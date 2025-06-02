@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-
+//git 연결 확인용 테스트
 export default function Footer() {
   return (
     <Box
