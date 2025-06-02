@@ -13,7 +13,7 @@ export function useChatSocket({ roomId, onMessage }) {
       onConnect: () => {
         console.log('✅ WebSocket 연결됨');
         stompClient.subscribe(`/topic/chat/${roomId}`, (message) => { //subcricbe는 STOMP 프로토콜에서 특정 "주제(topic)"를 구독하여 메시지를 실시간으로 받기 위한 함수
-          const body = JSON.parse(message.body);
+          const body = JSON.parse(message.body); //JSON.parse()는 JSON 문자열을 실제 JS 객체로 "파싱" 해주는 함수
           onMessage(body);
         });
       },
