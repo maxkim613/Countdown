@@ -1,5 +1,5 @@
 let navigate = null;
-
+//안씀
 export const setNavigate = (navFn) => {
   navigate = navFn;
 };

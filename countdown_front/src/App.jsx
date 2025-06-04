@@ -1,58 +1,63 @@
-import Ex1 from "./Ex1";
-import Ex2 from "./Ex2";
-import React  from "react";
-import Ex3 from "./Ex3";
-import Ex4 from "./Ex4";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from "./layout/Layout";
-import RLayout from "./layout/RLayout";
-import Ex5 from "./Ex5";
-import Ex7 from "./Ex7";
-import Ex8 from "./Ex8";
-import Ex9 from "./Ex9";
-import Ex10 from "./Ex10";
-import Ex11 from "./Ex11";
-import Join from "./Join";
-import View from "./View";
-import Update from "./Update";
-// const App = () => {
-//     const [count, setCount] = useState(0);
+import './App.css';
 
-//     return (
-//         <>
-//             <Ex2 isLogin={true} name="김태완" />
-//             count : {count}
-//             <Ex1 ex1="123" ex2="456" />
-//             <button onClick={() => setCount(count + 1)}>+1</button>
-//             <Ex3/>
-//             <Ex4/>
-//         </>
-//     )
-// }
+import React, { useEffect } from 'react';
+import {  Routes, Route, useNavigate } from 'react-router-dom';
+import Login from './page/user/Login';
+import Register from './page/user/Register';
+import UserUpdate from './page/user/UserUpdate';
+import UserView from './page/user/UserView';
+import BoardList from './page/board/BoardList';
+import BoardView from './page/board/BoardView';
+import BoardCreate from './page/board/BoardCreate';
+import BoardUpdate from './page/board/BoardUpdate';
 
+import AuctionList from './page/auction/AuctionList';
+import AuctionCreate from './page/auction/AuctionCreate';
+import AuctionUpdate from './page/auction/AuctionUpdate';
+import AuctionView from './page/auction/AuctionView';
 
-function App() {
-    return (
-        <BrowserRouter>
+import Home from './page/Home';
+import { setNavigate } from './cm/CmNavigateUtil';
+import LayoutLogin from './layout/LayoutLogin';
+import LayoutNoLogin from './layout/LayoutNoLogin';
+
+import NewBoardList from './page/newBoard/NewBoardList';
+import NewBoardCreate from './page/newBoard/NewBoardCreate';
+import UserList from './page/user/UserList';
+import CmRouteChangeNotifier from './cm/CmRouteChangeNotifier';
+
+const App = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setNavigate(navigate);
+  }, [navigate]);
+
+  return (
+    <>
       <Routes>
-        <Route path="/Ex1" element={<Layout><Ex1 ex1="123" ex2="456" /></Layout>} />
-        <Route path="/" element={<RLayout/>}>
-        <Route path="/Ex2" element={<Ex2 isLogin={true} name="taewan"/>} />
-        <Route path="/Ex3" element={<Ex3 />} />
-        <Route path="/Ex4" element={<Ex4 />} />
-        </Route>
-        <Route path="/Ex5/:id" element={<Layout><Ex5 /></Layout>} />
-        <Route path="/*" element={<h1>페이지를 찾을 수 없습니다.</h1>} />
-        <Route path="/Ex7" element={<Ex7 />} />
-        <Route path="/Ex8" element={<Ex8 />} />
-        <Route path="/Ex9" element={<Ex9 />} />
-        <Route path="/Ex10" element={<Ex10 />} />
-        <Route path="/Ex11" element={<Ex11 />} />
-        <Route path="/Join" element={<Join />} />
-        <Route path="/View" element={<View />} />
-        <Route path="/Update" element={<Update />} />
+        <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
+        <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
+        <Route path="/user/join.do" element={<LayoutNoLogin><Register /></LayoutNoLogin>} />
+        <Route path="/user/update.do" element={<LayoutLogin><UserUpdate /></LayoutLogin>} />
+        <Route path="/user/view.do" element={<LayoutLogin><UserView /></LayoutLogin>} />
+        <Route path="/board/list.do" element={<LayoutLogin><BoardList /></LayoutLogin>} />
+        <Route path="/board/view.do" element={<LayoutLogin><BoardView /></LayoutLogin>} />
+        <Route path="/board/create.do" element={<LayoutLogin><BoardCreate /></LayoutLogin>} />
+        <Route path="/board/update.do" element={<LayoutLogin><BoardUpdate /></LayoutLogin>} />
+        <Route path="/newBoard/create.do" element={<LayoutLogin><NewBoardCreate /></LayoutLogin>} />
+        <Route path="/newBoard/list.do" element={<LayoutLogin><NewBoardList /></LayoutLogin>} />
+        <Route path="/user/list.do" element={<LayoutLogin><UserList /></LayoutLogin>} />
+        <Route path="/auc/auclist.do" element={<LayoutLogin><AuctionList /></LayoutLogin>} />
+        <Route path="/auc/auccreate.do" element={<LayoutLogin><AuctionCreate /></LayoutLogin>} />
+        <Route path="/auc/aucview.do" element={<LayoutLogin><AuctionView /></LayoutLogin>} />
+        <Route path="/auc/aucdelete.do" element={<LayoutLogin><UserList /></LayoutLogin>} />
       </Routes>
-    </BrowserRouter>
-    )
-}
+      <CmRouteChangeNotifier />
+    </>
+      
+      
+  );
+};
+
 export default App;
