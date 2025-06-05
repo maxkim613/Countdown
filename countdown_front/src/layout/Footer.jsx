@@ -6,7 +6,7 @@ export default function Footer() {
     <Box
       component="footer"
       sx={{
-        backgroundColor: '#2c3e50', // 헤더와 같은 배경 색상
+        backgroundColor: '#B00020', // 헤더와 같은 배경 색상
         padding: '20px 0', // 충분한 패딩
         marginTop: '20px', // 상단 여백
         textAlign: 'center', // 가운데 정렬

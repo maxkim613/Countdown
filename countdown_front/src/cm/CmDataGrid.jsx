@@ -29,20 +29,6 @@ const CmDataGrid = ({
         />
       </div>
 
-      {/* 페이지네이션 영역 */}
-      <br />
-      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-        <Pagination
-          variant="outlined"
-          shape="rounded"
-          count={pageCount} // 총 페이지 수
-          page={page} // 현재 페이지
-          showFirstButton // 처음으로 이동 버튼
-          showLastButton // 마지막으로 이동 버튼
-          onChange={(e, value) => onPageChange(value)} // 페이지 변경 처리
-        />
-        {children} {/* 하단에 추가 컴포넌트를 렌더링할 수 있도록 함 */}
-      </div>
     </>
   );
 };

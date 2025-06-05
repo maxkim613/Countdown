@@ -16,6 +16,12 @@ import AuctionCreate from './page/auction/AuctionCreate';
 import AuctionUpdate from './page/auction/AuctionUpdate';
 import AuctionView from './page/auction/AuctionView';
 
+import AnnouncementList from './page/announcement/AnnouncementList';
+import AnnouncementCreate from './page/announcement/AnnouncementCreate';
+import AnnouncementUpdate from './page/announcement/AnnouncementUpdate';
+import AnnouncementDelete from './page/announcement/AnnouncementDelete';
+import AnnouncementView from './page/announcement/AnnouncementView';
+
 import Home from './page/Home';
 import { setNavigate } from './cm/CmNavigateUtil';
 import LayoutLogin from './layout/LayoutLogin';
@@ -51,7 +57,11 @@ const App = () => {
         <Route path="/auc/auclist.do" element={<LayoutLogin><AuctionList /></LayoutLogin>} />
         <Route path="/auc/auccreate.do" element={<LayoutLogin><AuctionCreate /></LayoutLogin>} />
         <Route path="/auc/aucview.do" element={<LayoutLogin><AuctionView /></LayoutLogin>} />
-        <Route path="/auc/aucdelete.do" element={<LayoutLogin><UserList /></LayoutLogin>} />
+        <Route path="/ann/annview.do" element={<LayoutLogin><AnnouncementView /></LayoutLogin>} />
+        <Route path="/ann/anncreate.do" element={<LayoutLogin><AnnouncementCreate /></LayoutLogin>} />
+        <Route path="/ann/annupdate.do" element={<LayoutLogin><AnnouncementUpdate /></LayoutLogin>} />
+        <Route path="/ann/anndelete.do" element={<LayoutLogin><AnnouncementDelete /></LayoutLogin>} />
+        <Route path="/ann/annlist.do" element={<LayoutLogin><AnnouncementList /></LayoutLogin>} />
       </Routes>
       <CmRouteChangeNotifier />
     </>

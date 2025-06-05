@@ -70,7 +70,9 @@ const CmTinyMCEEditor = forwardRef(({ value, setValue, editorStyle, max = 4000 }
   return (
     <>
       <Editor
-        apiKey="1owxjke1x3a8s8eg6de5u9w0ra2z2ozu5ny8pglysw5qkgk9"
+        // apiKey="no-api-key" 
+        //apiKey="1owxjke1x3a8s8eg6de5u9w0ra2z2ozu5ny8pglysw5qkgk9"
+        apiKey="v60uifdr5iaubd7218bg16w1s21pchn575ccrzs5m9deld7d"
         value={value}
         init={editorOptions}
         onEditorChange={handleEditorChange}

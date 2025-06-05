@@ -5,6 +5,9 @@ import { useBoardListQuery } from "../../features/board/boardApi";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCmDialog } from "../../cm/CmDialogUtil";
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 
 const AuctionList = () => {
   const [searchText, setSearchText] = useState("");
@@ -71,22 +74,29 @@ const AuctionList = () => {
   ];
 
   return (
-    <Box sx={{ p: 3 }}>
-      <h2>게시판 목록</h2>
-      <Box sx={{ mb: 2, display: "flex", gap: 2 }}>
+    <Box sx={{ p: 1 }}>
+      <h2>경매</h2>
+      <Box sx={{ mb: 1, display: "flex", gap: 2 }}>
         <TextField
-          label="검색어"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
+          placeholder="검색어"
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: '40px',
+              height: 40,
+            }
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={handleSearch}>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
         />
-        <Button variant="contained" onClick={handleSearch}>
-          검색
-        </Button>
-        {user && (
-          <Button variant="contained" onClick={() => navigate(`/board/create.do`)}>
-            글쓰기
-          </Button>
-        )}
       </Box>
       {isLoading ? (
         <p>Loading...</p>

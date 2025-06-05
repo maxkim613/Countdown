@@ -8,12 +8,14 @@ import CmPostCode from '../../cm/CmPostCode'; // 주소 검색 컴포넌트
 
 const Register = () => {
   const [userId, setUserId] = useState(''); // 아이디 상태
+  const [nickname, setNickname] = useState(''); // 아이디 상태
   const [password, setPassword] = useState(''); // 비밀번호 상태
   const [username, setUsername] = useState(''); // 이름 상태
   const [email, setEmail] = useState(''); // 이메일 상태
 
   // 각 입력창의 ref (포커스 처리용)
   const userIdRef = useRef();
+  const nicknameRef = useRef();
   const passwordRef = useRef();
   const usernameRef = useRef();
   const emailRef = useRef();
@@ -34,6 +36,12 @@ const Register = () => {
     if (CmUtil.isEmpty(userId)) {
       showAlert('아이디를 입력해주세요.');
       userIdRef.current?.focus();
+      return;
+    }
+
+    if (CmUtil.isEmpty(nickname)) {
+      showAlert('아이디를 입력해주세요.');
+      nicknameRef.current?.focus();
       return;
     }
 
@@ -118,6 +126,15 @@ const Register = () => {
         value={username}
         inputRef={usernameRef}
         onChange={(e) => setUsername(e.target.value)}
+      />
+      {/* 닉네임 입력 */}
+      <TextField
+        label="닉네임"
+        fullWidth
+        margin="normal"
+        value={nickname}
+        inputRef={nicknameRef}
+        onChange={(e) => setNickname(e.target.value)}
       />
 
       {/* 이메일 입력 */}
