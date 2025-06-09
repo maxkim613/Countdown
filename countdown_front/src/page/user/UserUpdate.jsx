@@ -1,33 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react'; // React 훅 import
-import { useUserUpdateMutation, useUserDeleteMutation, useViewQuery } from '../../features/user/userApi'; // 사용자 정보 API
-import { useSelector } from 'react-redux'; // Redux 상태 조회
-import { useNavigate } from 'react-router-dom'; // 페이지 이동
-import { TextField, Button, Box, Typography } from '@mui/material'; // MUI UI 컴포넌트
-import { useCmDialog } from '../../cm/CmDialogUtil';  // 커스텀 다이얼로그
-import { CmUtil } from '../../cm/CmUtil'; // 유틸 함수
+import React, { useState, useEffect, useRef } from 'react';
+import { useUserUpdateMutation, useUserDeleteMutation, useViewQuery } from '../../features/user/userApi';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Box, Typography } from '@mui/material';
+import { useCmDialog } from '../../cm/CmDialogUtil';  
+import { CmUtil } from '../../cm/CmUtil';
 
 const UserUpdate = () => {
-  const user = useSelector((state) => state.user.user); // 로그인된 사용자 정보
-  const navigate = useNavigate(); // 페이지 이동 함수
+  const user = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
 
-  // 입력값 상태 정의
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
 
-  // 입력창 참조
   const userIdRef = useRef();
   const passwordRef = useRef();
   const usernameRef = useRef();
   const emailRef = useRef();
 
-  const { showAlert } = useCmDialog(); // 알림창 함수
-  const [userUpdate] = useUserUpdateMutation(); // 사용자 정보 수정 API
-  const [userDelete] = useUserDeleteMutation(); // 사용자 탈퇴 API
-  const { data, isSuccess } = useViewQuery({ userId: user?.userId }); // 사용자 정보 조회 API
+  const { showAlert } = useCmDialog();
 
-  // 사용자 정보 불러와서 상태 설정
+  const [userUpdate] = useUserUpdateMutation();
+  const [userDelete] = useUserDeleteMutation();
+  const { data, isSuccess } = useViewQuery({ userId: user?.userId });
+
   useEffect(() => {
     if (isSuccess && data?.data) {
       const info = data.data;
@@ -37,7 +35,6 @@ const UserUpdate = () => {
     }
   }, [isSuccess, data]);
 
-  // 회원 정보 수정 처리
   const handleUpdateClick = async () => {
     if (CmUtil.isEmpty(userId)) {
       showAlert('아이디를 입력해주세요.');
@@ -62,7 +59,7 @@ const UserUpdate = () => {
       emailRef.current?.focus();
       return;
     }
-
+   
     const response = await userUpdate({ userId, password, username, email }).unwrap();
     try {
       if (response.success) {
@@ -75,12 +72,12 @@ const UserUpdate = () => {
     } 
   };
 
-  // 회원 탈퇴 처리
   const handleDeleteClick = async () => {
     try {
       const response = await userDelete({ userId }).unwrap();
       if (response.success) {
         showAlert("회원탈퇴에 성공 하셨습니다. 로그인화면으로 이동합니다.", () => navigate('/user/login.do'));
+      
       } else {
         showAlert('회원탈퇴에에 실패했습니다.');
       }
@@ -103,7 +100,6 @@ const UserUpdate = () => {
     >
       <Typography variant="h4" gutterBottom>회원정보 수정</Typography>
 
-      {/* 아이디 (수정 불가) */}
       <TextField
         label="아이디"
         value={userId}
@@ -113,7 +109,6 @@ const UserUpdate = () => {
         margin="normal"
       />
 
-      {/* 비밀번호 입력 (선택 사항) */}
       <TextField
         label="새 비밀번호 (변경 시 입력)"
         type="password"
@@ -124,7 +119,6 @@ const UserUpdate = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      {/* 이름 입력 */}
       <TextField
         label="이름"
         fullWidth
@@ -134,7 +128,6 @@ const UserUpdate = () => {
         onChange={(e) => setUsername(e.target.value)}
       />
 
-      {/* 이메일 입력 */}
       <TextField
         label="이메일"
         type="email"
@@ -145,7 +138,6 @@ const UserUpdate = () => {
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      {/* 수정 버튼 */}
       <Button
         onClick={handleUpdateClick}
         variant="contained"
@@ -155,8 +147,7 @@ const UserUpdate = () => {
       >
         회원 정보 수정
       </Button>
-
-      {/* 탈퇴 버튼 */}
+     
       <Button
         onClick={handleDeleteClick}
         variant="contained"
@@ -167,7 +158,6 @@ const UserUpdate = () => {
         회원 탈퇴
       </Button>
 
-      {/* 홈 이동 버튼 */}
       <Button
         onClick={() => navigate('/')}
         variant="contained"
@@ -181,4 +171,4 @@ const UserUpdate = () => {
   );
 };
 
-export default UserUpdate; // 컴포넌트 내보내기
+export default UserUpdate

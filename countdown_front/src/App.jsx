@@ -32,6 +32,9 @@ import NewBoardCreate from './page/newBoard/NewBoardCreate';
 import UserList from './page/user/UserList';
 import CmRouteChangeNotifier from './cm/CmRouteChangeNotifier';
 
+import FindId from './page/user/FindId';
+import ResetPassword from './page/user/ResetPassword';
+
 const App = () => {
   const navigate = useNavigate();
 
@@ -62,6 +65,9 @@ const App = () => {
         <Route path="/ann/annupdate.do" element={<LayoutLogin><AnnouncementUpdate /></LayoutLogin>} />
         <Route path="/ann/anndelete.do" element={<LayoutLogin><AnnouncementDelete /></LayoutLogin>} />
         <Route path="/ann/annlist.do" element={<LayoutLogin><AnnouncementList /></LayoutLogin>} />
+
+         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
+        <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
       </Routes>
       <CmRouteChangeNotifier />
     </>
