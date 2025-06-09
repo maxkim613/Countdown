@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSendCertiNumMutation, useVerifyCertiNumMutation } from '../../features/user/userApi';
+import { useSendCertiNumMutation, useVerifyCertiNumMutation } from '../../features/user/UserApi';
 import { useNavigate } from 'react-router-dom';
 
 const Modal = ({ isOpen, onConfirm, children }) => {

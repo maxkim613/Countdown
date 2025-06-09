@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useViewQuery } from '../features/user/userApi';
+import { useViewQuery } from '../features/user/UserApi';
 import { setAlertCheck, clearUser } from '../features/user/userSlice';
 
 export default function Header() {

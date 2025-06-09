@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useUserUpdateMutation, useUserDeleteMutation, useViewQuery } from '../../features/user/userApi';
+import { useUserUpdateMutation, useUserDeleteMutation, useViewQuery } from '../../features/user/UserApi';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography } from '@mui/material';

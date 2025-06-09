@@ -1,13 +1,13 @@
 import React, { useState, useRef} from 'react';
-import { useRegisterMutation } from '../../features/user/userApi';
+import { useRegisterMutation } from '../../features/user/UserApi';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useCmDialog } from '../../cm/CmDialogUtil';  
 import { CmUtil } from '../../cm/CmUtil';
 import  CmPostCode  from '../../cm/CmPostCode';
-import { useCheckUserIdMutation } from '../../features/user/userApi';
-import { useCheckNicknameMutation } from '../../features/user/userApi';
-import { useCheckEmailMutation } from '../../features/user/userApi';
+import { useCheckUserIdMutation } from '../../features/user/UserApi';
+import { useCheckNicknameMutation } from '../../features/user/UserApi';
+import { useCheckEmailMutation } from '../../features/user/UserApi';
 
 const Register = () => {
 

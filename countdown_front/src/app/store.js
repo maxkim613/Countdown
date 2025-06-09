@@ -1,7 +1,9 @@
 // src/app/store.js
 import { configureStore } from '@reduxjs/toolkit';
-import { userApi } from '../features/user/userApi';
+import { userApi } from '../features/user/UserApi';
 import { boardApi } from '../features/board/boardApi'; 
+import { auctionApi } from '../features/auction/auctionApi'; 
+import { announcementApi } from '../features/announcement/announcementApi'; 
 import { fileApi } from '../features/file/fileApi'; 
 
 import userReducer from '../features/user/userSlice';
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
   [userApi.reducerPath]: userApi.reducer,
   [boardApi.reducerPath]: boardApi.reducer,
   [fileApi.reducerPath]: fileApi.reducer,
+  [auctionApi.reducerPath]: auctionApi.reducer,
+  [announcementApi.reducerPath]: announcementApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -28,7 +32,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false
-    }).concat(userApi.middleware, boardApi.middleware, fileApi.middleware)
+    }).concat(userApi.middleware, boardApi.middleware, fileApi.middleware, auctionApi.middleware,announcementApi.middleware)
 });
 
 export const persistor = persistStore(store);
