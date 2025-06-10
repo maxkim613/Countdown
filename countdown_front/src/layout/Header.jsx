@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useViewQuery } from '../features/user/UserApi';
 import { setAlertCheck } from '../features/user/userSlice';
-import { Box, AppBar, Toolbar } from '@mui/material';
+import { Box } from '@mui/material';
 
 export default function Header() {
   const user = useSelector((state) => state.user.user);
