@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
-import CmDataGrid from "../../cm/CmDataGrid";
+import CmCardList from "../../cm/CmCardList";
 import { useAuctionListQuery } from "../../features/auction/auctionApi";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -8,20 +8,32 @@ import { useCmDialog } from "../../cm/CmDialogUtil";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
+import  CmDropdown  from '../../cm/CmDropdown';
 
 const AuctionList = () => {
   const [searchText, setSearchText] = useState("");
   const [sort, setSort] = useState({ field: "CREATE_DT", order: "DESC" }); // DB 컬럼명 기준
+  const [selected, setSelected] = useState('');
 
   const user = useSelector((state) => state.user.user);
   const { showAlert } = useCmDialog();
   const navigate = useNavigate();
-
+  
   const { data, isLoading, refetch } = useAuctionListQuery({
     searchText,
     sortField: sort.field,
     sortOrder: sort.order,
   });
+
+
+  const options = [
+          { value: '전체', label: '전체' },
+          { value: '전자기기', label: '전자기기' },
+          { value: '의류', label: '의류' },
+          { value: '도서', label: '도서' },
+          { value: '기타', label: '기타' },
+        ];
+
 
   const columns = [
     { field: "rn", headerName: "번호", width: 90, sortable: false },
@@ -34,18 +46,13 @@ const AuctionList = () => {
       headerName: "상세보기",
       width: 100,
       renderCell: (params) => (
-        <Button onClick={() => navigate(`/auction/view.do?id=${params.row.auctionId}`)}>
+        <Button onClick={() => navigate(`/auc/view.do?id=${params.row.auctionId}`)}>
           보기
         </Button>
       ),
       sortable: false,
     },
   ];
-
-  const rowsWithId = (data?.data?.list || []).map((row, idx) => ({
-    ...row,
-    id: row.auctionId ?? row.aucId ?? row.rn ?? `row-${idx}`, // 고유 ID fallback
-  }));
 
   const handleSortChange = (model) => {
     if (!model.length) return;
@@ -59,10 +66,19 @@ const AuctionList = () => {
     refetch();
   };
 
+  const auctionItems = (data?.data?.list || []).map((item, idx) => ({
+                        name: item.auctitle,
+                        price: item.aucsprice,
+                        endsIn: item.aucdeadline,
+                        bidders: item.bidcount ?? 0,
+                        thumbnailUrl: item.thumbnailUrl,
+                        auctionId: item.aucId, // ✅ 추가!
+                        loaddata: item.aucId ?? item.rn ?? `row-${idx}`,
+                        }));
+
   return (
     <Box sx={{ p: 1 }}>
-      <h2>경매 목록</h2>
-      <Box sx={{ mb: 1, display: "flex", gap: 2 }}>
+      <Box sx={{ mt: 2,mb: 1, display: "flex", gap: 2 }}>
         <TextField
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
@@ -83,17 +99,19 @@ const AuctionList = () => {
             ),
           }}
         />
+        <CmDropdown
+              label="카테고리"
+              value={selected}
+              setValue={setSelected}
+              options={options}
+        />
       </Box>
+
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <CmDataGrid
-          rows={rowsWithId}
-          columns={columns}
-          loading={isLoading}
-          sortS={handleSortChange}
-          getRowId={(row) => row.auctionId ?? row.aucId ?? row.rn}
-        />
+        <CmCardList items={auctionItems} />
+
       )}
     </Box>
   );

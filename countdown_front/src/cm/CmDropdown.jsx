@@ -2,9 +2,9 @@
 import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
-const CmDropdown = ({ label, value, setValue, options }) => {
+const CmDropdown = ({ label, value, setValue, options, width = '200px', height = '40px' }) => {
   return (
-    <FormControl fullWidth>
+    <FormControl sx={{ width, height }} size="small">
       <InputLabel>{label}</InputLabel>
       <Select
         value={value}

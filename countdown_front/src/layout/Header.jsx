@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useViewQuery } from '../features/user/UserApi';
 import { setAlertCheck } from '../features/user/userSlice';
-import { AppBar, Toolbar } from '@mui/material';
-import '../css/header.css';
+import { Box, AppBar, Toolbar } from '@mui/material';
 
 export default function Header() {
   const user = useSelector((state) => state.user.user);
@@ -31,17 +30,38 @@ export default function Header() {
   }, [location.pathname, checkAuth]);
 
   return (
-    <AppBar position="sticky" sx={{ background: '#B00020', boxShadow: 3 }}>
-      <Toolbar sx={{ justifyContent: 'center', padding: '0 !important', minHeight: '48px !important' }}>
-        {/* 로고 이미지 */}
-        <Link to="/auc/auclist.do">
+   
+          <Box
+            component="header" // ✅ 또는 생략 가능
+            sx={{
+              position: 'fixed',
+              top: 0,               // ✅ 헤더니까 top
+              left: 0,
+              width: '100%',
+              height: '45px',
+              backgroundColor: '#B00020', // ✅ 올바른 색상 코드
+              color: '#fff',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              
+            }}
+          >
+          <Link to="/auc/auclist.do">
           <img
             src="/cdlogo.png"
             alt="로고"
-            style={{ height: 60, margin: 0, padding: 0, objectFit: 'contain', cursor: 'pointer' }}
+            style={{
+              height: 45,
+              margin: 0,
+              padding: 0,
+              display: 'block', // ✅ 공백 방지
+              objectFit: 'contain',
+              cursor: 'pointer',
+            }}
           />
         </Link>
-      </Toolbar>
-    </AppBar>
+        </Box>
   );
 }

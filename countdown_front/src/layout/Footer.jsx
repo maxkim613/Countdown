@@ -1,21 +1,24 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-//git 연결 확인용 테스트
+
 export default function Footer() {
   return (
     <Box
       component="footer"
       sx={{
-        backgroundColor: '#B00020', // 헤더와 같은 배경 색상
-        padding: '20px 0', // 충분한 패딩
-        marginTop: '20px', // 상단 여백
-        textAlign: 'center', // 가운데 정렬
-        color: '#ecf0f1', // 글자 색상
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        height: '45px',
+        backgroundColor: 'lightgrey',
+        color: '#ecf0f1',
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      <Typography variant="body2" sx={{ fontSize: '14px', fontWeight: 'light' }}>
-        © 2025 MyApp. All rights reserved.
-      </Typography>
     </Box>
   );
 }
