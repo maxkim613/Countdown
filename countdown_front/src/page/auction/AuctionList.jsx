@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
 import CmCardList from "../../cm/CmCardList";
 import { useAuctionListQuery } from "../../features/auction/auctionApi";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCmDialog } from "../../cm/CmDialogUtil";
 import SearchIcon from "@mui/icons-material/Search";
@@ -17,7 +16,6 @@ const AuctionList = () => {
 
   const user = useSelector((state) => state.user.user);
   const { showAlert } = useCmDialog();
-  const navigate = useNavigate();
   
   const { data, isLoading, refetch } = useAuctionListQuery({
     searchText,
@@ -39,19 +37,8 @@ const AuctionList = () => {
     { field: "rn", headerName: "번호", width: 90, sortable: false },
     { field: "auctitle", headerName: "제목", width: 300, dbName: "AUC_TITLE" },
     { field: "createId", headerName: "작성자", width: 150, dbName: "CREATE_ID" },
-    { field: "aucsprice", headerName: "시작가", width: 120, dbName: "AUC_STARTING_PRICE" },
+    { field: "aucsprice", headerName: "시작가", width: 120, dbName: "AUC_CURRENT_PRICE" },
     { field: "aucdeadline", headerName: "마감일", width: 180, dbName: "AUC_DEADLINE" },
-    {
-      field: "action",
-      headerName: "상세보기",
-      width: 100,
-      renderCell: (params) => (
-        <Button onClick={() => navigate(`/auc/view.do?id=${params.row.auctionId}`)}>
-          보기
-        </Button>
-      ),
-      sortable: false,
-    },
   ];
 
   const handleSortChange = (model) => {

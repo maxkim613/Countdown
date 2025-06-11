@@ -53,7 +53,7 @@ export default function Header() {
             src="/cdlogo.png"
             alt="로고"
             style={{
-              height: 45,
+              height: 80,
               margin: 0,
               padding: 0,
               display: 'block', // ✅ 공백 방지
