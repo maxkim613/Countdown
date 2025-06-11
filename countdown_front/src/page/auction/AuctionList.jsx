@@ -33,34 +33,39 @@ const AuctionList = () => {
         ];
 
 
-  const columns = [
-    { field: "rn", headerName: "번호", width: 90, sortable: false },
-    { field: "auctitle", headerName: "제목", width: 300, dbName: "AUC_TITLE" },
-    { field: "createId", headerName: "작성자", width: 150, dbName: "CREATE_ID" },
-    { field: "aucsprice", headerName: "시작가", width: 120, dbName: "AUC_CURRENT_PRICE" },
-    { field: "aucdeadline", headerName: "마감일", width: 180, dbName: "AUC_DEADLINE" },
-  ];
+  // const columns = [
+  //   { field: "rn", headerName: "번호", width: 90, sortable: false },
+  //   { field: "auctitle", headerName: "제목", width: 300, dbName: "AUC_TITLE" },
+  //   { field: "createId", headerName: "작성자", width: 150, dbName: "CREATE_ID" },
+  //   { field: "aucsprice", headerName: "시작가", width: 120, dbName: "AUC_CURRENT_PRICE" },
+  //   { field: "aucdeadline", headerName: "마감일", width: 180, dbName: "AUC_DEADLINE" },
+  // ];
 
-  const handleSortChange = (model) => {
-    if (!model.length) return;
-    const { field, sort } = model[0];
-    const colDef = columns.find((col) => col.field === field);
-    const sortField = colDef?.dbName || field;
-    setSort({ field: sortField, order: sort?.toUpperCase() || "ASC" });
-  };
+  // const handleSortChange = (model) => {
+  //   if (!model.length) return;
+  //   const { field, sort } = model[0];
+  //   const colDef = columns.find((col) => col.field === field);
+  //   const sortField = colDef?.dbName || field;
+  //   setSort({ field: sortField, order: sort?.toUpperCase() || "ASC" });
+  // };
 
   const handleSearch = () => {
     refetch();
   };
 
+  
+  console.log(data)
   const auctionItems = (data?.data?.list || []).map((item, idx) => ({
-                        name: item.auctitle,
-                        price: item.aucsprice,
-                        endsIn: item.aucdeadline,
-                        bidders: item.bidcount ?? 0,
+                        info1: item.aucTitle,
+                        writeinfo1: '',
+                        info2: item.aucStartingPrice,
+                        writeinfo2: '원',
+                        info3: item.aucDeadline,
+                        writeinfo3: '',
+                        info4: item.aucStatus,
+                        writeinfo4: '', 
                         thumbnailUrl: item.thumbnailUrl,
-                        auctionId: item.aucId, 
-                        loaddata: item.aucId ?? item.rn ?? `row-${idx}`,
+                        id: item.aucId,  
                         }));
 
   return (
@@ -97,8 +102,10 @@ const AuctionList = () => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <CmCardList items={auctionItems} />
-
+        <CmCardList
+          items={auctionItems}
+          path="/auc/aucview.do"    // 클릭 시 /auc/aucview.do?id=<id> 로 이동
+        />
       )}
     </Box>
   );

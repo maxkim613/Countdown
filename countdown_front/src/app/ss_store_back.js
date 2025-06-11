@@ -1,7 +1,7 @@
 // src/app/store.js
 
 import { configureStore } from '@reduxjs/toolkit'; // Redux 스토어 구성 함수
-import { userApi } from '../features/user/userApi'; // 사용자 API 슬라이스
+import { userApi } from '../features/user/UserApi'; // 사용자 API 슬라이스
 import { boardApi } from '../features/board/boardApi'; // 게시판 API 슬라이스
 import { fileApi } from '../features/file/fileApi'; // 파일 API 슬라이스
 

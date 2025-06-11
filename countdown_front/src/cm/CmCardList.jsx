@@ -1,17 +1,28 @@
 import React from 'react';
 import CmDataCard from './CmDataCard';
 
-export default function CmCardList({ items }) {
+export default function CmCardList({
+  items,
+  path,           // 클릭 시 이동할 기본 경로 (예: '/auc/aucview.do')
+  onItemClick     // 클릭 시 커스텀 핸들러가 필요하면 전달
+}) {
   return (
     <div className="divide-y divide-gray-300 divide-solid">
       {items.map((item, idx) => (
         <CmDataCard
-          key={item.loaddata || idx}//받아올 객체
-          name={item.name} //아이템 이름
-          price={item.price} // 아이템 가격
-          endsIn={item.endsIn} // 끝나는 시간
-          bidders={item.bidders} // 낙찰자
-          thumbnailUrl={item.thumbnailUrl} //사진
+          key={item.id ?? idx}
+          id={item.id}
+          thumbnailUrl={item.thumbnailUrl}
+          info1={item.info1}
+          writeinfo1={item.writeinfo1}
+          info2={item.info2}
+          writeinfo2={item.writeinfo2}
+          info3={item.info3}
+          writeinfo3={item.writeinfo3}
+          info4={item.info4}
+          writeinfo4={item.writeinfo4}
+          path={path}             // onClick이 없으면 이 경로로 이동
+          onClick={onItemClick}    // 있으면 이 함수 호출(id 전달)
         />
       ))}
     </div>
