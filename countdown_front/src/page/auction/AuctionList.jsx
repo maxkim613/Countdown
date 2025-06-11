@@ -72,7 +72,7 @@ const AuctionList = () => {
                         endsIn: item.aucdeadline,
                         bidders: item.bidcount ?? 0,
                         thumbnailUrl: item.thumbnailUrl,
-                        auctionId: item.aucId, // ✅ 추가!
+                        auctionId: item.aucId, 
                         loaddata: item.aucId ?? item.rn ?? `row-${idx}`,
                         }));
 

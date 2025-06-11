@@ -38,9 +38,10 @@ const AuctionCreate = () => {
   const [aucdeadline, setAucdeadline] = useState('');
 
   const options = [
-          { value: '123', label: '123' },
-          { value: '234', label: '234' },
-          { value: '345', label: '345' },
+          { value: '전자기기', label: '전자기기' },
+          { value: '의류', label: '의류' },
+          { value: '도서', label: '도서' },
+          { value: '기타', label: '기타' },
         ];
 
   const { getRootProps, getInputProps } = useDropzone({
