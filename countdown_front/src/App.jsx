@@ -66,7 +66,7 @@ const App = () => {
         <Route path="/ann/anndelete.do" element={<LayoutLogin><AnnouncementDelete /></LayoutLogin>} />
         <Route path="/ann/annlist.do" element={<LayoutLogin><AnnouncementList /></LayoutLogin>} />
 
-         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
+        <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
       </Routes>
       <CmRouteChangeNotifier />
