@@ -15,7 +15,7 @@ import {
   useViewQuery,
   useCheckNicknameMutation,
   useCheckEmailMutation,
-} from '../../features/user/userApi';
+} from '../../features/user/UserApi';
 import { useCmDialog } from '../../cm/CmDialogUtil';
 import { CmUtil } from '../../cm/CmUtil';
 import CmPostCode from '../../cm/CmPostCode';
