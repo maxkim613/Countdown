@@ -55,13 +55,13 @@ const AuctionView = () => {
   }, [isSuccess, data]);
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", my: 4, p: 2 }}>
+    <Box sx={{ width: "100%", maxWidth: 800, mx: "auto", p: 2, minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
       {isLoading ? (
         <CircularProgress />
       ) : error ? (
         <Alert severity="error">게시글을 불러오는 데 실패했습니다.</Alert>
       ) : auction ? (
-        <Paper elevation={3} sx={{ p: 2 }}>
+        <Box elevation={3} sx={{ p: 2 }}>
           <Box display="flex" gap={2}>
             {/* 왼쪽: 이미지 */}
             <Box flexShrink={0}>
@@ -159,7 +159,7 @@ const AuctionView = () => {
                 </Box>
               </CardActions>
             )}
-        </Paper>
+        </Box>
       ) : null}
     </Box>
   );
