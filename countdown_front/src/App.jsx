@@ -20,8 +20,9 @@ import AuctionView from './page/auction/AuctionView';
 import AnnouncementList from './page/announcement/AnnouncementList';
 import AnnouncementCreate from './page/announcement/AnnouncementCreate';
 import AnnouncementUpdate from './page/announcement/AnnouncementUpdate';
-import AnnouncementDelete from './page/announcement/AnnouncementDelete';
 import AnnouncementView from './page/announcement/AnnouncementView';
+import UserAnnList from './page/announcement/UserAnnList';
+import UserAnnView from './page/announcement/UserAnnView';
 
 import Home from './page/Home';
 import { setNavigate } from './cm/CmNavigateUtil';
@@ -85,8 +86,9 @@ const App = () => {
         <Route path="/ann/annview.do" element={<LayoutLogin><AnnouncementView /></LayoutLogin>} />
         <Route path="/ann/anncreate.do" element={<LayoutLogin><AnnouncementCreate /></LayoutLogin>} />
         <Route path="/ann/annupdate.do" element={<LayoutLogin><AnnouncementUpdate /></LayoutLogin>} />
-        <Route path="/ann/anndelete.do" element={<LayoutLogin><AnnouncementDelete /></LayoutLogin>} />
         <Route path="/ann/annlist.do" element={<LayoutLogin><AnnouncementList /></LayoutLogin>} />
+        <Route path="/ann/userannlist.do" element={<LayoutLogin><UserAnnList /></LayoutLogin>} />
+        <Route path="/ann/userannview.do" element={<LayoutLogin><UserAnnView /></LayoutLogin>} />
 
         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
