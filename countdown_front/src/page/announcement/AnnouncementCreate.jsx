@@ -1,197 +1,167 @@
 import React, { useRef, useState } from "react"; // React 훅 import
-import CmTinyMCEEditor from "../../cm/CmTinyMCEEditor"; // 커스텀 TinyMCE 에디터 컴포넌트
-import { useBoardCreateMutation } from "../../features/board/boardApi"; // 게시글 생성 API 호출 훅
-import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 훅
-import { useDropzone } from "react-dropzone"; // 파일 드래그&드롭 업로드 기능
-import { useSelector } from "react-redux"; // Redux 상태 조회를 위한 훅
+import { useAnnouncementCreateMutation } from "../../features/announcement/announcementApi"; // 게시글 생성 API 호출 훅
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  IconButton,
-  Paper,
-} from "@mui/material"; // MUI UI 컴포넌트
-import DeleteIcon from "@mui/icons-material/Delete"; // 파일 삭제 아이콘
-import { CmUtil } from "../../cm/CmUtil"; // 유틸리티 함수 모음
-import { useCmDialog } from "../../cm/CmDialogUtil"; // 커스텀 다이얼로그 훅
+  Typography, TextField, Box, Button
+} from "@mui/material";
+import { CmUtil } from "../../cm/CmUtil";
+import { useCmDialog } from '../../cm/CmDialogUtil';  
 
-const AuctionCreate = () => {
-  const navigate = useNavigate(); // 페이지 이동 함수
-  const editorRef = useRef(); // 에디터 ref
-  const titleRef = useRef(); // 제목 입력창 ref
-  const user = useSelector((state) => state.user.user); // 로그인 사용자 정보 가져오기
-  const [uploadedFiles, setUploadedFiles] = useState([]); // 업로드된 파일 상태
-  const [boardCreate] = useBoardCreateMutation(); // 게시글 생성 API 훅 호출
-  const { showAlert } = useCmDialog(); // 알림창 함수 가져오기
-  const [editorValue, setEditorValue] = useState(""); // 에디터 입력 값 상태
-
-  const { getRootProps, getInputProps } = useDropzone({
-    // 파일 업로드 드롭존 설정
-    onDrop: (acceptedFiles) => {
-      setUploadedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
-    },
-    multiple: true,
-    maxSize: 10 * 1024 * 1024, // 10MB 제한
-  });
+const AnnouncementCreate = () => {
+  const navigate = useNavigate();
+  const titleRef = useRef();
+  const contentRef = useRef();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const user = useSelector((state) => state.user.user); // 로그인된 사용자 정보
+  const [announcementCreate] = useAnnouncementCreateMutation();
+  const { showAlert } = useCmDialog();
+  const today = CmUtil.getToday(); // 예: "2025.06.05"
 
   const handleSubmit = async (e) => {
-    // 폼 제출 시 실행되는 함수
     e.preventDefault();
-    const title = e.target.title.value.trim();
-    const contentText = editorRef.current?.getContent({ format: "text" });
-    const contentHtml = editorRef.current?.getContent();
+    const trimmedTitle = title.trim();
+    const contentText = content.trim();
 
-    if (CmUtil.isEmpty(title)) {
-      // 제목 비어있는지 체크
+    if (CmUtil.isEmpty(trimmedTitle)) {
       showAlert("제목을 입력해주세요.");
       titleRef.current?.focus();
       return;
     }
 
-    if (!CmUtil.maxLength(title, 100)) {
-      // 제목 길이 제한 체크
+    if (!CmUtil.maxLength(trimmedTitle, 100)) {
       showAlert("제목은 최대 100자까지 입력할 수 있습니다.");
       titleRef.current?.focus();
       return;
     }
 
     if (CmUtil.isEmpty(contentText)) {
-      // 내용 비어있는지 체크
       showAlert("내용을 입력해주세요.", () => {
-        editorRef?.current?.focus();
+        contentRef.current?.focus();
       });
       return;
     }
 
     if (!CmUtil.maxLength(contentText, 2000)) {
-      // 내용 길이 제한 체크
       showAlert("내용은 최대 2000자까지 입력할 수 있습니다.", () => {
-        editorRef?.current?.focus();
+        contentRef.current?.focus();
       });
       return;
     }
 
-    const formData = new FormData(); // FormData 객체 생성
-    formData.append("title", title);
-    formData.append("content", contentHtml);
-    formData.append("viewCount", 0);
+    const createId = user?.userId || 'anonymous';
 
-    uploadedFiles.forEach((file) => {
-      // 파일들 추가
-      formData.append("files", file);
-    });
-
-    const res = await boardCreate(formData).unwrap(); // 게시글 생성 API 호출
-    if (res.success) {
-      showAlert("게시글 생성 성공! 게시판 목록으로 이동합니다.", () =>
-        navigate("/board/list.do")
-      );
-    } else {
-      showAlert("게시글 생성 실패 했습니다.");
+    if (!user || !user.userId) { // 실제 사용자 ID 속성으로 변경해주세요.
+      showAlert("로그인 정보가 없습니다. 다시 로그인해주세요.");
+      navigate("/login"); // 로그인 페이지로 이동시키거나 다른 처리
+      return;
     }
-  };
 
-  const handleRemoveFile = (indexToRemove) => {
-    // 파일 삭제 함수
-    setUploadedFiles((prevFiles) =>
-      prevFiles.filter((_, index) => index !== indexToRemove)
-    );
+    const payload = {
+      annTitle: trimmedTitle,
+      annContent: contentText,
+      createId: createId,
+    };
+
+    try {
+      const res = await announcementCreate(payload).unwrap();
+      console.log(payload);
+      console.log("등록 성공", res);
+      console.log(">>> navigate('/ann/annlist.do') 호출 직전!");
+      navigate("/ann/annlist.do");
+    } catch (err) {
+      console.log(payload);
+      console.error("등록 실패", err);
+      showAlert("공지사항 등록에 실패했습니다.");
+    }
+    
+  };
+  
+  const handleCancel = () => {
+    navigate('/ann/annlist.do');
   };
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", p: 3 }}>
-      <Typography variant="h5" gutterBottom>
-        게시글 작성
-      </Typography>
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        encType="multipart/form-data"
-        noValidate
-      >
-        {/* 제목 입력 */}
-        <Box mb={3}>
-          <TextField
-            fullWidth
-            id="title"
-            name="title"
-            label="제목"
-            variant="outlined"
-            inputProps={{ maxLength: 100 }}
-            inputRef={titleRef}
-          />
-        </Box>
+    <Box sx={{ pb: 8 }}>
+      {/* 본문 입력 영역 */}
+      <Box sx={{ p: 2 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 1 }}>제목</Typography>
+        <TextField
+          fullWidth
+          id="annTitle"
+          name="annTitle"
+          label="제목"
+          variant="outlined"
+          inputProps={{ maxLength: 100 }} 
+          inputRef={titleRef}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          sx={{ backgroundColor: "#f5f5f5", mb: 1 }}
+        />
+        <Typography variant="body2" sx={{ mb: 2 }}>등록일 : {today}</Typography>
 
-        {/* 에디터 */}
         <Box mb={3}>
           <Typography gutterBottom>내용</Typography>
-          <CmTinyMCEEditor
-            value={editorValue}
-            setValue={setEditorValue}
-            ef={editorRef}
-            max={2000}
-          />
+          <Box mb={3}>
+            <TextField
+              fullWidth
+              id="content"
+              name="content"
+              label="내용"
+              variant="outlined"
+              multiline
+              rows={7}
+              inputProps={{ maxLength: 2000 }} 
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              inputRef={contentRef} 
+            />
+          </Box>
         </Box>
 
-        {/* 파일 업로드 드롭존 */}
-        <Box mb={3}>
-          <Typography gutterBottom>파일 업로드</Typography>
-          <Paper
-            variant="outlined"
-            sx={{ p: 3, textAlign: "center", borderStyle: "dashed" }}
-            {...getRootProps()}
-          >
-            <input {...getInputProps()} />
-            <Typography variant="body2" color="textSecondary">
-              파일을 드래그하거나 클릭하여 업로드하세요.
-            </Typography>
-          </Paper>
-
-          {/* 업로드된 파일 리스트 */}
-          {uploadedFiles.length > 0 && (
-            <List>
-              {uploadedFiles.map((file, index) => (
-                <ListItem
-                  key={index}
-                  secondaryAction={
-                    <IconButton
-                      edge="end"
-                      onClick={() => handleRemoveFile(index)}
-                    >
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  }
-                >
-                  <ListItemText primary={file.name} />
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </Box>
-
-        {/* 버튼 영역 */}
-        <Box display="flex" gap={1} mt={2}>
-          {user && ( // 로그인한 사용자만 등록 가능
-            <Button type="submit" variant="contained" color="primary">
-              등록
-            </Button>
-          )}
-
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate("/board/list.do")}
-          >
-            목록으로
-          </Button>
-        </Box>
+        {/* 등록 버튼 */}
+        {user && (
+        <Button
+          type="submit"
+          variant="contained"
+          onClick={handleSubmit}
+          fullWidth
+          sx={{
+            mt: 1,
+            backgroundColor: '#B00020',
+            '&:hover': { backgroundColor: '#9A001C' },
+            fontWeight: 'bold',
+            borderRadius: 1,
+            boxShadow: 2
+          }}
+        >
+          등록
+        </Button>
+        )}
+        <Button
+          type="button"
+          variant="outlined"
+          onClick={handleCancel}
+          fullWidth
+          sx={{
+            mt: 1,
+            color: '#B00020',
+            borderColor: '#B00020',
+            fontWeight: 'bold',
+            borderRadius: 1,
+            boxShadow: 1,
+            '&:hover': {
+              backgroundColor: '#FFF0F1',
+              borderColor: '#9A001C',
+            }
+          }}
+        >
+          취소
+        </Button>
       </Box>
     </Box>
   );
 };
 
-export default AuctionCreate; // 컴포넌트 내보내기
+export default AnnouncementCreate;

@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import { 
-  Box, Typography, List, ListItemButton,
-  ListItemText, Fab, CircularProgress
+  Box, Typography, List, ListItemButton, ListItemText, CircularProgress
  } from "@mui/material";
 import { useAnnouncementListQuery } from "../../features/announcement/announcementApi";
 import { useNavigate } from "react-router-dom";
-import EditIcon from '@mui/icons-material/Edit';
 import { CmUtil } from "../../cm/CmUtil";
 
-const AnnouncementList = () => {
+const UserAnnList = () => {
   const navigate = useNavigate();
 
   const { data, refetch, isLoading, isError, error } = useAnnouncementListQuery({
@@ -56,6 +54,11 @@ const AnnouncementList = () => {
     );
   }
 
+  // const rowsWithId = (data?.data?.list || []).map((row) => ({
+  //   ...row,
+  //   annId: row.annId,
+  // }));
+
   return (
     <Box sx={{ pb: 8 }}>
       {/* 공지사항 리스트 */}
@@ -81,26 +84,8 @@ const AnnouncementList = () => {
           </ListItemButton>
         ))}
       </List>
-
-      {/* 공지 작성 버튼 */}
-      <Fab
-        aria-label="add"
-        sx={{
-          position: 'fixed',
-          bottom: 80,
-          right: 16,
-          bgcolor: '#B00020',
-          color: '#fff',
-          '&:hover': {
-            bgcolor: '#8a0010',
-          },
-        }}
-        onClick={() => navigate('/ann/anncreate.do')}
-      >
-        <EditIcon />
-      </Fab>
     </Box>
   );
 };
 
-export default AnnouncementList;
+export default UserAnnList;

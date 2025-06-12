@@ -2,18 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAnnouncementViewQuery } from "../../features/announcement/announcementApi";
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
-import ForumIcon from '@mui/icons-material/Forum';
-import GavelIcon from '@mui/icons-material/Gavel';
 import {
     Box, Typography, Button, CircularProgress, 
-    Paper, Alert, Stack, AppBar, Toolbar, IconButton // Alert는 에러 메시지 표시용
+    Paper, Alert, Stack, // Alert는 에러 메시지 표시용
 } from '@mui/material';
-import cdlogo from '../../cdlogo.png';
 
-const AnnouncementView = () => {
+const UserAnnView = () => {
     const [searchParams] = useSearchParams();
     const id = searchParams.get('id');
     const user = useSelector((state) => state.user.user);
@@ -75,21 +69,6 @@ const AnnouncementView = () => {
 
             {/* 버튼 영역 */}
             <Stack direction="row" spacing={2} justifyContent="center">
-              {user?.userId === announcement?.createId && (
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#B00020",
-                    color: "#fff",
-                    '&:hover': { backgroundColor: "#9A001C" },
-                    fontWeight: "bold",
-                    px: 4
-                  }}
-                  onClick={handleEdit}
-                >
-                  수정
-                </Button>
-              )}
               <Button
                 variant="outlined"
                 sx={{
@@ -114,4 +93,4 @@ const AnnouncementView = () => {
     );
 };
 
-export default AnnouncementView;
+export default UserAnnView;
