@@ -27,6 +27,8 @@ import Home from './page/Home';
 import { setNavigate } from './cm/CmNavigateUtil';
 import LayoutLogin from './layout/LayoutLogin';
 import LayoutNoLogin from './layout/LayoutNoLogin';
+import AdminLayoutLogin from './layout/AdminLayoutLogin';
+import AdminLayoutNoLogin from './layout/AdminLayoutNoLogin';
 
 import NewBoardList from './page/newBoard/NewBoardList';
 import NewBoardCreate from './page/newBoard/NewBoardCreate';
