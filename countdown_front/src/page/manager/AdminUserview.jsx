@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {  Box,  Typography,  Button,} from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import {  useViewQuery,  useUserUpdateMutation, // 상태 변경용 API 가정
-} from '../../features/user/userApi';
+} from '../../features/user/UserApi';
 import { useCmDialog } from '../../cm/CmDialogUtil';
 
 const AdminUserview = () => {

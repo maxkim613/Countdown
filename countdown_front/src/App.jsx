@@ -28,6 +28,8 @@ import Home from './page/Home';
 import { setNavigate } from './cm/CmNavigateUtil';
 import LayoutLogin from './layout/LayoutLogin';
 import LayoutNoLogin from './layout/LayoutNoLogin';
+import AdminLayoutLogin from './layout/AdminLayoutLogin';
+import AdminLayoutNoLogin from './layout/AdminLayoutNoLogin';
 
 import NewBoardList from './page/newBoard/NewBoardList';
 import NewBoardCreate from './page/newBoard/NewBoardCreate';
@@ -36,6 +38,10 @@ import CmRouteChangeNotifier from './cm/CmRouteChangeNotifier';
 
 import FindId from './page/user/FindId';
 import ResetPassword from './page/user/ResetPassword';
+
+import AdminDashboard from './page/manager/AdminDashboard';
+import AdminUserList from './page/manager/AdminUserList';
+import AdminUserview from './page/manager/AdminUserview';
 
 const App = () => {
   const navigate = useNavigate();
@@ -47,11 +53,15 @@ const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
-        <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
-        <Route path="/user/join.do" element={<LayoutNoLogin><Register /></LayoutNoLogin>} />
-        <Route path="/user/update.do" element={<LayoutLogin><UserUpdate /></LayoutLogin>} />
-        <Route path="/user/view.do" element={<LayoutLogin><UserView /></LayoutLogin>} />
+         <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
+         <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
+         <Route path="/user/join.do" element={<LayoutNoLogin><Register /></LayoutNoLogin>} />
+         <Route path="/user/update.do" element={<LayoutLogin><UserUpdate /></LayoutLogin>} />
+         <Route path="/user/view.do" element={<LayoutLogin><UserView /></LayoutLogin>} />
+         <Route path="/user/list.do" element={<LayoutLogin><UserList /></LayoutLogin>} />
+
+        <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
+        <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
 
 
         <Route path="/board/list.do" element={<LayoutLogin><BoardList /></LayoutLogin>} />
@@ -82,6 +92,11 @@ const App = () => {
 
         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
+
+         <Route path="/manager/admin" element={<AdminLayoutNoLogin><AdminDashboard /></AdminLayoutNoLogin>} />
+        <Route path="/manager/alist" element={<AdminLayoutLogin><AdminUserList /></AdminLayoutLogin>} />
+       <Route path="/manager/user/:userId" element={<AdminLayoutNoLogin><AdminUserview /></AdminLayoutNoLogin>} />
+
       </Routes>
       <CmRouteChangeNotifier />
     </>
