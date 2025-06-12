@@ -52,7 +52,10 @@ const AuctionList = () => {
   };
 
   console.log(data);
-  const auctionItems = (data?.data?.list || []).map((item, idx) => ({
+
+  const BASE_URL = "http://192.168.0.60:8081/"; // 실제 Spring 서버 주소
+
+  const auctionItems = (data?.data?.list || []).map((item) => ({
     info1: item.aucTitle,
     writeinfo1: "",
     info2: item.aucCprice,
@@ -61,7 +64,13 @@ const AuctionList = () => {
     writeinfo3: "",
     info4: item.aucStatus,
     writeinfo4: "",
-    thumbnailUrl: item.thumbnailUrl,
+    thumbnailUrl: item.thumbnailUrl
+      ? `${BASE_URL}${
+          item.thumbnailUrl.startsWith("/")
+            ? item.thumbnailUrl.slice(1)
+            : item.thumbnailUrl
+        }`
+      : null,
     id: item.aucId,
   }));
 
@@ -96,12 +105,20 @@ const AuctionList = () => {
           options={options}
         />
       </Box>
-      <Box sx={{ display: "flex", gap: 1, flexWrap: "nowrap", overflowX: "auto" ,mb: 2.5}}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 1,
+          flexWrap: "nowrap",
+          overflowX: "auto",
+          mb: 2.5,
+        }}
+      >
         <Button
           variant="contained"
           color="error"
           size="small"
-          sx={{ borderRadius: '20px', whiteSpace: 'nowrap', maxWidth: '75px' }}
+          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
         >
           전체
         </Button>
@@ -109,7 +126,7 @@ const AuctionList = () => {
           variant="contained"
           color="error"
           size="small"
-          sx={{ borderRadius: '20px', whiteSpace: 'nowrap', maxWidth: '75px' }}
+          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
         >
           마감임박
         </Button>
@@ -117,7 +134,7 @@ const AuctionList = () => {
           variant="contained"
           color="error"
           size="small"
-          sx={{ borderRadius: '20px', whiteSpace: 'nowrap', maxWidth: '75px' }}
+          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
         >
           인기순
         </Button>
@@ -125,7 +142,7 @@ const AuctionList = () => {
           variant="contained"
           color="error"
           size="small"
-          sx={{ borderRadius: '20px', whiteSpace: 'nowrap', maxWidth: '75px' }}
+          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
         >
           낮은 가격순
         </Button>

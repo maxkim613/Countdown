@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useAuctionDeleteMutation } from "../../features/auction/auctionApi";
+import {
+  useAuctionDeleteMutation,
+  useAuctionViewQuery,
+} from "../../features/auction/auctionApi";
 import {
   Box,
   Typography,
@@ -18,9 +21,10 @@ import {
   CardActions,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { useAuctionViewQuery } from "../../features/auction/auctionApi";
 
 const AuctionView = () => {
+  const BASE_URL = "http://localhost:8081/";
+
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const user = useSelector((state) => state.user.user);
@@ -28,12 +32,12 @@ const AuctionView = () => {
     aucId: id,
   });
   const [auction, setAuction] = useState(null);
+  console.log("auction", auction);
   const navigate = useNavigate();
   const [deleteAuction] = useAuctionDeleteMutation();
 
   const handleDelete = async () => {
-    const confirm = window.confirm("정말 삭제하시겠습니까?");
-    if (!confirm) return;
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
     try {
       const res = await deleteAuction({ aucId: id }).unwrap();
@@ -48,14 +52,29 @@ const AuctionView = () => {
       alert("에러가 발생했습니다.");
     }
   };
+
   useEffect(() => {
     if (isSuccess) {
       setAuction(data?.data);
     }
   }, [isSuccess, data]);
 
+  const images =
+    auction?.postFiles?.map((file) => BASE_URL + file.fileUrl) || [];
+
   return (
-    <Box sx={{ width: "100%", maxWidth: 800, mx: "auto", p: 2, minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: 800,
+        mx: "auto",
+        p: 2,
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
       {isLoading ? (
         <CircularProgress />
       ) : error ? (
@@ -63,17 +82,20 @@ const AuctionView = () => {
       ) : auction ? (
         <Box elevation={3} sx={{ p: 2 }}>
           <Box display="flex" gap={2}>
-            {/* 왼쪽: 이미지 */}
             <Box flexShrink={0}>
               <CardMedia
                 component="img"
                 height="60"
-                image={auction.thumbnailUrl || "/default-img.png"}
+                image={
+                  auction.thumbnailUrl
+                    ? BASE_URL + auction.thumbnailUrl
+                    : "/default-img.png"
+                }
                 alt="상품 이미지"
                 sx={{ width: 60, borderRadius: 1 }}
               />
               <Grid container spacing={1} mt={1}>
-                {auction.images?.map((img, idx) => (
+                {images.map((img, idx) => (
                   <Grid item xs={3} key={idx}>
                     <CardMedia
                       component="img"
@@ -86,7 +108,6 @@ const AuctionView = () => {
               </Grid>
             </Box>
 
-            {/* 오른쪽: 정보 */}
             <Box flex={1}>
               <CardContent sx={{ p: 0 }}>
                 <Box display="flex" flexDirection="column" gap={0.1}>
