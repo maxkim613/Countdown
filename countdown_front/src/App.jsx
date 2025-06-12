@@ -12,6 +12,7 @@ import BoardCreate from './page/board/BoardCreate';
 import BoardUpdate from './page/board/BoardUpdate';
 
 import AuctionList from './page/auction/AuctionList';
+import AuctionMyList from './page/auction/AuctionMyList';
 import AuctionCreate from './page/auction/AuctionCreate';
 import AuctionUpdate from './page/auction/AuctionUpdate';
 import AuctionView from './page/auction/AuctionView';
@@ -50,16 +51,27 @@ const App = () => {
         <Route path="/user/join.do" element={<LayoutNoLogin><Register /></LayoutNoLogin>} />
         <Route path="/user/update.do" element={<LayoutLogin><UserUpdate /></LayoutLogin>} />
         <Route path="/user/view.do" element={<LayoutLogin><UserView /></LayoutLogin>} />
+
+
         <Route path="/board/list.do" element={<LayoutLogin><BoardList /></LayoutLogin>} />
         <Route path="/board/view.do" element={<LayoutLogin><BoardView /></LayoutLogin>} />
         <Route path="/board/create.do" element={<LayoutLogin><BoardCreate /></LayoutLogin>} />
         <Route path="/board/update.do" element={<LayoutLogin><BoardUpdate /></LayoutLogin>} />
+
+
         <Route path="/newBoard/create.do" element={<LayoutLogin><NewBoardCreate /></LayoutLogin>} />
         <Route path="/newBoard/list.do" element={<LayoutLogin><NewBoardList /></LayoutLogin>} />
+        
         <Route path="/user/list.do" element={<LayoutLogin><UserList /></LayoutLogin>} />
+        
         <Route path="/auc/auclist.do" element={<LayoutLogin><AuctionList /></LayoutLogin>} />
+        <Route path="/auc/aucmylist.do" element={<LayoutLogin><AuctionList /></LayoutLogin>} />
         <Route path="/auc/auccreate.do" element={<LayoutLogin><AuctionCreate /></LayoutLogin>} />
         <Route path="/auc/aucview.do" element={<LayoutLogin><AuctionView /></LayoutLogin>} />
+        <Route path="/auc/aucupdate.do" element={<LayoutLogin><AuctionUpdate /></LayoutLogin>} />
+        
+        
+        
         <Route path="/ann/annview.do" element={<LayoutLogin><AnnouncementView /></LayoutLogin>} />
         <Route path="/ann/anncreate.do" element={<LayoutLogin><AnnouncementCreate /></LayoutLogin>} />
         <Route path="/ann/annupdate.do" element={<LayoutLogin><AnnouncementUpdate /></LayoutLogin>} />

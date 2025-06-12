@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useAuctionDeleteMutation } from "../../features/auction/auctionApi";
 import {
   Box,
   Typography,
@@ -9,150 +10,159 @@ import {
   Alert,
   Button,
   Divider,
-  Grid,
   Avatar,
-  IconButton
-} from '@mui/material';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ShareIcon from '@mui/icons-material/Share';
-import { useAuctionViewQuery } from '../../features/auction/auctionApi';
-import CmComment from '../../cm/CmComment';
+  IconButton,
+  Grid,
+  CardMedia,
+  CardContent,
+  CardActions,
+} from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useAuctionViewQuery } from "../../features/auction/auctionApi";
 
-export default function AuctionView() {
+const AuctionView = () => {
   const [searchParams] = useSearchParams();
-  const id = searchParams.get('id');
-  const user = useSelector(state => state.user.user);
-  const navigate = useNavigate();
-
-  const { data, isLoading, error, isSuccess, refetch  } = useAuctionViewQuery({ auctionId: id });
+  const id = searchParams.get("id");
+  const user = useSelector((state) => state.user.user);
+  const { data, isLoading, error, isSuccess } = useAuctionViewQuery({
+    aucId: id,
+  });
   const [auction, setAuction] = useState(null);
+  const navigate = useNavigate();
+  const [deleteAuction] = useAuctionDeleteMutation();
 
+  const handleDelete = async () => {
+    const confirm = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirm) return;
+
+    try {
+      const res = await deleteAuction({ aucId: id }).unwrap();
+      if (res.success) {
+        alert("삭제되었습니다.");
+        navigate("/auc/auclist.do");
+      } else {
+        alert("삭제에 실패했습니다.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("에러가 발생했습니다.");
+    }
+  };
   useEffect(() => {
     if (isSuccess) {
-      setAuction(data.data);
+      setAuction(data?.data);
     }
   }, [isSuccess, data]);
 
-  if (isLoading) return <CircularProgress />;
-  if (error) return <Alert severity="error">게시글을 불러오는 데 실패했습니다.</Alert>;
-  if (!auction) return null;
-
-  const mainImage = auction.postFiles?.[0]?.filePath
-    ? `${process.env.REACT_APP_API_BASE_URL}/api/file/imgDown.do?fileId=${auction.postFiles[0].fileId}`
-    : 'https://via.placeholder.com/300';
-  const thumbUrls = auction.postFiles?.slice(1).map(f =>
-    `${process.env.REACT_APP_API_BASE_URL}/api/file/imgDown.do?fileId=${f.fileId}`
-  ) || [];
-
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto', py: 4 }}>
-      {/* 1. 메인 썸네일 + 상품 정보 */}
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 1 }}>
-            <img
-              src={mainImage}
-              alt="상품 메인"
-              style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-            />
-          </Paper>
-          {/* 썸네일 갤러리 */}
-          <Box mt={1} sx={{ display: 'flex', gap: 1, overflowX: 'auto' }}>
-            {thumbUrls.map((url, i) => (
-              <img
-                key={i}
-                src={url}
-                alt={`thumb-${i}`}
-                style={{
-                  width: 60,
-                  height: 60,
-                  objectFit: 'cover',
-                  borderRadius: 4,
-                  cursor: 'pointer'
-                }}
-                onClick={() => {/* 클릭 시 mainImage 교체 로직 */}}
+    <Box sx={{ maxWidth: 600, mx: "auto", my: 4, p: 2 }}>
+      {isLoading ? (
+        <CircularProgress />
+      ) : error ? (
+        <Alert severity="error">게시글을 불러오는 데 실패했습니다.</Alert>
+      ) : auction ? (
+        <Paper elevation={3} sx={{ p: 2 }}>
+          <Box display="flex" gap={2}>
+            {/* 왼쪽: 이미지 */}
+            <Box flexShrink={0}>
+              <CardMedia
+                component="img"
+                height="60"
+                image={auction.thumbnailUrl || "/default-img.png"}
+                alt="상품 이미지"
+                sx={{ width: 60, borderRadius: 1 }}
               />
-            ))}
+              <Grid container spacing={1} mt={1}>
+                {auction.images?.map((img, idx) => (
+                  <Grid item xs={3} key={idx}>
+                    <CardMedia
+                      component="img"
+                      height="60"
+                      image={img}
+                      alt={`썸네일 ${idx}`}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+
+            {/* 오른쪽: 정보 */}
+            <Box flex={1}>
+              <CardContent sx={{ p: 0 }}>
+                <Box display="flex" flexDirection="column" gap={0.1}>
+                  <Typography variant="body2" fontWeight="bold">
+                    상품명: {auction.aucTitle}
+                  </Typography>
+                  <Typography variant="body2" fontWeight="bold">
+                    금액: {auction.aucCprice}원
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    등록일: {auction.createDt}
+                  </Typography>
+                  <Typography variant="caption">
+                    판매자: {auction.createId}
+                  </Typography>
+                  <Typography variant="caption">
+                    분류: {auction.aucCategory}
+                  </Typography>
+                  <Typography variant="caption">
+                    위치: {auction.location || "위치 정보 없음"}
+                  </Typography>
+                  <Typography variant="caption">
+                    현재 상태: {auction.aucStatus}
+                    <IconButton color="primary">
+                      <FavoriteIcon />
+                    </IconButton>
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Box>
           </Box>
-        </Grid>
 
-        <Grid item xs={12} md={6}>
-          <Typography variant="h5" gutterBottom>
-            상품명 : {auction.auctitle}
-          </Typography>
-          <Typography variant="body1">
-            최소입찰가 : {(auction.aucsprice ?? 0).toLocaleString()}원
-          </Typography>
-          <Typography variant="body1" color="error">
-            최고입찰가 : {(auction.auccbprice ?? 0).toLocaleString()}원
-          </Typography>
-          <Typography variant="body1" color="error">
-            마감시간 : {auction.aucdeadline} {/* 남은 시간 계산 로직 추가 가능 */}
-          </Typography>
-          <Typography variant="body2" sx={{ mt: 1 }}>
-            현재상태 : {auction.aucstatus}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-            *1시간 이내로 무입찰 시 경매 종료
-          </Typography>
+          <Divider sx={{ my: 2 }} />
 
-          <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-            <IconButton>
-              <FavoriteBorderIcon />
-            </IconButton>
-            <Typography>{auction.auclikecnt}</Typography>
-            <IconButton>
-              <ShareIcon />
-            </IconButton>
+          <Box display="flex" alignItems="center" mb={1}>
+            <Avatar sx={{ mr: 1 }} />
+            <Box>
+              <Typography variant="body1">{auction.createId}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                천안시 서북구
+              </Typography>
+            </Box>
           </Box>
 
-          <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-            {user?.userId === auction.createId && (
-              <Button
-                variant="contained"
-                onClick={() => navigate(`/auc/aucupdate.do?id=${auction.auctionId}`)}
-              >
-                수정
-              </Button>
+          <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+            {auction.aucDescription || "상품 설명 없음"}
+          </Typography>
+
+          {auction.aucStatus === "판매대기" &&
+            user?.userId === auction.createId && (
+              <CardActions sx={{ mt: 2, justifyContent: "space-between" }}>
+                <Box>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    sx={{ mr: 1 }}
+                    onClick={() =>
+                      navigate(`/auc/aucupdate.do?id=${auction.aucId}`)
+                    }
+                  >
+                    수정
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleDelete}
+                  >
+                    상품삭제
+                  </Button>
+                </Box>
+              </CardActions>
             )}
-            <Button variant="outlined" onClick={() => navigate('/auc/auclist.do')}>
-              목록
-            </Button>
-          </Box>
-        </Grid>
-      </Grid>
-
-      <Divider sx={{ my: 4 }} />
-
-      {/* 2. 판매자 정보 */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-        <Avatar sx={{ width: 56, height: 56 }}> {/* 실제 프로필 이미지 URL로 교체 가능 */}</Avatar>
-        <Box>
-          <Typography>{auction.createId}</Typography>
-          <Typography variant="caption" color="text.secondary">
-            {/* location 필드가 있다면 여기에 */}
-            서울시 강남구
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* 3. 상품 설명 */}
-      <Typography variant="body1" paragraph sx={{ whiteSpace: 'pre-wrap' }}>
-        {/** 안전을 위해 dangerouslySetInnerHTML 대신 text 추출 */}
-        {auction.aucdescription.replace(/<[^>]+>/g, '')}
-      </Typography>
-
-      {/* 4. 댓글/입찰 내역 */}
-      <Box mt={4}>
-        <Typography variant="h6">입찰 기록</Typography>
-        <IconButton onClick={refetch}>🔄</IconButton>
-        <CmComment
-          comments={auction.comments || []}
-          user={user}
-          boardId={auction.auctionId}
-          refetchComments={refetch}
-        />
-      </Box>
+        </Paper>
+      ) : null}
     </Box>
   );
-}
+};
+
+export default AuctionView;

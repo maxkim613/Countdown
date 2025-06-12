@@ -4,7 +4,7 @@ import { useAuctionCreateMutation } from "../../features/auction/auctionApi"; //
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 훅
 import { useDropzone } from "react-dropzone"; // 파일 드래그&드롭 업로드 기능
 import { useSelector } from "react-redux"; // Redux 상태 조회를 위한 훅
-import  CmDropdown  from '../../cm/CmDropdown';
+import CmDropdown from "../../cm/CmDropdown";
 import {
   Box,
   Button,
@@ -34,15 +34,15 @@ const AuctionCreate = () => {
   const [auctionCreate] = useAuctionCreateMutation(); // 게시글 생성 API 훅 호출
   const { showAlert } = useCmDialog(); // 알림창 함수 가져오기
   const [editorValue, setEditorValue] = useState(""); // 에디터 입력 값 상태
-  const [selected, setSelected] = useState('');
-  const [aucdeadline, setAucdeadline] = useState('');
+  const [selected, setSelected] = useState("");
+  const [aucdeadline, setAucdeadline] = useState("");
 
   const options = [
-          { value: '전자기기', label: '전자기기' },
-          { value: '의류', label: '의류' },
-          { value: '도서', label: '도서' },
-          { value: '기타', label: '기타' },
-        ];
+    { value: "전자기기", label: "전자기기" },
+    { value: "의류", label: "의류" },
+    { value: "도서", label: "도서" },
+    { value: "기타", label: "기타" },
+  ];
 
   const { getRootProps, getInputProps } = useDropzone({
     // 파일 업로드 드롭존 설정
@@ -67,7 +67,6 @@ const AuctionCreate = () => {
       showAlert("제목을 입력해주세요.");
       titleRef.current?.focus();
       return;
-
     }
 
     if (!CmUtil.maxLength(auctitle, 100)) {
@@ -77,9 +76,9 @@ const AuctionCreate = () => {
       return;
     }
     //alert(editorRef.current+contentHtml);
-    console.log("editorRef.current"+editorRef.current);
-    console.log("html"+contentHtml);
-    console.log("text"+contentText);
+    console.log("editorRef.current" + editorRef.current);
+    console.log("html" + contentHtml);
+    console.log("text" + contentText);
     if (CmUtil.isEmpty(contentText)) {
       // 내용 비어있는지 체크
       showAlert("내용을 입력해주세요.", () => {
@@ -88,22 +87,21 @@ const AuctionCreate = () => {
       return;
     }
 
-    if (!CmUtil.maxLength(contentText, 2000)) {
+    if (!CmUtil.maxLength(contentText, 500)) {
       // 내용 길이 제한 체크
-      showAlert("내용은 최대 2000자까지 입력할 수 있습니다.", () => {
+      showAlert("내용은 최대 500자까지 입력할 수 있습니다.", () => {
         editorRef?.current?.focus();
       });
       return;
     }
 
     const formData = new FormData(); // FormData 객체 생성
-    formData.append("auctitle", auctitle);
-    formData.append("aucdescription", contentHtml);
-    formData.append("auccategory", selected);
-    formData.append("aucsprice", aucsprice);
-    formData.append("aucbprice", aucbprice);
-    formData.append("aucdeadline", aucdeadline);
-    formData.append("aucstatus", "경매대기");
+    formData.append("aucTitle", auctitle);
+    formData.append("aucDescription", contentText);
+    formData.append("aucCategory", selected);
+    formData.append("aucSprice", aucsprice);
+    formData.append("aucBprice", aucbprice);
+    formData.append("aucDeadline", aucdeadline);
 
     uploadedFiles.forEach((file) => {
       // 파일들 추가
@@ -166,14 +164,14 @@ const AuctionCreate = () => {
         <Box mb={3}>
           <Typography gutterBottom>카테고리 선택</Typography>
           <CmDropdown
-              label="과일"
-              value={selected}
-              setValue={setSelected}
-              options={options}
-            />
-          </Box>
+            label="카테고리"
+            value={selected}
+            setValue={setSelected}
+            options={options}
+          />
+        </Box>
 
-          {/* 시작가 입력 */}
+        {/* 시작가 입력 */}
         <Box mb={3}>
           <TextField
             fullWidth
@@ -200,16 +198,16 @@ const AuctionCreate = () => {
         </Box>
 
         {/* 시작일 입력 */}
-          <Box mb={3}>
-            <TextField
-              fullWidth
-              label="시작일"
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              value={aucdeadline}
-              onChange={(e) => setAucdeadline(e.target.value)}
-            />
-          </Box>
+        <Box mb={3}>
+          <TextField
+            fullWidth
+            label="시작일"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={aucdeadline}
+            onChange={(e) => setAucdeadline(e.target.value)}
+          />
+        </Box>
 
         {/* 파일 업로드 드롭존 */}
         <Box mb={3}>

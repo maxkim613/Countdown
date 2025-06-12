@@ -25,6 +25,18 @@ export const auctionApi = createApi({
       staleTime: 0, // (참고용) 데이터가 항상 최신 상태라고 간주하지 않음
     }),
 
+    // 🔍 게시판 목록 조회 (GET 대신 POST 사용)
+    auctionMyList: builder.query({ //query 조회용(GET 또는 POST) API를 정의
+      query: (params) => ({
+        url: "/auc/aucmylist.do",
+        method: "POST",
+        body: params,
+      }),
+      keepUnusedDataFor: 0, // 사용하지 않는 데이터 즉시 제거 (캐시 X)
+      refetchOnMountOrArgChange: true, // 컴포넌트 마운트/파라미터 변경 시 자동 재요청
+      staleTime: 0, // (참고용) 데이터가 항상 최신 상태라고 간주하지 않음
+    }),
+
     // 🔍 게시글 상세 보기
     auctionView: builder.query({
       query: (params) => ({
@@ -70,6 +82,7 @@ export const auctionApi = createApi({
 // 컴포넌트에서 사용할 수 있도록 export (자동 생성된 훅)
 export const {
   useAuctionListQuery,      // 게시판 목록 가져오기
+  useAuctionMyListQuery,      // 게시판 목록 가져오기
   useAuctionViewQuery,      // 게시글 상세 조회
   useAuctionCreateMutation, // 게시글 생성
   useAuctionUpdateMutation, // 게시글 수정
