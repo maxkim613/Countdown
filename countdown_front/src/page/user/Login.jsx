@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useLoginMutation } from '../../features/user/UserApi';
+import { useLoginMutation } from '../../features/user/userApi';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../../features/user/userSlice';
+import { setUser, clearUser } from '../../features/user/userSlice';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography } from '@mui/material';
-import { useCmDialog } from '../../cm/CmDialogUtil';  
+import { Box, Typography, Button, OutlinedInput } from '@mui/material';
+import { useCmDialog } from '../../cm/CmDialogUtil';
 import { CmUtil } from '../../cm/CmUtil';
-import { clearUser } from '../../features/user/userSlice';
 import { persistor } from '../../app/store';
+import logoImage from '../../css/icons/logo.png';
 
 const Login = () => {
   const [userId, setUserId] = useState('');
@@ -18,115 +18,159 @@ const Login = () => {
   const [login] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     persistor.purge();
     dispatch(clearUser());
   }, [dispatch]);
 
   const handleLoginClick = async () => {
-     if (CmUtil.isEmpty(userId)) {
+    if (CmUtil.isEmpty(userId)) {
       showAlert("ID를 입력해주세요.");
       userIdRef.current?.focus();
       return;
     }
 
-     if (CmUtil.isEmpty(password)) {
+    if (CmUtil.isEmpty(password)) {
       showAlert("비밀번호를 입력해주세요.");
       passwordRef.current?.focus();
       return;
     }
+
     try {
       const response = await login({ userId, password }).unwrap();
+
       if (response.success) {
-        showAlert("로그인 성공 홈으로 이동합니다.",() => {
+        showAlert("로그인 성공 홈으로 이동합니다.", () => {
           dispatch(setUser(response.data));
-          if (window.Android && window.Android.receiveMessage) {
+          if (window.Android?.receiveMessage) {
             window.Android.receiveMessage(JSON.stringify({
               type: "LOGIN",
               userId: response?.data?.userId
             }));
           }
-          navigate("/");
+          navigate(response.data.adminYn === 'Y' ? '/manager/admin' : '/');
         });
       } else {
         showAlert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
       }
-    } catch (error) {
+    } catch {
       showAlert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
     }
   };
 
-
   return (
     <Box
       sx={{
+        width: '350px',
+        height: '640px',
+        margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
         alignItems: 'center',
-        height: '640px',
-        maxWidth: '360px',
-        margin: '0 auto'
+        background: 'linear-gradient(to bottom, #5F1111, #A83A3A)',
+        color: '#fff',
+        pt: 8,
       }}
     >
-      <Typography variant="h4" gutterBottom>로그인</Typography>
-
-      <TextField
-        label="아이디"
-        fullWidth
-        margin="normal"
-        value={userId}
-        inputRef={userIdRef}
-        onChange={(e) => setUserId(e.target.value)}
+      <img
+        src={logoImage}
+        alt="logo"
+        style={{ width: '200px', marginBottom: '40px' }}
       />
 
-      <TextField
-        label="비밀번호"
+      <Typography sx={{ fontSize: '36px', fontWeight: 'bold', mb: 4 }}>
+        로그인
+      </Typography>
+
+      {/* 아이디 입력 */}
+      <OutlinedInput
+        placeholder="아이디"
+        inputRef={userIdRef}
+        value={userId}
+        onChange={(e) => setUserId(e.target.value)}
+        sx={{
+          width: '240px',
+          height: '40px',
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          mb: 3,
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#B00020',
+            borderRadius: '12px',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#8C001A',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#8C001A',
+          },
+        }}
+      />
+
+      {/* 비밀번호 입력 */}
+      
+      <OutlinedInput
+        placeholder="비밀번호"
         type="password"
-        fullWidth
-        margin="normal"
-        value={password}
         inputRef={passwordRef}
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
+        sx={{
+          width: '240px',
+          height: '40px',
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          mb: 3,
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#B00020',
+            borderRadius: '12px',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#8C001A',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#8C001A',
+          },
+        }}
       />
 
       <Button
         onClick={handleLoginClick}
-        variant="contained"
-        color="primary"
-        fullWidth
-        sx={{ marginTop: 2 }}
+        sx={{
+          width: '110px',
+          height: '38px',
+          backgroundColor: '#B00020',
+          color: '#fff',
+          fontWeight: 'bold',
+          fontSize: '16px',
+          boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)',
+          borderRadius: '6px',
+          '&:hover': {
+            backgroundColor: '#8C001A',
+            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.35)',
+          }
+        }}
       >
         로그인
       </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={() => navigate('/user/join.do')}
-        sx={{ marginTop: 2 }}
-      >
-        회원가입
-      </Button>
 
-       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
-      <Typography
-        variant="body2"
-        sx={{ cursor: 'pointer', color: 'primary.main', textDecoration: 'underline' }}
-        onClick={() => navigate('/user/findId.do')}
-      >
-        아이디 찾기
-      </Typography>
-
-      <Typography
-        variant="body2"
-        sx={{ cursor: 'pointer', color: 'primary.main', textDecoration: 'underline' }}
-        onClick={() => navigate('/user/rpassword.do')}
-      >
-        비밀번호 찾기
-      </Typography>
-    </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '240px', mt: 3 }}>
+        <Typography
+          variant="body2"
+          sx={{ cursor: 'pointer', textDecoration: 'underline', color: '#fff' }}
+          onClick={() => navigate('/user/findId.do')}
+        >
+          아이디 찾기
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{ cursor: 'pointer', textDecoration: 'underline', color: '#fff' }}
+          onClick={() => navigate('/user/rpassword.do')}
+        >
+          비밀번호 찾기
+        </Typography>
+      </Box>
     </Box>
   );
 };

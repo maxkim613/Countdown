@@ -1,20 +1,50 @@
-import React, { useState, useRef} from 'react';
-import { useRegisterMutation } from '../../features/user/UserApi';
+import React, { useState, useRef } from 'react';
+import { useRegisterMutation, useCheckUserIdMutation, useCheckNicknameMutation, useCheckEmailMutation } from '../../features/user/userApi';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography } from '@mui/material';
-import { useCmDialog } from '../../cm/CmDialogUtil';  
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  Typography,
+} from '@mui/material';
+import { useCmDialog } from '../../cm/CmDialogUtil';
 import { CmUtil } from '../../cm/CmUtil';
-import  CmPostCode  from '../../cm/CmPostCode';
-import { useCheckUserIdMutation } from '../../features/user/UserApi';
-import { useCheckNicknameMutation } from '../../features/user/UserApi';
-import { useCheckEmailMutation } from '../../features/user/UserApi';
+import CmPostCode from '../../cm/CmPostCode';
+
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { showAlert } = useCmDialog();
 
+  const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [userTel, setUserTel] = useState('');
+  const [addr, setAddr] = useState('');
+  const [addrD, setAddrD] = useState('');
+  const [postCode, setPostCode] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const userIdRef = useRef();
+  const passwordRef = useRef();
+  const usernameRef = useRef();
+  const nicknameRef = useRef();
+  const emailRef = useRef();
+  const userTelRef = useRef();
+
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const passwordConfirmRef = useRef();
+
+  const [register] = useRegisterMutation();
   const [checkUserId] = useCheckUserIdMutation();
   const [checkNickname] = useCheckNicknameMutation();
   const [checkEmail] = useCheckEmailMutation();
 
+  // 아이디 중복 확인
   const handleCheckId = async () => {
     if (CmUtil.isEmpty(userId)) {
       showAlert('아이디를 입력해주세요.');
@@ -22,17 +52,14 @@ const Register = () => {
       return;
     }
     try {
-      const res = await checkUserId({userId}).unwrap();
-      if (res.data === true){
-        showAlert('이미 사용중인 아이디 입니다.');
-      }else {
-        showAlert('사용 가능한 아이디입니다.');
-      }
-    } catch (error) {
+      const res = await checkUserId({ userId }).unwrap();
+      showAlert(res.data ? '이미 사용중인 아이디 입니다.' : '사용 가능한 아이디입니다.');
+    } catch {
       showAlert('아이디 중복 확인 중 오류가 발생했습니다.');
     }
   };
 
+  // 닉네임 중복 확인
   const handleCheckNickname = async () => {
     if (CmUtil.isEmpty(nickname)) {
       showAlert('닉네임을 입력해주세요.');
@@ -40,281 +67,495 @@ const Register = () => {
       return;
     }
     try {
-      const res = await checkNickname({nickname}).unwrap();
-      if (res.data === true){
-        showAlert('이미 사용중인 닉네임 입니다.');
-      }else {
-        showAlert('사용 가능한 닉네임입니다.');
-      }
-    } catch (error) {
+      const res = await checkNickname({ nickname }).unwrap();
+      showAlert(res.data ? '이미 사용중인 닉네임 입니다.' : '사용 가능한 닉네임입니다.');
+    } catch {
       showAlert('닉네임 중복 확인 중 오류가 발생했습니다.');
     }
   };
 
+  // 이메일 중복 확인
   const handleCheckEmail = async () => {
     if (CmUtil.isEmpty(email)) {
       showAlert('이메일을 입력해주세요.');
-      nicknameRef.current?.focus();
+      emailRef.current?.focus();
       return;
     }
     try {
-      const res = await checkEmail({email}).unwrap();
-      if (res.data === true){
-        showAlert('이미 사용중인 이메일 입니다.');
-      }else {
-        showAlert('사용 가능한 이메일입니다.');
-      }
-    } catch (error) {
+      const res = await checkEmail({ email }).unwrap();
+      showAlert(res.data ? '이미 사용중인 이메일 입니다.' : '사용 가능한 이메일입니다.');
+    } catch {
       showAlert('이메일 중복 확인 중 오류가 발생했습니다.');
     }
   };
 
-
-  const [username, setUsername] = useState('');
-  const [userId, setUserId] = useState('');
-  const [nickname, setUsernickname] = useState('');
-  const [password, setPassword] = useState('');  
-  const [email, setEmail] = useState('');
-  const [userTel, setusertel] = useState('');
-
-  const userIdRef = useRef();
-  const passwordRef = useRef();
-  const usernameRef = useRef();
-  const nicknameRef = useRef();
-  const emailRef = useRef();
-  const usettelRef = useRef();
-
-  const [addr, setAddr] = useState("");
-  const [addrD, setAddrD] = useState("");
-  const [postCode, setPostCode] = useState("");
-  const postRef = useRef();
-  
-  const { showAlert } = useCmDialog();
- 
-  const [register] = useRegisterMutation();
-  const navigate = useNavigate();
-
+  // 회원가입 처리
   const handleRegisterClick = async () => {
-
     if (CmUtil.isEmpty(userId)) {
       showAlert('아이디를 입력해주세요.');
       userIdRef.current?.focus();
       return;
     }
-
     if (CmUtil.isEmpty(password)) {
       showAlert('비밀번호를 입력해주세요.');
       passwordRef.current?.focus();
       return;
     }
-
+    if (password !== passwordConfirm) {
+      showAlert('비밀번호가 일치하지 않습니다.');
+      passwordConfirmRef.current?.focus();
+      return;
+    }
     if (CmUtil.isEmpty(username)) {
       showAlert('이름을 입력해주세요.');
       usernameRef.current?.focus();
       return;
     }
-
+    if (CmUtil.isEmpty(nickname)) {
+      showAlert('닉네임을 입력해주세요.');
+      nicknameRef.current?.focus();
+      return;
+    }
     if (CmUtil.isEmpty(email)) {
       showAlert('이메일을 입력해주세요.');
       emailRef.current?.focus();
       return;
     }
-
     if (!CmUtil.isEmail(email)) {
       showAlert('유효한 이메일 형식이 아닙니다.');
       emailRef.current?.focus();
       return;
     }
-
-    if (CmUtil.isEmail(nickname)) {
-      showAlert('닉네임을 입력해주세요.');
-      nicknameRef.current?.focus();
+    if (CmUtil.isEmpty(userTel)) {
+      showAlert('전화번호를 입력해주세요.');
+      userTelRef.current?.focus();
       return;
     }
 
-    
     try {
-      const response = await register({ userId, password, username, nickname, email, userTel, addr, addrD, postCode }).unwrap();
+      const userData = {
+        userId,
+        password,
+        username,
+        nickname,
+        email,
+        userTel,
+        addr,
+        addrD,
+        postCode,
+      };
+      const response = await register(userData).unwrap();
       if (response.success) {
-        showAlert("회원가입에 성공 하셨습니다. 로그인화면으로 이동합니다.",()=>{navigate('/user/login.do');});
+        showAlert('회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.', () => navigate('/user/login.do'));
       } else {
         showAlert('회원가입에 실패했습니다. 다시 시도해주세요.');
       }
-    } catch (error) {
+    } catch {
       showAlert('회원가입에 실패했습니다. 다시 시도해주세요.');
-    } 
+    }
   };
 
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        maxWidth: '360px',
-        margin: '0 auto'
+        width: '350px',
+        height: '640px',
+        margin: '0 auto',
+        padding: '1rem',
+        fontFamily: 'sans-serif',
+        mt: '50px',
+        boxSizing: 'border-box',
       }}
     >
-      <Typography variant="h4" gutterBottom>회원가입</Typography>
+      <Typography variant="h5" sx={{ textAlign: 'center', mb: 3, color: '#B00020' }}>
+        회원가입
+      </Typography>
 
-      <Box sx={{ display: 'flex', width: '100%', gap: 1, alignItems: 'center', mt: 2 }}>
-
-       
-         
-          <TextField
-            label="아이디"
-            fullWidth
+      {/* 아이디 */}
+      <Box display="flex" alignItems="center" gap={1} mb={2}>
+        <FormControl size="small" sx={{ flex: 1 }}>
+          <InputLabel>아이디</InputLabel>
+          <OutlinedInput
             value={userId}
-            inputRef={userIdRef}
             onChange={(e) => setUserId(e.target.value)}
-          />
-          <Button
-            onClick={handleCheckId}
-            variant="outlined"            
-            sx={{ 
-              backgroundColor:'#B00020',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#cc0000',
+            inputRef={userIdRef}
+            label="아이디"
+            sx={{
+              height: '40px',
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+                borderRadius: '12px',
               },
-              whiteSpace: 'nowrap',
-              height: '56px'
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#8C001A',
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#8C001A',
+              },
             }}
-          >
-            중복 확인
-          </Button>
+          />
+        </FormControl>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={handleCheckId}
+          sx={{
+            backgroundColor: '#B00020',
+            borderColor: '#B00020',
+            height: '40px',
+            whiteSpace: 'nowrap',
+            borderRadius: '20px',
+            color: 'white',
+          }}
+        >
+          중복 확인
+        </Button>
       </Box>
 
-        <TextField
-        label="이름"
-        fullWidth
-        margin="normal"
-        value={username}
-        inputRef={usernameRef}
-        onChange={(e) => setUsername(e.target.value)}
-      />       
+      {/* 비밀번호 */}
+      <FormControl size="small" sx={{ mb: 2 }}>
+        <InputLabel>비밀번호</InputLabel>
+        <OutlinedInput
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          inputRef={passwordRef}
+          label="비밀번호"
+          sx={{
+            width: '315px',
+            height: '40px',
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#B00020',
+              borderRadius: '12px',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#8C001A',
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#8C001A',
+            },
+          }}
+        />
+      </FormControl>
 
-      <Box sx={{ display: 'flex', width: '100%', gap: 1, alignItems: 'center', mt: 2 }}>
+      <FormControl size="small" sx={{ mb: 2 }}>
+        <InputLabel>비밀번호 재확인</InputLabel>
+        <OutlinedInput
+          type="password"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
+          inputRef={passwordConfirmRef}
+          label="비밀번호 재확인"
+          sx={{
+            width: '315px',
+            height: '40px',
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#B00020',
+              borderRadius: '12px',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#8C001A',
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#8C001A',
+            },
+          }}
+        />
+      </FormControl>
 
-      <TextField
-            label="닉네임"
-            fullWidth
+
+      {/* 이름 */}
+      <FormControl size="small" sx={{ mb: 2 }}>
+        <InputLabel>이름</InputLabel>
+        <OutlinedInput
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          inputRef={usernameRef}
+          label="이름"
+          sx={{
+            width: '315px',
+            height: '40px',
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#B00020',
+              borderRadius: '12px',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#8C001A',
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#8C001A',
+            },
+          }}
+        />
+      </FormControl>
+
+      {/* 닉네임 */}
+      <Box display="flex" alignItems="center" gap={1} mb={2}>
+        <FormControl size="small" sx={{ flex: 1 }}>
+          <InputLabel>닉네임</InputLabel>
+          <OutlinedInput
             value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
             inputRef={nicknameRef}
-            onChange={(e) => setUsernickname(e.target.value)}
+            label="닉네임"
+            sx={{
+              height: '40px',
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+                borderRadius: '12px',
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#8C001A',
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#8C001A',
+              },
+            }}
           />
-          <Button
-            onClick={handleCheckNickname}
-            variant="outlined"            
-            sx={{ 
-              backgroundColor:'#B00020',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#cc0000',
-              },
-              whiteSpace: 'nowrap',
-              height: '56px'
-            }}
-          >
-            중복 확인
-          </Button>
-
-          </Box>
-
-      <TextField
-        label="비밀번호"
-        type="password"
-        fullWidth
-        margin="normal"
-        value={password}
-        inputRef={passwordRef}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-
-      <Box sx={{ display: 'flex', width: '100%', gap: 1, alignItems: 'center', mt: 2 }}>
-
-     
-
-      <TextField
-        label="이메일"
-        type="email"
-        fullWidth
-        margin="normal"
-        value={email}
-        inputRef={emailRef}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-     <Button
-            onClick={handleCheckEmail}
-            variant="outlined"            
-            sx={{ 
-              backgroundColor:'#B00020',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#cc0000',
-              },
-              whiteSpace: 'nowrap',
-              height: '56px'
-            }}
-          >
-            중복 확인
-          </Button>
+        </FormControl>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={handleCheckNickname}
+          sx={{
+            backgroundColor: '#B00020',
+            borderColor: '#B00020',
+            height: '40px',
+            whiteSpace: 'nowrap',
+            borderRadius: '20px',
+            color: 'white',
+          }}
+        >
+          중복 확인
+        </Button>
       </Box>
 
-       <TextField
-        label="전화번호"
-        type="tel"
-        fullWidth
-        margin="normal"
-        value={userTel}
-        inputRef={usettelRef}
-        onChange={(e) => setusertel(e.target.value)}
-      />
+      {/* 이메일 */}
+      <Box display="flex" alignItems="center" gap={1} mb={2}>
+        <FormControl size="small" sx={{ flex: 1 }}>
+          <InputLabel>이메일</InputLabel>
+          <OutlinedInput
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            inputRef={emailRef}
+            label="이메일"
+            sx={{
+              height: '40px',
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+                borderRadius: '12px',
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#8C001A',
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#8C001A',
+              },
+            }}
+          />
+        </FormControl>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={handleCheckEmail}
+          sx={{
+            backgroundColor: '#B00020',
+            borderColor: '#B00020',
+            height: '40px',
+            whiteSpace: 'nowrap',
+            borderRadius: '20px',
+            color: 'white',
+          }}
+        >
+          중복 확인
+        </Button>
+      </Box>
 
-      <CmPostCode
-        addr={addr}
-        setAddr={setAddr}
-        addrD={addrD}
-        setAddrD={setAddrD}
-        postCode={postCode}
-        setPostCode={setPostCode}
-        ref={postRef}
-      />
-      <Box sx={{ display: 'flex', width: '100%', gap: 2, mt: 2 }}>
+      {/* 전화번호 */}
+      <FormControl size="small" sx={{ mb: 2 }}>
+        <InputLabel>전화번호</InputLabel>
+        <OutlinedInput
+          value={userTel}
+          onChange={(e) => setUserTel(e.target.value)}
+          inputRef={userTelRef}
+          label="전화번호"
+          sx={{
+            width: '315px',
+            height: '40px',
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#B00020',
+              borderRadius: '12px',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#8C001A',
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#8C001A',
+            },
+          }}
+        />
+      </FormControl>
+
+      {/* 우편번호 + 주소 검색 버튼 */}
+<Box display="flex" alignItems="center" gap={1} mb={2}>
+  <FormControl size="small">
+    <InputLabel shrink>우편번호</InputLabel>
+    <OutlinedInput
+      value={postCode}
+      readOnly
+      label="우편번호"
+      sx={{
+        width: '240px',
+        height: '40px',
+        backgroundColor: '#fff',
+        borderRadius: '12px',
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: '#B00020',
+          borderRadius: '12px',
+        },
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: '#8C001A',
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: '#8C001A',
+        },
+      }}
+    />
+  </FormControl>
+
   <Button
-    onClick={handleRegisterClick}
-    variant="contained"
-    sx={{
-    backgroundColor: '#B00020',  // 배경 빨간색
-    color: '#fff',               // 글자색 흰색
-    '&:hover': {
-      backgroundColor: '#8C001A',  // 마우스 오버 시 색상
-    },
-    flex: 1,
-    height: 38
-  }}
+    onClick={() => setModalOpen(true)}
+    variant="outlined"
+   sx={{
+      backgroundColor: '#B00020',
+      borderColor: '#B00020',
+      height: '40px',
+      width: '70px',
+      whiteSpace: 'nowrap',
+      borderRadius: '20px',
+      color : 'white'      
+    }}
   >
-    가입
-  </Button>
-  <Button
-    onClick={() => navigate('/user/login.do')}
-    variant="contained"
-     sx={{
-    backgroundColor: '#B00020',  // 배경 빨간색
-    color: '#fff',               // 글자색 흰색
-    '&:hover': {
-      backgroundColor: '#8C001A',  // 마우스 오버 시 색상
-    },
-    flex: 1,
-    height: 38
-  }}
-  >
-    취소
+    주소 검색
   </Button>
 </Box>
+
+{/* 기본주소 */}
+<FormControl size="small" sx={{ mb: 2 }}>
+  <InputLabel shrink>기본주소</InputLabel>
+  <OutlinedInput
+    value={addr}
+    readOnly
+    label="기본주소"
+    sx={{
+      width: '315px',
+      height: '40px',
+      backgroundColor: '#fff',
+      borderRadius: '12px',
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#B00020',
+        borderRadius: '12px',
+      },
+      '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#8C001A',
+      },
+      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#8C001A',
+      },
+    }}
+  />
+</FormControl>
+
+{/* 상세주소 */}
+<FormControl size="small">
+  <InputLabel>상세주소</InputLabel>
+  <OutlinedInput
+    value={addrD}
+    onChange={(e) => setAddrD(e.target.value)}
+    label="상세주소"
+    sx={{
+      width: '315px',
+      height: '40px',
+      backgroundColor: '#fff',
+      borderRadius: '12px',
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#B00020',
+        borderRadius: '12px',
+      },
+      '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#8C001A',
+      },
+      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#8C001A',
+      },
+    }}
+  />
+</FormControl>
+
+
+
+      {/* 주소 모달 */}
+      {modalOpen && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0, left: 0, width: '100vw', height: '100vh',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
+            zIndex: 1000
+          }}
+        >
+          <Box sx={{ backgroundColor: 'white', p: 3, borderRadius: '8px', maxWidth: '300px' }}>
+            <CmPostCode
+              addr={addr}
+              setAddr={setAddr}
+              addrD={addrD}
+              setAddrD={setAddrD}
+              postCode={postCode}
+              setPostCode={setPostCode}
+              onConfirm={() => setModalOpen(false)}
+            />
+            <Button onClick={() => setModalOpen(false)} fullWidth variant="contained" sx={{ mt: 2, backgroundColor: '#B00020' }}>확인</Button>
+          </Box>
+        </Box>
+      )}
+    
+
+      
+
+      {/* 회원가입 버튼 */}
+      <Button
+        variant="contained"
+        onClick={handleRegisterClick}
+        sx={{
+          backgroundColor: '#B00020',
+          borderRadius: '20px',
+          height: '40px',
+          width: '315px',
+          mt: 2,
+          '&:hover': {
+            backgroundColor: '#8C001A',
+          },
+        }}
+      >
+        회원가입
+      </Button>
+
+     
     </Box>
   );
 };
