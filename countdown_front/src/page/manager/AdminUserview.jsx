@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useViewQuery, useUpdateUserStatusMutation } from '../../features/user/userApi';
+import { useViewQuery, useUpdateUserStatusMutation } from '../../features/user/UserApi';
 import { useCmDialog } from '../../cm/CmDialogUtil';
 
 const AdminUserview = () => {

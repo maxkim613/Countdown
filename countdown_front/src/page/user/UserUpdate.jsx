@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, Button, FormControl, InputLabel, OutlinedInput } from '@mui/material';
-import { useUserUpdateMutation, useUserDeleteMutation, useViewQuery, useCheckNicknameMutation, useCheckEmailMutation } from '../../features/user/userApi';
+import { useUserUpdateMutation, useUserDeleteMutation, useViewQuery, useCheckNicknameMutation, useCheckEmailMutation } from '../../features/user/UserApi';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useCmDialog } from '../../cm/CmDialogUtil';

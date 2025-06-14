@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useListQuery } from '../../features/user/userApi';
+import { useListQuery } from '../../features/user/UserApi';
 import { CmUtil } from '../../cm/CmUtil';
 import CmUserCardList from '../../cm/CmUserCardList';
 

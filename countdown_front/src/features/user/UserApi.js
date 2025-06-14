@@ -114,10 +114,20 @@ export const userApi = createApi({
       }),
     }),
 
+    updateUserStatus: builder.mutation({
+      query: ({ userId, status }) => ({
+        url: `user/update-status.do`,
+        method: 'POST',
+        body: { userId, status },
+      }),
+       invalidatesTags: ['User'],
+    }),
+
   })
 });
 
 export const {
+  useUpdateUserStatusMutation,
   useResetPasswordMutation,
   useSendCertiNumMutation,
   useVerifyCertiNumMutation,
