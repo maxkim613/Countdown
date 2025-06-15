@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import {  Box,  TextField,  InputAdornment,  IconButton,  MenuItem,  Typography,} from '@mui/material';
+import {
+  Box,
+  TextField,
+  InputAdornment,
+  IconButton,
+  MenuItem,
+  Typography,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useListQuery } from '../../features/user/UserApi';
 import { CmUtil } from '../../cm/CmUtil';
 import CmUserCardList from '../../cm/CmUserCardList';
-import { useNavigate } from 'react-router-dom';
+
+import CmUserDataCard from '../../cm/CmUserDataCard';
 
 const AdminUserList = () => {
-
-  const navigate = useNavigate();
+  
 
   const [search, setSearch] = useState({
     searchText: '',
@@ -26,12 +33,19 @@ const AdminUserList = () => {
     sortOrder: 'DESC',
   });
 
- const rowsWithId = (data?.data?.list || [])
-  .filter(row => row.adminYn === 'N') // adminYn이 'N'인 것만 필터링
-  .map(row => ({
-    ...row,
-    id: row.userId,
-  }));
+  const rowsWithId = (data?.data?.list || [])
+    .filter((row) => row.adminYn === 'N')
+    .filter((row) => {
+      if (!search.status) return true; // 전체
+      if (search.status === '활성') return row.delYn !== 'Y' && row.accYn !== 'Y';
+      if (search.status === '정지') return row.accYn === 'Y';
+      if (search.status === '탈퇴') return row.delYn === 'Y';
+      return true;
+    })
+    .map((row) => ({
+      ...row,
+      id: row.userId,
+    }));
 
   const handleSearch = () => {
     refetch();
@@ -39,11 +53,12 @@ const AdminUserList = () => {
 
   useEffect(() => {
     refetch();
-  }, [search.status, refetch]);
+  }, [refetch]);
 
   return (
     <Box
-      sx={{        
+      Box
+      sx={{
         width: '350px',
         height: '640px',
         border: '1px solid #ccc',
@@ -53,37 +68,65 @@ const AdminUserList = () => {
         boxShadow: '0 0 8px rgba(0,0,0,0.1)',
         display: 'flex',
         flexDirection: 'column',
-          paddingTop: '50px', // 내부 위쪽에 공간
+        paddingTop: '40px',
       }}
     >
-      {/* 검색 영역 */}
+      {/* 검색창 + 상태 선택박스 한 줄 배치 */}
       <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
         <TextField
-          fullWidth
           placeholder="닉네임 검색"
           value={search.searchText}
           onChange={(e) => setSearch({ ...search, searchText: e.target.value })}
           size="small"
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-          sx={{ height: 40, marginTop:'7px' }}          
+          sx={{ flexGrow: 1,
+                height: 40,
+                marginTop: '7px',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '20px',
+                  '& fieldset': {
+                    borderColor: '#B00020', // 테두리 색상
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#B00020',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#B00020',
+                  },
+                },
+              }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton onClick={handleSearch}>
-                  <SearchIcon />
+                  <SearchIcon sx={{ color: '#B00020' }}/>
                 </IconButton>
               </InputAdornment>
             ),
           }}
         />
-
         <TextField
           select
           label="상태"
           value={search.status}
           onChange={(e) => setSearch({ ...search, status: e.target.value })}
           size="small"
-          sx={{ minWidth: 100 }}
+          sx={{ minWidth: 100,   
+              
+                marginTop: '7px',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '20px',
+                  '& fieldset': {
+                    borderColor: '#B00020', // 테두리 색상
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#B00020',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#B00020',
+                  },
+                },             
+            }}
         >
           <MenuItem value="">전체</MenuItem>
           <MenuItem value="활성">활성</MenuItem>
@@ -92,62 +135,28 @@ const AdminUserList = () => {
         </TextField>
       </Box>
 
-      {/* 유저 리스트 영역 */}
-      <Box sx={{ flex: 1, overflowY: 'auto', px: 1 }}>
+      {/* 유저 리스트 */}
+       <Box sx={{ flex: 1, overflowY: 'auto', px: 1 }}>
         {isLoading ? (
           <Typography>로딩 중...</Typography>
         ) : (
           <CmUserCardList data={rowsWithId}>
             {(row) => (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '8px 8px', // 최소 여백
-                  borderBottom: '1px solid #ddd',
-                  width: '100%',
-                  boxSizing: 'border-box',
-                }}
-                onClick={() => navigate(`/manager/user/${row.userId}`)}
-              >
-                <img
-                  src={row.profileImg || 'https://i.stack.imgur.com/l60Hf.png'}
-                  alt="프로필 이미지"
-                
-                  style={{
-                    width: '80px',
-                    height: '80px',
-                    objectFit: 'cover',
-                    borderRadius: '6px',
-                    backgroundColor: '#eee',
-                    flexShrink: 0,
-                  }}
-                />
-                <div style={{ marginLeft: '15px', flex: 1 }}>
-                  <Typography variant="body2">
-                    닉네임: {row.nickname}
-                  </Typography>
-                  <Typography variant="body2">
-                    아이디: {row.userId}
-                  </Typography>
-                 
-                  <Typography variant="body2">
-                    전화번호: {row.userTel}
-                  </Typography>
-                  <Typography variant="body2">
-                    상태:{' '}
-                    {row.delYn === 'Y'
-                      ? '탈퇴'
-                      : row.status === '정지'
-                      ? '정지'
-                      : '활성'}
-                  </Typography>
-                </div>
-              </div>
+              <CmUserDataCard
+                key={row.id}
+                nickname={row.nickname}
+                userId={row.userId}
+                email={row.email}
+                userTel={row.userTel}
+                delYn={row.delYn}
+                accYn={row.accYn}
+                profileImg={row.profileImg}
+              />
             )}
           </CmUserCardList>
         )}
       </Box>
+    
     </Box>
   );
 };

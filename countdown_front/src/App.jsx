@@ -86,10 +86,10 @@ const App = () => {
         <Route path="/auc/aucbuynow.do" element={<LayoutLogin><AuctionBuynow /></LayoutLogin>} />
         
         
-        <Route path="/ann/annview.do" element={<LayoutLogin><AnnouncementView /></LayoutLogin>} />
-        <Route path="/ann/anncreate.do" element={<LayoutLogin><AnnouncementCreate /></LayoutLogin>} />
-        <Route path="/ann/annupdate.do" element={<LayoutLogin><AnnouncementUpdate /></LayoutLogin>} />
-        <Route path="/ann/annlist.do" element={<LayoutLogin><AnnouncementList /></LayoutLogin>} />
+        <Route path="/ann/annview.do" element={<AdminLayoutNoLogin><AnnouncementView /></AdminLayoutNoLogin>} />
+        <Route path="/ann/anncreate.do" element={<AdminLayoutNoLogin><AnnouncementCreate /></AdminLayoutNoLogin>} />
+        <Route path="/ann/annupdate.do" element={<AdminLayoutNoLogin><AnnouncementUpdate /></AdminLayoutNoLogin>} />
+        <Route path="/ann/annlist.do" element={<AdminLayoutNoLogin><AnnouncementList /></AdminLayoutNoLogin>} />
         <Route path="/ann/userannlist.do" element={<LayoutLogin><UserAnnList /></LayoutLogin>} />
         <Route path="/ann/userannview.do" element={<LayoutLogin><UserAnnView /></LayoutLogin>} />
 

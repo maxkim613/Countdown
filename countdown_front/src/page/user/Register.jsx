@@ -172,370 +172,327 @@ const Register = () => {
       </Typography>
 
       {/* 아이디 */}
-      <Box display="flex" alignItems="center" gap={1} mb={2}>
-        <FormControl size="small" sx={{ flex: 1 }}>
-          <InputLabel>아이디</InputLabel>
+
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel htmlFor="id">
+          아이디
+          <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+        </InputLabel>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
           <OutlinedInput
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
             inputRef={userIdRef}
             label="아이디"
             sx={{
-              height: '40px',
+              height: 40, flexGrow: 1,
               backgroundColor: '#fff',
               borderRadius: '12px',
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#B00020',
-                borderRadius: '12px',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#8C001A',
-              },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#8C001A',
+                borderColor: '#B00020',
               },
             }}
           />
-        </FormControl>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={handleCheckId}
-          sx={{
-            backgroundColor: '#B00020',
-            borderColor: '#B00020',
-            height: '40px',
-            whiteSpace: 'nowrap',
-            borderRadius: '20px',
-            color: 'white',
-          }}
-        >
-          중복 확인
-        </Button>
-      </Box>
-
-      {/* 비밀번호 */}
-      <FormControl size="small" sx={{ mb: 2 }}>
-        <InputLabel>비밀번호</InputLabel>
-        <OutlinedInput
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          inputRef={passwordRef}
-          label="비밀번호"
-          sx={{
-            width: '315px',
-            height: '40px',
-            backgroundColor: '#fff',
-            borderRadius: '12px',
-            '& .MuiOutlinedInput-notchedOutline': {
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={handleCheckId}
+            sx={{
+              backgroundColor: '#B00020',
               borderColor: '#B00020',
-              borderRadius: '12px',
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#8C001A',
-            },
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#8C001A',
-            },
-          }}
-        />
+              height: '40px',
+              whiteSpace: 'nowrap',
+              borderRadius: '20px',
+              color: 'white',
+            }}
+          >
+            중복 확인
+          </Button>
+        </Box>
       </FormControl>
 
-      <FormControl size="small" sx={{ mb: 2 }}>
-        <InputLabel>비밀번호 재확인</InputLabel>
-        <OutlinedInput
-          type="password"
-          value={passwordConfirm}
-          onChange={(e) => setPasswordConfirm(e.target.value)}
-          inputRef={passwordConfirmRef}
-          label="비밀번호 재확인"
-          sx={{
-            width: '315px',
-            height: '40px',
-            backgroundColor: '#fff',
-            borderRadius: '12px',
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#B00020',
+      {/* 비밀번호 */}
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel>비밀번호
+          <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+        </InputLabel>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
+          <OutlinedInput
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            inputRef={passwordRef}
+            label="비밀번호"
+            sx={{
+              height: 40, flexGrow: 1,
+              backgroundColor: '#fff',
               borderRadius: '12px',
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#8C001A',
-            },
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#8C001A',
-            },
-          }}
-        />
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+              },
+            }}
+          />
+        </Box>
+      </FormControl>
+
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel>비밀번호 재확인
+          <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+        </InputLabel>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
+          <OutlinedInput
+            type="password"
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
+            inputRef={passwordConfirmRef}
+            label="비밀번호 재확인"
+            sx={{
+              height: 40, flexGrow: 1,
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+              },
+            }}
+          />
+        </Box>
       </FormControl>
 
 
       {/* 이름 */}
-      <FormControl size="small" sx={{ mb: 2 }}>
-        <InputLabel>이름</InputLabel>
-        <OutlinedInput
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          inputRef={usernameRef}
-          label="이름"
-          sx={{
-            width: '315px',
-            height: '40px',
-            backgroundColor: '#fff',
-            borderRadius: '12px',
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#B00020',
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel>이름
+          <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+        </InputLabel>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
+          <OutlinedInput
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            inputRef={usernameRef}
+            label="이름"
+            sx={{
+              height: 40, flexGrow: 1,
+              backgroundColor: '#fff',
               borderRadius: '12px',
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#8C001A',
-            },
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#8C001A',
-            },
-          }}
-        />
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+              },
+            }}
+          />
+        </Box>
       </FormControl>
 
       {/* 닉네임 */}
-      <Box display="flex" alignItems="center" gap={1} mb={2}>
-        <FormControl size="small" sx={{ flex: 1 }}>
-          <InputLabel>닉네임</InputLabel>
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel>닉네임
+          <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+        </InputLabel>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
           <OutlinedInput
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             inputRef={nicknameRef}
             label="닉네임"
             sx={{
-              height: '40px',
+              height: 40, flexGrow: 1,
               backgroundColor: '#fff',
               borderRadius: '12px',
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#B00020',
-                borderRadius: '12px',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#8C001A',
-              },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#8C001A',
+                borderColor: '#B00020',
               },
             }}
           />
-        </FormControl>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={handleCheckNickname}
-          sx={{
-            backgroundColor: '#B00020',
-            borderColor: '#B00020',
-            height: '40px',
-            whiteSpace: 'nowrap',
-            borderRadius: '20px',
-            color: 'white',
-          }}
-        >
-          중복 확인
-        </Button>
-      </Box>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={handleCheckNickname}
+            sx={{
+              backgroundColor: '#B00020',
+              borderColor: '#B00020',
+              height: '40px',
+              whiteSpace: 'nowrap',
+              borderRadius: '20px',
+              color: 'white',
+            }}
+          >
+            중복 확인
+          </Button>
+        </Box>
+      </FormControl>
 
       {/* 이메일 */}
-      <Box display="flex" alignItems="center" gap={1} mb={2}>
-        <FormControl size="small" sx={{ flex: 1 }}>
-          <InputLabel>이메일</InputLabel>
+
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel>이메일
+          <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+        </InputLabel>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
           <OutlinedInput
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             inputRef={emailRef}
             label="이메일"
             sx={{
-              height: '40px',
+              height: 40, flexGrow: 1,
               backgroundColor: '#fff',
               borderRadius: '12px',
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#B00020',
-                borderRadius: '12px',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#8C001A',
-              },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#8C001A',
+                borderColor: '#B00020',
               },
             }}
           />
-        </FormControl>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={handleCheckEmail}
-          sx={{
-            backgroundColor: '#B00020',
-            borderColor: '#B00020',
-            height: '40px',
-            whiteSpace: 'nowrap',
-            borderRadius: '20px',
-            color: 'white',
-          }}
-        >
-          중복 확인
-        </Button>
-      </Box>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={handleCheckEmail}
+            sx={{
+              backgroundColor: '#B00020',
+              borderColor: '#B00020',
+              height: '40px',
+              whiteSpace: 'nowrap',
+              borderRadius: '20px',
+              color: 'white',
+            }}
+          >
+            중복 확인
+          </Button>
+        </Box>
+      </FormControl>
 
       {/* 전화번호 */}
-      <FormControl size="small" sx={{ mb: 2 }}>
-        <InputLabel>전화번호</InputLabel>
-        <OutlinedInput
-          value={userTel}
-          onChange={(e) => setUserTel(e.target.value)}
-          inputRef={userTelRef}
-          label="전화번호"
-          sx={{
-            width: '315px',
-            height: '40px',
-            backgroundColor: '#fff',
-            borderRadius: '12px',
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#B00020',
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel>전화번호
+          <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+        </InputLabel>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
+          <OutlinedInput
+            value={userTel}
+            onChange={(e) => setUserTel(e.target.value)}
+            inputRef={userTelRef}
+            label="전화번호"
+            sx={{
+              height: 40, flexGrow: 1,
+              backgroundColor: '#fff',
               borderRadius: '12px',
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#8C001A',
-            },
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#8C001A',
-            },
-          }}
-        />
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+              },
+            }}
+          />
+        </Box>
       </FormControl>
 
       {/* 우편번호 + 주소 검색 버튼 */}
-<Box display="flex" alignItems="center" gap={1} mb={2}>
-  <FormControl size="small">
-    <InputLabel shrink>우편번호</InputLabel>
-    <OutlinedInput
-      value={postCode}
-      readOnly
-      label="우편번호"
-      sx={{
-        width: '240px',
-        height: '40px',
-        backgroundColor: '#fff',
-        borderRadius: '12px',
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: '#B00020',
-          borderRadius: '12px',
-        },
-        '&:hover .MuiOutlinedInput-notchedOutline': {
-          borderColor: '#8C001A',
-        },
-        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-          borderColor: '#8C001A',
-        },
-      }}
-    />
-  </FormControl>
 
-  <Button
-    onClick={() => setModalOpen(true)}
-    variant="outlined"
-   sx={{
-      backgroundColor: '#B00020',
-      borderColor: '#B00020',
-      height: '40px',
-      width: '70px',
-      whiteSpace: 'nowrap',
-      borderRadius: '20px',
-      color : 'white'      
-    }}
-  >
-    주소 검색
-  </Button>
-</Box>
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel shrink>우편번호
+          <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+        </InputLabel>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
+          <OutlinedInput
+            value={postCode}
+            readOnly
+            label="우편번호"
+            sx={{
+              height: 40, flexGrow: 1,
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+              },
+            }}
+          />
+          <Button
+            onClick={() => setModalOpen(true)}
+            variant="outlined"
+            sx={{
+              backgroundColor: '#B00020',
+              borderColor: '#B00020',
+              height: '40px',
+              width: '70px',
+              whiteSpace: 'nowrap',
+              borderRadius: '20px',
+              color: 'white'
+            }}
+          >
+            주소 검색
+          </Button>
+        </Box>
+      </FormControl>
 
-{/* 기본주소 */}
-<FormControl size="small" sx={{ mb: 2 }}>
-  <InputLabel shrink>기본주소</InputLabel>
-  <OutlinedInput
-    value={addr}
-    readOnly
-    label="기본주소"
-    sx={{
-      width: '315px',
-      height: '40px',
-      backgroundColor: '#fff',
-      borderRadius: '12px',
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#B00020',
-        borderRadius: '12px',
-      },
-      '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#8C001A',
-      },
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#8C001A',
-      },
-    }}
-  />
-</FormControl>
+      {/* 기본주소 */}
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel shrink>기본주소
+        </InputLabel>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
+        <OutlinedInput
+          value={addr}
+          readOnly
+          label="기본주소"
+           sx={{
+              height: 40, flexGrow: 1,
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+              },
+            }}
+        />
+        </Box>
+      </FormControl>
 
-{/* 상세주소 */}
-<FormControl size="small">
-  <InputLabel>상세주소</InputLabel>
-  <OutlinedInput
-    value={addrD}
-    onChange={(e) => setAddrD(e.target.value)}
-    label="상세주소"
-    sx={{
-      width: '315px',
-      height: '40px',
-      backgroundColor: '#fff',
-      borderRadius: '12px',
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#B00020',
-        borderRadius: '12px',
-      },
-      '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#8C001A',
-      },
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#8C001A',
-      },
-    }}
-  />
-</FormControl>
+      {/* 상세주소 */}
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel shrink>상세주소</InputLabel>
+         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: '7px' }}>
+        <OutlinedInput
+          value={addrD}
+          onChange={(e) => setAddrD(e.target.value)}
+          label="상세주소"
+           sx={{
+              height: 40, flexGrow: 1,
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#B00020',
+              },
+            }}
+        />
+        </Box>
+      </FormControl>
 
 
 
       {/* 주소 모달 */}
-      {modalOpen && (
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0, left: 0, width: '100vw', height: '100vh',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            display: 'flex', justifyContent: 'center', alignItems: 'center',
-            zIndex: 1000
-          }}
-        >
-          <Box sx={{ backgroundColor: 'white', p: 3, borderRadius: '8px', maxWidth: '300px' }}>
-            <CmPostCode
-              addr={addr}
-              setAddr={setAddr}
-              addrD={addrD}
-              setAddrD={setAddrD}
-              postCode={postCode}
-              setPostCode={setPostCode}
-              onConfirm={() => setModalOpen(false)}
-            />
-            <Button onClick={() => setModalOpen(false)} fullWidth variant="contained" sx={{ mt: 2, backgroundColor: '#B00020' }}>확인</Button>
+      {
+        modalOpen && (
+          <Box
+            sx={{
+              position: 'fixed',
+              top: 0, left: 0, width: '100vw', height: '100vh',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              display: 'flex', justifyContent: 'center', alignItems: 'center',
+              zIndex: 1000
+            }}
+          >
+            <Box sx={{ backgroundColor: 'white', p: 3, borderRadius: '8px', maxWidth: '300px' }}>
+              <CmPostCode
+                addr={addr}
+                setAddr={setAddr}
+                addrD={addrD}
+                setAddrD={setAddrD}
+                postCode={postCode}
+                setPostCode={setPostCode}
+                onConfirm={() => setModalOpen(false)}
+              />
+              <Button onClick={() => setModalOpen(false)} fullWidth variant="contained" sx={{ mt: 2, backgroundColor: '#B00020' }}>확인</Button>
+            </Box>
           </Box>
-        </Box>
-      )}
-    
+        )
+      }
 
-      
+
+
 
       {/* 회원가입 버튼 */}
       <Button
@@ -555,8 +512,8 @@ const Register = () => {
         회원가입
       </Button>
 
-     
-    </Box>
+
+    </Box >
   );
 };
 
