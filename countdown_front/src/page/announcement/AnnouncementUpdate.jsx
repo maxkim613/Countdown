@@ -9,8 +9,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import ForumIcon from '@mui/icons-material/Forum';
-import GavelIcon from '@mui/icons-material/Gavel';
-import cdlogo from '../../cdlogo.png';
+import GavelIcon from '@mui/icons-material/Gavel'; 
 
 const AnnouncementUpdate = () => {
     const [searchParams] = useSearchParams();

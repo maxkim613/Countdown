@@ -42,6 +42,8 @@ import ResetPassword from './page/user/ResetPassword';
 import AdminDashboard from './page/manager/AdminDashboard';
 import AdminUserList from './page/manager/AdminUserList';
 import AdminUserview from './page/manager/AdminUserview';
+import AuctionBid from './page/auction/AuctionBid';
+import AuctionBuynow from './page/auction/AuctionBuynow';
 
 const App = () => {
   const navigate = useNavigate();
@@ -80,7 +82,8 @@ const App = () => {
         <Route path="/auc/auccreate.do" element={<LayoutLogin><AuctionCreate /></LayoutLogin>} />
         <Route path="/auc/aucview.do" element={<LayoutLogin><AuctionView /></LayoutLogin>} />
         <Route path="/auc/aucupdate.do" element={<LayoutLogin><AuctionUpdate /></LayoutLogin>} />
-        
+        <Route path="/auc/aucbid.do" element={<LayoutLogin><AuctionBid /></LayoutLogin>} />
+        <Route path="/auc/aucbuynow.do" element={<LayoutLogin><AuctionBuynow /></LayoutLogin>} />
         
         
         <Route path="/ann/annview.do" element={<LayoutLogin><AnnouncementView /></LayoutLogin>} />

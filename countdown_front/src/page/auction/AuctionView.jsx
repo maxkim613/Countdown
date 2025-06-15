@@ -32,7 +32,6 @@ const AuctionView = () => {
     aucId: id,
   });
   const [auction, setAuction] = useState(null);
-  console.log("auction", auction);
   const navigate = useNavigate();
   const [deleteAuction] = useAuctionDeleteMutation();
 
@@ -56,11 +55,15 @@ const AuctionView = () => {
   useEffect(() => {
     if (isSuccess) {
       setAuction(data?.data);
+      console.log("data:", data);
+      console.log("썸네일 URL:", BASE_URL + data?.data?.thumbnailUrl);
     }
   }, [isSuccess, data]);
 
   const images =
     auction?.postFiles?.map((file) => BASE_URL + file.fileUrl) || [];
+
+  console.log("썸네일 전체 이미지 리스트", images);
 
   return (
     <Box
@@ -139,9 +142,11 @@ const AuctionView = () => {
               </CardContent>
             </Box>
           </Box>
-
-          <Divider sx={{ my: 2 }} />
-
+          <Divider sx={{ my: 2 }} /> {/* 아래에 회색 줄 */}
+          <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+            {auction.aucDescription || "상품 설명 없음"}
+          </Typography>
+          <Divider sx={{ my: 2 }} /> {/* 아래에 회색 줄 */}
           <Box display="flex" alignItems="center" mb={1}>
             <Avatar sx={{ mr: 1 }} />
             <Box>
@@ -151,11 +156,49 @@ const AuctionView = () => {
               </Typography>
             </Box>
           </Box>
-
-          <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
-            {auction.aucDescription || "상품 설명 없음"}
+          <Divider sx={{ my: 2 }} /> {/* 아래에 회색 줄 */}
+          <Typography variant="h6" gutterBottom>
+            입찰 기록
           </Typography>
-
+          <Box
+            component="table"
+            sx={{ width: "100%", borderCollapse: "collapse" }}
+          >
+            <thead>
+              <tr>
+                <th style={{ borderBottom: "1px solid #ccc", padding: "8px" }}>
+                  닉네임
+                </th>
+                <th style={{ borderBottom: "1px solid #ccc", padding: "8px" }}>
+                  입찰가
+                </th>
+                <th style={{ borderBottom: "1px solid #ccc", padding: "8px" }}>
+                  입찰시간
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{ padding: "8px", textAlign: "center" }}>미니df</td>
+                <td style={{ padding: "8px", textAlign: "center" }}>10000원</td>
+                <td style={{ padding: "8px", textAlign: "center" }}>20분 전</td>
+              </tr>
+              <tr>
+                <td style={{ padding: "8px", textAlign: "center" }}>미니df</td>
+                <td style={{ padding: "8px", textAlign: "center" }}>
+                  500000원
+                </td>
+                <td style={{ padding: "8px", textAlign: "center" }}>16분 전</td>
+              </tr>
+              <tr>
+                <td style={{ padding: "8px", textAlign: "center" }}>미니df</td>
+                <td style={{ padding: "8px", textAlign: "center" }}>
+                  100000원
+                </td>
+                <td style={{ padding: "8px", textAlign: "center" }}>5분 전</td>
+              </tr>
+            </tbody>
+          </Box>
           {auction.aucStatus === "판매대기" &&
             user?.userId === auction.createId && (
               <CardActions sx={{ mt: 2, justifyContent: "space-between" }}>
@@ -176,6 +219,23 @@ const AuctionView = () => {
                     onClick={handleDelete}
                   >
                     상품삭제
+                  </Button>
+                </Box>
+              </CardActions>
+            )}
+            {auction.aucStatus === "경매중" &&
+            user?.userId !== auction.createId && (
+              <CardActions sx={{ mt: 2, justifyContent: "space-between" }}>
+                <Box>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    sx={{ mr: 1 }}
+                    onClick={() =>
+                      navigate(`/auc/aucbid.do?id=${auction.aucId}`)
+                    }
+                  >
+                    입찰하기
                   </Button>
                 </Box>
               </CardActions>

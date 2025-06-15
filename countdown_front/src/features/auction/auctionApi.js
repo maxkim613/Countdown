@@ -8,13 +8,15 @@ import baseQueryWithAuthHandler from "../../cm/CmCustomBaseQuery"; // 사용자 
 
 // createApi: RTK Query로 API 요청들을 정의합니다.
 export const auctionApi = createApi({
-  reducerPath: 'auctionApi', // Redux 스토어에 저장될 키 이름
+  reducerPath: "auctionApi", // Redux 스토어에 저장될 키 이름
   baseQuery: baseQueryWithAuthHandler, // 모든 요청에서 사용할 공통 fetch 함수
-  endpoints: (builder) => ({ //여기에 query()와 mutation()을 정의 
-                             // builder는 RTK Query가 제공하는 "엔드포인트 생성 도우미 객체
+  endpoints: (builder) => ({
+    //여기에 query()와 mutation()을 정의
+    // builder는 RTK Query가 제공하는 "엔드포인트 생성 도우미 객체
 
     // 🔍 게시판 목록 조회 (GET 대신 POST 사용)
-    auctionList: builder.query({ //query 조회용(GET 또는 POST) API를 정의
+    auctionList: builder.query({
+      //query 조회용(GET 또는 POST) API를 정의
       query: (params) => ({
         url: "/auc/auclist.do",
         method: "POST",
@@ -26,7 +28,8 @@ export const auctionApi = createApi({
     }),
 
     // 🔍 게시판 목록 조회 (GET 대신 POST 사용)
-    auctionMyList: builder.query({ //query 조회용(GET 또는 POST) API를 정의
+    auctionMyList: builder.query({
+      //query 조회용(GET 또는 POST) API를 정의
       query: (params) => ({
         url: "/auc/aucmylist.do",
         method: "POST",
@@ -50,9 +53,28 @@ export const auctionApi = createApi({
     }),
 
     // 📝 게시글 생성
-    auctionCreate: builder.mutation({ //mutation 변경용(POST/PUT/DELETE) API를 정의
+    auctionCreate: builder.mutation({
+      //mutation 변경용(POST/PUT/DELETE) API를 정의
       query: (formData) => ({
         url: "/auc/auccreate.do",
+        method: "POST",
+        body: formData,
+      }),
+    }),
+
+    // 📝 게시글 생성
+    auctionBid: builder.mutation({
+      //mutation 변경용(POST/PUT/DELETE) API를 정의
+      query: (formData) => ({
+        url: "/auc/aucbid.do",
+        method: "POST",
+        body: formData,
+      }),
+    }),
+    // 📝 게시글 생성
+    auctionBuynow: builder.mutation({ 
+      query: (formData) => ({
+        url: "/auc/aucbuynow.do",
         method: "POST",
         body: formData,
       }),
@@ -75,16 +97,17 @@ export const auctionApi = createApi({
         body: params,
       }),
     }),
-
   }),
 });
 
 // 컴포넌트에서 사용할 수 있도록 export (자동 생성된 훅)
 export const {
-  useAuctionListQuery,      // 게시판 목록 가져오기
-  useAuctionMyListQuery,      // 게시판 목록 가져오기
-  useAuctionViewQuery,      // 게시글 상세 조회
+  useAuctionListQuery, // 게시판 목록 가져오기
+  useAuctionMyListQuery, // 게시판 목록 가져오기
+  useAuctionViewQuery, // 게시글 상세 조회
   useAuctionCreateMutation, // 게시글 생성
   useAuctionUpdateMutation, // 게시글 수정
   useAuctionDeleteMutation, // 게시글 삭제
+  useAuctionBidMutation,
+  useAuctionBuynowMutation,
 } = auctionApi;

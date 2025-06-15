@@ -11,7 +11,6 @@ import {
     Box, Typography, Button, CircularProgress, 
     Paper, Alert, Stack, AppBar, Toolbar, IconButton // Alert는 에러 메시지 표시용
 } from '@mui/material';
-import cdlogo from '../../cdlogo.png';
 
 const AnnouncementView = () => {
     const [searchParams] = useSearchParams();
