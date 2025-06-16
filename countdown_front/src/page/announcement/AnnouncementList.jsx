@@ -10,6 +10,7 @@ import { CmUtil } from "../../cm/CmUtil";
 
 const AnnouncementList = () => {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user); // 로그인된 사용자 정보
 
   const { data, refetch, isLoading, isError, error } = useAnnouncementListQuery({
     startDate: CmUtil.addDate(CmUtil.getToday(), { months: -3 }),
@@ -83,7 +84,8 @@ const AnnouncementList = () => {
       </List>
 
       {/* 공지 작성 버튼 */}
-      <Fab
+      {user?.adminYn === 'Y' && (
+        <Fab
         aria-label="add"
         sx={{
           position: 'fixed',
@@ -96,9 +98,10 @@ const AnnouncementList = () => {
           },
         }}
         onClick={() => navigate('/ann/anncreate.do')}
-      >
+        >
         <EditIcon />
       </Fab>
+      )}
     </Box>
   );
 };

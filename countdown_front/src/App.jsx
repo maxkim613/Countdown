@@ -21,8 +21,6 @@ import AnnouncementList from './page/announcement/AnnouncementList';
 import AnnouncementCreate from './page/announcement/AnnouncementCreate';
 import AnnouncementUpdate from './page/announcement/AnnouncementUpdate';
 import AnnouncementView from './page/announcement/AnnouncementView';
-import UserAnnList from './page/announcement/UserAnnList';
-import UserAnnView from './page/announcement/UserAnnView';
 
 import Home from './page/Home';
 import { setNavigate } from './cm/CmNavigateUtil';
@@ -90,8 +88,6 @@ const App = () => {
         <Route path="/ann/anncreate.do" element={<AdminLayoutNoLogin><AnnouncementCreate /></AdminLayoutNoLogin>} />
         <Route path="/ann/annupdate.do" element={<AdminLayoutNoLogin><AnnouncementUpdate /></AdminLayoutNoLogin>} />
         <Route path="/ann/annlist.do" element={<AdminLayoutNoLogin><AnnouncementList /></AdminLayoutNoLogin>} />
-        <Route path="/ann/userannlist.do" element={<LayoutLogin><UserAnnList /></LayoutLogin>} />
-        <Route path="/ann/userannview.do" element={<LayoutLogin><UserAnnView /></LayoutLogin>} />
 
         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
