@@ -63,30 +63,6 @@ export const announcementApi = createApi({
         body: data,
       }),
     }),
-    
-    // 🔍 사용자용 공지사항 목록 조회 (POST 사용)
-    userAnnouncementList: builder.query({
-      query: (params) => ({
-        url: '/ann/userannlist.do', // 사용자용 목록 URL
-        method: 'POST',
-        body: params,
-      }),
-      keepUnusedDataFor: 0,
-      refetchOnMountOrArgChange: true,
-      staleTime: 0,
-    }),
-
-    // 🔍 사용자용 공지사항 상세 보기
-    userAnnouncementView: builder.query({
-      query: (params) => ({
-        url: '/ann/userannview.do', // 사용자용 상세 보기 URL
-        method: 'POST',
-        body: params,
-      }),
-      keepUnusedDataFor: 0,
-      refetchOnMountOrArgChange: true,
-      staleTime: 0,
-    }),
 
 
   }),
