@@ -72,7 +72,7 @@ export const auctionApi = createApi({
       }),
     }),
     // 📝 게시글 생성
-    auctionBuynow: builder.mutation({ 
+    auctionBuynow: builder.mutation({
       query: (formData) => ({
         url: "/auc/aucbuynow.do",
         method: "POST",
@@ -97,6 +97,24 @@ export const auctionApi = createApi({
         body: params,
       }),
     }),
+
+    likeStatus: builder.query({
+      query: ({ aucId, userId }) => ({
+        url: `/auc/auclike/status`,
+        method: "GET",
+        params: { aucId, userId },
+      }),
+      keepUnusedDataFor: 0,
+      refetchOnMountOrArgChange: true,
+    }),
+
+    toggleLike: builder.mutation({
+      query: (body) => ({
+        url: "/auc/auclike/toggle",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -110,4 +128,6 @@ export const {
   useAuctionDeleteMutation, // 게시글 삭제
   useAuctionBidMutation,
   useAuctionBuynowMutation,
+  useLikeStatusQuery,
+  useToggleLikeMutation,
 } = auctionApi;

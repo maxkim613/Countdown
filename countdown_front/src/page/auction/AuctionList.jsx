@@ -31,21 +31,10 @@ const AuctionList = () => {
     { value: "기타", label: "기타" },
   ];
 
-  // const columns = [
-  //   { field: "rn", headerName: "번호", width: 90, sortable: false },
-  //   { field: "auctitle", headerName: "제목", width: 300, dbName: "AUC_TITLE" },
-  //   { field: "createId", headerName: "작성자", width: 150, dbName: "CREATE_ID" },
-  //   { field: "aucsprice", headerName: "시작가", width: 120, dbName: "AUC_CURRENT_PRICE" },
-  //   { field: "aucdeadline", headerName: "마감일", width: 180, dbName: "AUC_DEADLINE" },
-  // ];
-
-  // const handleSortChange = (model) => {
-  //   if (!model.length) return;
-  //   const { field, sort } = model[0];
-  //   const colDef = columns.find((col) => col.field === field);
-  //   const sortField = colDef?.dbName || field;
-  //   setSort({ field: sortField, order: sort?.toUpperCase() || "ASC" });
-  // };
+  const handleSortButtonClick = (field, order) => {
+    setSort({ field, order });
+    refetch();
+  };
 
   const handleSearch = () => {
     refetch();
@@ -119,30 +108,37 @@ const AuctionList = () => {
           color="error"
           size="small"
           sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
+          onClick={() => handleSortButtonClick("CREATE_DT", "DESC")}
         >
           전체
         </Button>
+
         <Button
           variant="contained"
           color="error"
           size="small"
           sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
+          onClick={() => handleSortButtonClick("AUC_DEADLINE", "ASC")}
         >
           마감임박
         </Button>
+
         <Button
           variant="contained"
           color="error"
           size="small"
           sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
+          onClick={() => handleSortButtonClick("AUC_LIKE_CNT", "DESC")}
         >
           인기순
         </Button>
+
         <Button
           variant="contained"
           color="error"
           size="small"
           sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
+          onClick={() => handleSortButtonClick("AUC_CURRENT_PRICE", "ASC")}
         >
           낮은 가격순
         </Button>
