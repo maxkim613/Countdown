@@ -13,6 +13,7 @@ import BoardUpdate from './page/board/BoardUpdate';
 
 import AuctionList from './page/auction/AuctionList';
 import AuctionMyList from './page/auction/AuctionMyList';
+import AuctionMySellList from './page/auction/AuctionMySellList';
 import AuctionCreate from './page/auction/AuctionCreate';
 import AuctionUpdate from './page/auction/AuctionUpdate';
 import AuctionView from './page/auction/AuctionView';
@@ -42,6 +43,7 @@ import AdminUserList from './page/manager/AdminUserList';
 import AdminUserview from './page/manager/AdminUserview';
 import AuctionBid from './page/auction/AuctionBid';
 import AuctionBuynow from './page/auction/AuctionBuynow';
+import AuctionMyBidList from './page/auction/AuctionMyBidList';
 
 const App = () => {
   const navigate = useNavigate();
@@ -82,7 +84,8 @@ const App = () => {
         <Route path="/auc/aucupdate.do" element={<LayoutLogin><AuctionUpdate /></LayoutLogin>} />
         <Route path="/auc/aucbid.do" element={<LayoutLogin><AuctionBid /></LayoutLogin>} />
         <Route path="/auc/aucbuynow.do" element={<LayoutLogin><AuctionBuynow /></LayoutLogin>} />
-        
+        <Route path="/auc/aucmybidlist.do" element={<LayoutLogin><AuctionMyBidList/></LayoutLogin>} />
+        <Route path="/auc/aucmyselllist.do" element={<LayoutLogin><AuctionMySellList/></LayoutLogin>} />
         
         <Route path="/ann/annview.do" element={<AdminLayoutNoLogin><AnnouncementView /></AdminLayoutNoLogin>} />
         <Route path="/ann/anncreate.do" element={<AdminLayoutNoLogin><AnnouncementCreate /></AdminLayoutNoLogin>} />
