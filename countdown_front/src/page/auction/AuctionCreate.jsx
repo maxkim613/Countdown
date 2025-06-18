@@ -25,7 +25,8 @@ const AuctionCreate = () => {
   const editorRef = useRef();
   const titleRef = useRef();
   const aucspriceRef = useRef();
-  const aucbpriceRef = useRef();
+  const aucbpriceRef = useRef(); 
+  const auclocationRef = useRef(); 
   const user = useSelector((state) => state.user.user);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [mainImageIndex, setMainImageIndex] = useState(0);
@@ -34,6 +35,7 @@ const AuctionCreate = () => {
   const [editorValue, setEditorValue] = useState("");
   const [selected, setSelected] = useState("");
   const [aucdeadline, setAucdeadline] = useState("");
+  const [aucstartdate, setAucstartdate] = useState(""); 
 
   const options = [
     { value: "전자기기", label: "전자기기" },
@@ -56,6 +58,7 @@ const AuctionCreate = () => {
     const contentText = editorRef.current?.getContent({ format: "text" });
     const aucsprice = e.target.aucsprice.value.trim();
     const aucbprice = e.target.aucbprice.value.trim();
+    const auclocation = e.target.auclocation.value.trim();
 
     if (CmUtil.isEmpty(auctitle)) {
       showAlert("제목을 입력해주세요.");
@@ -90,6 +93,8 @@ const AuctionCreate = () => {
     formData.append("aucSprice", aucsprice);
     formData.append("aucBprice", aucbprice);
     formData.append("aucDeadline", aucdeadline);
+    formData.append("aucStartdate", aucstartdate);
+    formData.append("aucLocation", auclocation);
     formData.append("mainImageIndex", mainImageIndex);
 
     uploadedFiles.forEach((file) => {
@@ -188,11 +193,34 @@ const AuctionCreate = () => {
         <Box mb={3}>
           <TextField
             fullWidth
+            id="auclocation"
+            name="auclocation"
+            label="위치"
+            variant="outlined"
+            inputProps={{ maxLength: 10 }}
+            inputRef={aucbpriceRef}
+          />
+        </Box>
+
+        <Box mb={3}>
+          <TextField
+            fullWidth
             label="시작일"
             type="date"
             InputLabelProps={{ shrink: true }}
             value={aucdeadline}
             onChange={(e) => setAucdeadline(e.target.value)}
+          />
+        </Box>
+
+        <Box mb={3}>
+          <TextField
+            fullWidth
+            label="종료일"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={aucstartdate}
+            onChange={(e) => setAucstartdate(e.target.value)}
           />
         </Box>
 

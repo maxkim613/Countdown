@@ -6,6 +6,7 @@ export default function CmCardList({
   path,           // 클릭 시 이동할 기본 경로 (예: '/auc/aucview.do')
   onItemClick     // 클릭 시 커스텀 핸들러가 필요하면 전달
 }) {
+  console.log(items);
   return (
     <div className="divide-y divide-gray-300 divide-solid">
       {items.map((item, idx) => (

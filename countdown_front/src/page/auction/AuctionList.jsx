@@ -42,8 +42,6 @@ const AuctionList = () => {
 
   console.log(data);
 
-  const BASE_URL = "http://192.168.0.60:8081/"; // 실제 Spring 서버 주소
-
   const auctionItems = (data?.data?.list || []).map((item) => ({
     info1: item.aucTitle,
     writeinfo1: "",
@@ -53,13 +51,9 @@ const AuctionList = () => {
     writeinfo3: "",
     info4: item.aucStatus,
     writeinfo4: "",
-    thumbnailUrl: item.thumbnailUrl
-      ? `${BASE_URL}${
-          item.thumbnailUrl.startsWith("/")
-            ? item.thumbnailUrl.slice(1)
-            : item.thumbnailUrl
-        }`
-      : null,
+    thumbnailUrl: item.fileId
+  ? `${process.env.REACT_APP_API_BASE_URL}/auc/imgDown.do?fileId=${item.fileId}`
+  : null,
     id: item.aucId,
   }));
 
