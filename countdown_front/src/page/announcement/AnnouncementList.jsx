@@ -13,6 +13,14 @@ const AnnouncementList = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user); // 로그인된 사용자 정보
 
+  // ✅ 관리자만 접근 가능하도록
+  useEffect(() => {
+    if (!user || user.adminYn !== "Y") {
+      alert("관리자만 접근 가능합니다.");
+      navigate("/"); // 또는 로그인 화면이나 홈 화면 등으로 리디렉션
+    }
+  }, [user, navigate]);
+
   const { data, refetch, isLoading, isError, error } = useAnnouncementListQuery({
     startDate: CmUtil.addDate(CmUtil.getToday(), { months: -3 }),
     endDate: CmUtil.getToday(),
