@@ -16,11 +16,15 @@ import AuctionMyList from './page/auction/AuctionMyList';
 import AuctionCreate from './page/auction/AuctionCreate';
 import AuctionUpdate from './page/auction/AuctionUpdate';
 import AuctionView from './page/auction/AuctionView';
+import AuctionAdminList from './page/auction/AuctionAdminList';
+import AuctionAdminView from './page/auction/AuctionAdminView';
 
 import AnnouncementList from './page/announcement/AnnouncementList';
 import AnnouncementCreate from './page/announcement/AnnouncementCreate';
 import AnnouncementUpdate from './page/announcement/AnnouncementUpdate';
 import AnnouncementView from './page/announcement/AnnouncementView';
+import UserAnnList from './page/announcement/UserAnnList';
+import UserAnnView from './page/announcement/UserAnnView';
 
 import Home from './page/Home';
 import { setNavigate } from './cm/CmNavigateUtil';
@@ -82,12 +86,16 @@ const App = () => {
         <Route path="/auc/aucupdate.do" element={<LayoutLogin><AuctionUpdate /></LayoutLogin>} />
         <Route path="/auc/aucbid.do" element={<LayoutLogin><AuctionBid /></LayoutLogin>} />
         <Route path="/auc/aucbuynow.do" element={<LayoutLogin><AuctionBuynow /></LayoutLogin>} />
+        <Route path="/auc/admauclist.do" element={<LayoutLogin><AuctionAdminList /></LayoutLogin>} />
+        <Route path="/auc/admaucview.do" element={<LayoutLogin><AuctionAdminView /></LayoutLogin>} />
         
         
         <Route path="/ann/annview.do" element={<AdminLayoutNoLogin><AnnouncementView /></AdminLayoutNoLogin>} />
         <Route path="/ann/anncreate.do" element={<AdminLayoutNoLogin><AnnouncementCreate /></AdminLayoutNoLogin>} />
         <Route path="/ann/annupdate.do" element={<AdminLayoutNoLogin><AnnouncementUpdate /></AdminLayoutNoLogin>} />
         <Route path="/ann/annlist.do" element={<AdminLayoutNoLogin><AnnouncementList /></AdminLayoutNoLogin>} />
+        <Route path="/ann/userannlist.do" element={<AdminLayoutNoLogin><UserAnnList /></AdminLayoutNoLogin>} />
+        <Route path="/ann/userannview.do" element={<AdminLayoutNoLogin><UserAnnView /></AdminLayoutNoLogin>} />
 
         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />

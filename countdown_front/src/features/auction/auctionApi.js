@@ -97,6 +97,14 @@ export const auctionApi = createApi({
         body: params,
       }),
     }),
+
+    approveAuction: builder.mutation({
+      query: (body) => ({
+        url: "/auc/approve.do", // 백엔드의 POST /auc/approve.do 엔드포인트와 일치시켜야 합니다.
+        method: "POST",
+        body, // `{ aucId: number }` 형태의 데이터를 보낼 것입니다.
+      }),
+    }),
   }),
 });
 
@@ -110,4 +118,5 @@ export const {
   useAuctionDeleteMutation, // 게시글 삭제
   useAuctionBidMutation,
   useAuctionBuynowMutation,
+  useApproveAuctionMutation,
 } = auctionApi;
