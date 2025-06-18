@@ -19,10 +19,14 @@ export default function CmDataCard({
   info2,
   info3,
   info4,
+  info5,
+  info6,
   writeinfo1 = '',
   writeinfo2 = '',
   writeinfo3 = '',
   writeinfo4 = '',
+  writeinfo5 = '',
+  writeinfo6 = '',
   path = '',
   onClick
 }) {
@@ -84,6 +88,16 @@ export default function CmDataCard({
         {info4 != null && (
           <div style={{ fontSize: '12px', color: '#888' }}>
             {info4}{writeinfo4}
+          </div>
+        )}
+        {info5 != null && (
+          <div style={{ fontSize: '12px', color: '#888' }}>
+            {info5}{writeinfo5}
+          </div>
+        )}
+        {info6 != null && (
+          <div style={{ fontSize: '12px', color: '#888' }}>
+            {info6}{writeinfo6}
           </div>
         )}
       </div>

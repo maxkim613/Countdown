@@ -32,14 +32,14 @@ export default function Header() {
   return (
    
           <Box
-            component="header" // ✅ 또는 생략 가능
+            component="header" 
             sx={{
               position: 'fixed',
-              top: 0,               // ✅ 헤더니까 top
+              top: 0,               
               left: 0,
               width: '100%',
               height: '45px',
-              backgroundColor: '#B00020', // ✅ 올바른 색상 코드
+              backgroundColor: '#B00020', 
               color: '#fff',
               zIndex: 1000,
               display: 'flex',
@@ -56,7 +56,7 @@ export default function Header() {
               height: 80,
               margin: 0,
               padding: 0,
-              display: 'block', // ✅ 공백 방지
+              display: 'block', 
               objectFit: 'contain',
               cursor: 'pointer',
             }}

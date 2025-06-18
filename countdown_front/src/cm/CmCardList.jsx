@@ -21,6 +21,10 @@ export default function CmCardList({
           writeinfo3={item.writeinfo3}
           info4={item.info4}
           writeinfo4={item.writeinfo4}
+          info5={item.info5}
+          writeinfo5={item.writeinfo5}
+          info6={item.info6}
+          writeinfo6={item.writeinfo6}
           path={path}             // onClick이 없으면 이 경로로 이동
           onClick={onItemClick}    // 있으면 이 함수 호출(id 전달)
         />

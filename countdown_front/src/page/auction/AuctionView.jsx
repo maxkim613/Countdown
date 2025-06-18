@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import {
   useAuctionDeleteMutation,
   useAuctionViewQuery,
+  useLikeStatusQuery,
+  useToggleLikeMutation,
 } from "../../features/auction/auctionApi";
 import {
   Box,
@@ -21,13 +23,21 @@ import {
   CardActions,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const AuctionView = () => {
   const BASE_URL = "http://localhost:8081/";
-
+  const [bidList, setBidList] = useState([]);
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const user = useSelector((state) => state.user.user);
+  console.log(user);
+  const [liked, setLiked] = useState(false);
+  const { data: likeData, refetch: refetchLikeStatus } = useLikeStatusQuery({
+    aucId: id,
+    userId: user?.userId,
+  });
+  const [toggleLike] = useToggleLikeMutation();
   const { data, isLoading, error, isSuccess } = useAuctionViewQuery({
     aucId: id,
   });
@@ -56,9 +66,41 @@ const AuctionView = () => {
     if (isSuccess) {
       setAuction(data?.data);
       console.log("data:", data);
-      console.log("썸네일 URL:", BASE_URL + data?.data?.thumbnailUrl);
     }
   }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (auction) {
+      setBidList(auction.bidList || []);
+      console.log("auction data:", data?.data);
+      console.log("bidList:", data?.data?.bidList);
+    }
+  }, [auction]);
+
+  useEffect(() => {
+    if (likeData) {
+      setLiked(likeData.data === "Y");
+    }
+  }, [likeData]);
+
+  const handleLikeToggle = async () => {
+    console.log("handleLikeToggle 클릭됨");
+    try {
+      const result = await toggleLike({
+        aucId: id,
+        userId: user.userId,
+      }).unwrap();
+      console.log("toggleLike 결과:", result);
+
+      if (result) {
+        // 좋아요 토글 성공 시, 서버에서 상태 다시 받아오기
+        await refetchLikeStatus();
+      }
+    } catch (error) {
+      console.error("toggleLike 오류:", error);
+      alert("좋아요 변경 중 오류가 발생했습니다.");
+    }
+  };
 
   const images =
     auction?.postFiles?.map((file) => BASE_URL + file.fileUrl) || [];
@@ -134,8 +176,12 @@ const AuctionView = () => {
                   </Typography>
                   <Typography variant="caption">
                     현재 상태: {auction.aucStatus}
-                    <IconButton color="primary">
-                      <FavoriteIcon />
+                    <IconButton onClick={handleLikeToggle}>
+                      {liked ? (
+                        <FavoriteIcon sx={{ color: "red" }} />
+                      ) : (
+                        <FavoriteBorderIcon sx={{ color: "lightgray" }} />
+                      )}
                     </IconButton>
                   </Typography>
                 </Box>
@@ -178,25 +224,30 @@ const AuctionView = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td style={{ padding: "8px", textAlign: "center" }}>미니df</td>
-                <td style={{ padding: "8px", textAlign: "center" }}>10000원</td>
-                <td style={{ padding: "8px", textAlign: "center" }}>20분 전</td>
-              </tr>
-              <tr>
-                <td style={{ padding: "8px", textAlign: "center" }}>미니df</td>
-                <td style={{ padding: "8px", textAlign: "center" }}>
-                  500000원
-                </td>
-                <td style={{ padding: "8px", textAlign: "center" }}>16분 전</td>
-              </tr>
-              <tr>
-                <td style={{ padding: "8px", textAlign: "center" }}>미니df</td>
-                <td style={{ padding: "8px", textAlign: "center" }}>
-                  100000원
-                </td>
-                <td style={{ padding: "8px", textAlign: "center" }}>5분 전</td>
-              </tr>
+              {bidList.length > 0 ? (
+                bidList.map((bid, idx) => (
+                  <tr key={idx}>
+                    <td style={{ padding: "8px", textAlign: "center" }}>
+                      {bid.userName}
+                    </td>
+                    <td style={{ padding: "8px", textAlign: "center" }}>
+                      {bid.bidPrice}원
+                    </td>
+                    <td style={{ padding: "8px", textAlign: "center" }}>
+                      {bid.bidTime}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={3}
+                    style={{ padding: "8px", textAlign: "center" }}
+                  >
+                    입찰 기록이 없습니다.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </Box>
           {auction.aucStatus === "판매대기" &&
@@ -223,7 +274,7 @@ const AuctionView = () => {
                 </Box>
               </CardActions>
             )}
-            {auction.aucStatus === "경매중" &&
+          {auction.aucStatus === "경매중" &&
             user?.userId !== auction.createId && (
               <CardActions sx={{ mt: 2, justifyContent: "space-between" }}>
                 <Box>

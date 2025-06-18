@@ -9,7 +9,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import CmDropdown from "../../cm/CmDropdown";
 
-const AuctionList = () => {
+const AuctionMyBidList = () => {
   const [searchText, setSearchText] = useState("");
   const [sort, setSort] = useState({ field: "CREATE_DT", order: "DESC" }); // DB 컬럼명 기준
   const [selected, setSelected] = useState("");
@@ -31,10 +31,6 @@ const AuctionList = () => {
     { value: "기타", label: "기타" },
   ];
 
-  const handleSortButtonClick = (field, order) => {
-    setSort({ field, order });
-    refetch();
-  };
 
   const handleSearch = () => {
     refetch();
@@ -103,45 +99,6 @@ const AuctionList = () => {
           mb: 2.5,
         }}
       >
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
-          onClick={() => handleSortButtonClick("CREATE_DT", "DESC")}
-        >
-          전체
-        </Button>
-
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
-          onClick={() => handleSortButtonClick("AUC_DEADLINE", "ASC")}
-        >
-          마감임박
-        </Button>
-
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
-          onClick={() => handleSortButtonClick("AUC_LIKE_CNT", "DESC")}
-        >
-          인기순
-        </Button>
-
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
-          onClick={() => handleSortButtonClick("AUC_CURRENT_PRICE", "ASC")}
-        >
-          낮은 가격순
-        </Button>
       </Box>
 
       {isLoading ? (
@@ -156,4 +113,4 @@ const AuctionList = () => {
   );
 };
 
-export default AuctionList;
+export default AuctionMyBidList;
