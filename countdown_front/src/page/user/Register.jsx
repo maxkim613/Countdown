@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useRegisterMutation, useCheckUserIdMutation, useCheckNicknameMutation, useCheckEmailMutation } from '../../features/user/UserApi';
+import { useRegisterMutation, useCheckUserIdMutation, useCheckNicknameMutation, useCheckEmailMutation } from '../../features/user/userApi';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
