@@ -94,16 +94,16 @@ const App = () => {
         <Route path="/auc/aucbuynow.do" element={<LayoutLogin><AuctionBuynow /></LayoutLogin>} />
         <Route path="/auc/aucmybidlist.do" element={<LayoutLogin><AuctionMyBidList/></LayoutLogin>} />
         <Route path="/auc/aucmyselllist.do" element={<LayoutLogin><AuctionMySellList/></LayoutLogin>} />
-        <Route path="/auc/admauclist.do" element={<LayoutLogin><AuctionAdminList /></LayoutLogin>} />
-        <Route path="/auc/admaucview.do" element={<LayoutLogin><AuctionAdminView /></LayoutLogin>} />
+        <Route path="/auc/admauclist.do" element={<AdminLayoutLogin><AuctionAdminList /></AdminLayoutLogin>} />
+        <Route path="/auc/admaucview.do" element={<AdminLayoutLogin><AuctionAdminView /></AdminLayoutLogin>} />
 
         
-        <Route path="/ann/annview.do" element={<AdminLayoutNoLogin><AnnouncementView /></AdminLayoutNoLogin>} />
-        <Route path="/ann/anncreate.do" element={<AdminLayoutNoLogin><AnnouncementCreate /></AdminLayoutNoLogin>} />
-        <Route path="/ann/annupdate.do" element={<AdminLayoutNoLogin><AnnouncementUpdate /></AdminLayoutNoLogin>} />
-        <Route path="/ann/annlist.do" element={<AdminLayoutNoLogin><AnnouncementList /></AdminLayoutNoLogin>} />
-        <Route path="/ann/userannlist.do" element={<AdminLayoutNoLogin><UserAnnList /></AdminLayoutNoLogin>} />
-        <Route path="/ann/userannview.do" element={<AdminLayoutNoLogin><UserAnnView /></AdminLayoutNoLogin>} />
+        <Route path="/ann/annview.do" element={<AdminLayoutLogin><AnnouncementView /></AdminLayoutLogin>} />
+        <Route path="/ann/anncreate.do" element={<AdminLayoutLogin><AnnouncementCreate /></AdminLayoutLogin>} />
+        <Route path="/ann/annupdate.do" element={<AdminLayoutLogin><AnnouncementUpdate /></AdminLayoutLogin>} />
+        <Route path="/ann/annlist.do" element={<AdminLayoutLogin><AnnouncementList /></AdminLayoutLogin>} />
+        <Route path="/ann/userannlist.do" element={<LayoutLogin><UserAnnList /></LayoutLogin>} />
+        <Route path="/ann/userannview.do" element={<LayoutLogin><UserAnnView /></LayoutLogin>} />
 
         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
