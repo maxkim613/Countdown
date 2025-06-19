@@ -2,10 +2,19 @@ import './App.css';
 
 import React, { useEffect } from 'react';
 import {  Routes, Route, useNavigate } from 'react-router-dom';
+import FirstPage from './page/user/FirstPage';
 import Login from './page/user/Login';
 import Register from './page/user/Register';
 import UserUpdate from './page/user/UserUpdate';
 import UserView from './page/user/UserView';
+
+import UserAuctionList from './page/userAuction/UserAuctionList';
+import UserAuctionBidList from './page/userAuction/UserAuctionBidList';
+import UserAuctionSellList from './page/userAuction/UserAuctionSellList';
+import UserMyAuctionWaiteList from './page/userAuction/UserMyAuctionWaiteList';
+import UserAuctionLikeList from './page/userAuction/UserAuctionLikeList';
+
+
 import BoardList from './page/board/BoardList';
 import BoardView from './page/board/BoardView';
 import BoardCreate from './page/board/BoardCreate';
@@ -63,6 +72,7 @@ const App = () => {
   return (
     <>
       <Routes>
+        <Route path="/user/first.do" element={<FirstPage />} />
         <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
         <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
         <Route path="/user/join.do" element={<LayoutNoLogin><Register /></LayoutNoLogin>} />
@@ -72,6 +82,13 @@ const App = () => {
 
         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
+
+        <Route path="/userA/useral" element={<UserAuctionList />} />
+        <Route path="/userA/userabid" element={<UserAuctionBidList />} />
+        <Route path="/userA/userasell" element={<UserAuctionSellList />} />
+        <Route path="/userA/userawaite" element={<UserMyAuctionWaiteList />} />
+        <Route path="/userA/useralike" element={<UserAuctionLikeList />} />
+
 
 
         <Route path="/board/list.do" element={<LayoutLogin><BoardList /></LayoutLogin>} />
