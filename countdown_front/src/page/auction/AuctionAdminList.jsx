@@ -11,9 +11,8 @@ import CmDropdown from "../../cm/CmDropdown";
 
 const AuctionAdminList = () => {
   const [searchText, setSearchText] = useState("");
-  const [sort, setSort] = useState({ field: "CREATE_DT", order: "DESC" });
+  const [sort, setSort] = useState({ field: "CREATE_DT", order: "DESC" }); // DB 컬럼명 기준
   const [selected, setSelected] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("판매대기"); // 상태 필터 추가
 
   const user = useSelector((state) => state.user.user);
   const { showAlert } = useCmDialog();
@@ -22,7 +21,6 @@ const AuctionAdminList = () => {
     searchText,
     sortField: sort.field,
     sortOrder: sort.order,
-    isAdmin: true,
   });
 
   const options = [
@@ -33,16 +31,18 @@ const AuctionAdminList = () => {
     { value: "기타", label: "기타" },
   ];
 
+  const handleSortButtonClick = (field, order) => {
+    setSort({ field, order });
+    refetch();
+  };
+
   const handleSearch = () => {
     refetch();
   };
 
-  const rawItems = data?.data?.list || [];
+  console.log(data);
 
-  // 관리자: 판매대기 상태만 필터링
-  const filteredItems = rawItems.filter((item) => item.aucStatus === "판매대기");
-
-  const auctionItems = filteredItems.map((item) => ({
+  const auctionItems = (data?.data?.list || []).map((item) => ({
     info1: item.aucTitle,
     writeinfo1: "",
     info2: item.aucCprice,
@@ -51,7 +51,9 @@ const AuctionAdminList = () => {
     writeinfo3: "",
     info4: item.aucStatus,
     writeinfo4: "",
-    thumbnailUrl: item.thumbnailUrl,
+    thumbnailUrl: item.fileId
+  ? `${process.env.REACT_APP_API_BASE_URL}/auc/imgDown.do?fileId=${item.fileId}`
+  : null,
     id: item.aucId,
   }));
 
@@ -86,36 +88,45 @@ const AuctionAdminList = () => {
           options={options}
         />
       </Box>
-
-      <Box sx={{ display: "flex", gap: 1, flexWrap: "nowrap", overflowX: "auto", mb: 2.5 }}>
-        <Button variant="contained" color="error" size="small" sx={{ borderRadius: '20px' }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 1,
+          flexWrap: "nowrap",
+          overflowX: "auto",
+          mb: 2.5,
+        }}
+      >
+        <Button
+          variant="contained"
+          color="error"
+          size="small"
+          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
+          onClick={() => handleSortButtonClick("CREATE_DT", "DESC")}
+        >
           전체
         </Button>
-        <Button variant="contained" color="error" size="small" sx={{ borderRadius: '20px' }}>
-          마감임박
-        </Button>
-        <Button variant="contained" color="error" size="small" sx={{ borderRadius: '20px' }}>
-          인기순
-        </Button>
-        <Button variant="contained" color="error" size="small" sx={{ borderRadius: '20px' }}>
-          낮은 가격순
-        </Button>
-      </Box>
 
-      {/* 상태 필터 버튼 */}
-      <Box sx={{ display: "flex", gap: 1, flexWrap: "nowrap", overflowX: "auto", mb: 2.5 }}>
-        {["전체", "판매대기", "경매중"].map((status) => (
-          <Button
-            key={status}
-            variant={selectedStatus === status ? "contained" : "outlined"}
-            color="error"
-            size="small"
-            onClick={() => setSelectedStatus(status)}
-            sx={{ borderRadius: '20px', whiteSpace: 'nowrap', maxWidth: '90px' }}
-          >
-            {status}
-          </Button>
-        ))}
+        <Button
+          variant="contained"
+          color="error"
+          size="small"
+          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
+          onClick={() => handleSortButtonClick("AUC_DEADLINE", "ASC")}
+        >
+          판매대기
+        </Button>
+
+        <Button
+          variant="contained"
+          color="error"
+          size="small"
+          sx={{ borderRadius: "20px", whiteSpace: "nowrap", maxWidth: "75px" }}
+          onClick={() => handleSortButtonClick("AUC_LIKE_CNT", "DESC")}
+        >
+          경매중
+        </Button>
+
       </Box>
 
       {isLoading ? (
@@ -123,7 +134,7 @@ const AuctionAdminList = () => {
       ) : (
         <CmCardList
           items={auctionItems}
-          path="/auc/admaucview.do" // 관리자용 상세보기
+          path="/auc/admaucview.do" // 클릭 시 /auc/aucview.do?id=<id> 로 이동
         />
       )}
     </Box>

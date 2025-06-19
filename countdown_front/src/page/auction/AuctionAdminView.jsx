@@ -40,7 +40,7 @@ const AuctionAdminView = () => {
   const handleApprove = async () => {
     // 상품 상태가 "판매대기"이고, 승인 여부가 "N"일 때만 승인 가능하도록 조건 추가
     // 백엔드에서도 최종 검증이 필요하지만, UI에서도 미리 보여주는 것이 좋습니다.
-    if (auction?.aucStatus !== "판매대기" || auction?.aucPermitYn === "Y") {
+    if (auction?.aucStatus !== "경매대기" || auction?.aucPermitYn === "Y") {
       alert("이미 승인되었거나 승인 대기 상태가 아닌 상품입니다.");
       return;
     }

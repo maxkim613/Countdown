@@ -9,6 +9,7 @@ import NoticeIcon from '../../css/icons/공지.png';
 import UserIcon from '../../css/icons/유저.png';
 import MessageIcon from '../../css/icons/쪽지.png';
 
+
 export default function AdminDashboard() {
   const navigate = useNavigate();
 

@@ -86,8 +86,6 @@ const App = () => {
         <Route path="/auc/aucupdate.do" element={<LayoutLogin><AuctionUpdate /></LayoutLogin>} />
         <Route path="/auc/aucbid.do" element={<LayoutLogin><AuctionBid /></LayoutLogin>} />
         <Route path="/auc/aucbuynow.do" element={<LayoutLogin><AuctionBuynow /></LayoutLogin>} />
-        <Route path="/auc/aucmybidlist.do" element={<LayoutLogin><AuctionMyBidList/></LayoutLogin>} />
-        <Route path="/auc/aucmyselllist.do" element={<LayoutLogin><AuctionMySellList/></LayoutLogin>} />
         <Route path="/auc/admauclist.do" element={<LayoutLogin><AuctionAdminList /></LayoutLogin>} />
         <Route path="/auc/admaucview.do" element={<LayoutLogin><AuctionAdminView /></LayoutLogin>} />
 
