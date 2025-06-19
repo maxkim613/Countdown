@@ -7,7 +7,7 @@ import {
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
-import { useSendCertiNumMutation, useVerifyCertiNumMutation, useResetPasswordMutation } from '../../features/user/userApi';
+import { useSendCertiNumMutation, useVerifyCertiNumMutation, useResetPasswordMutation } from '../../features/user/UserApi';
 import { useNavigate } from 'react-router-dom';
 
 // 공통 모달 컴포넌트

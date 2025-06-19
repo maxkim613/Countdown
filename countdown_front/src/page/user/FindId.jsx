@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {  Box,  Typography,  FormControl,  InputLabel,  OutlinedInput,  Button,} from '@mui/material';
-import { useSendCertiNumMutation, useVerifyCertiNumMutation } from '../../features/user/userApi';
+import { useSendCertiNumMutation, useVerifyCertiNumMutation } from '../../features/user/UserApi';
 import { useNavigate } from 'react-router-dom';
 
 // 모달 컴포넌트 (MUI 스타일로 재작성 가능)

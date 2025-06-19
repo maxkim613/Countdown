@@ -12,7 +12,7 @@ import {
   useUploadUserImgMutation,
   useUpdateUserImgMutation,
   useDeleteUserImgMutation,
-} from '../../features/user/userApi';
+} from '../../features/user/UserApi';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useCmDialog } from '../../cm/CmDialogUtil';
