@@ -23,8 +23,6 @@ import {
   useAuctionUpdateMutation,
 } from "../../features/auction/auctionApi";
 
-
-
 const AuctionUpdate = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
@@ -33,6 +31,7 @@ const AuctionUpdate = () => {
   const titleRef = useRef();
   const aucspriceRef = useRef();
   const aucbpriceRef = useRef();
+  const auclocationRef = useRef();
   const user = useSelector((state) => state.user.user);
   const { showAlert } = useCmDialog();
 
@@ -43,14 +42,17 @@ const AuctionUpdate = () => {
   const [editorValue, setEditorValue] = useState("");
   const [selected, setSelected] = useState("");
   const [aucdeadline, setAucdeadline] = useState("");
+  const [aucstartdate, setAucstartdate] = useState("");
+  const [auclocation, setAuclocation] = useState("");
 
   useEffect(() => {
-    
     if (isSuccess) {
       const auc = data?.data;
       setEditorValue(auc.aucDescription);
       setSelected(auc.aucCategory);
       setAucdeadline(auc.aucDeadline);
+      setAucstartdate(auc.aucStartdate);
+      setAuclocation(auc.aucLocation);
     }
   }, [isSuccess, data]);
 
@@ -81,6 +83,7 @@ const AuctionUpdate = () => {
     const aucsprice = e.target.aucsprice.value.trim();
     const aucbprice = e.target.aucbprice.value.trim();
     const contentText = editorRef.current?.getContent({ format: "text" });
+    const auclocation = e.target.auclocation.value.trim();
 
     if (CmUtil.isEmpty(auctitle)) {
       showAlert("제목을 입력해주세요.");
@@ -103,6 +106,9 @@ const AuctionUpdate = () => {
     formData.append("aucSprice", aucsprice);
     formData.append("aucBprice", aucbprice);
     formData.append("aucDeadline", aucdeadline);
+    formData.append("aucStartdate", aucstartdate);
+    formData.append("aucLocation", auclocation);
+
     uploadedFiles.forEach((file) => {
       formData.append("files", file);
     });
@@ -187,7 +193,30 @@ const AuctionUpdate = () => {
         <Box mb={3}>
           <TextField
             fullWidth
-            label="마감일"
+            id="auclocation"
+            name="auclocation"
+            label="위치"
+            variant="outlined"
+            defaultValue={data?.data?.aucLocation || ""}
+            inputRef={auclocationRef}
+          />
+        </Box>
+
+        <Box mb={3}>
+          <TextField
+            fullWidth
+            label="시작일"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={aucstartdate}
+            onChange={(e) => setAucstartdate(e.target.value)}
+          />
+        </Box>
+
+        <Box mb={3}>
+          <TextField
+            fullWidth
+            label="종료일"
             type="date"
             InputLabelProps={{ shrink: true }}
             value={aucdeadline}

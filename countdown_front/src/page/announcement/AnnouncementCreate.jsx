@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"; // React 훅 import
+import React, { useRef, useState, useEffect } from "react"; // React 훅 import
 import { useAnnouncementCreateMutation } from "../../features/announcement/announcementApi"; // 게시글 생성 API 호출 훅
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -18,6 +18,14 @@ const AnnouncementCreate = () => {
   const [announcementCreate] = useAnnouncementCreateMutation();
   const { showAlert } = useCmDialog();
   const today = CmUtil.getToday(); // 예: "2025.06.05"
+
+  // ✅ 관리자만 접근 가능하도록
+  useEffect(() => {
+    if (!user || user.adminYn !== "Y") {
+      alert("관리자만 접근 가능합니다.");
+      navigate("/"); // 또는 로그인 화면이나 홈 화면 등으로 리디렉션
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,25 +1,13 @@
 import React, { useEffect } from "react";
 import { 
-  Box, Typography, List, ListItemButton,
-  ListItemText, Fab, CircularProgress
+  Box, Typography, List, ListItemButton, ListItemText, CircularProgress
  } from "@mui/material";
- import { useSelector } from "react-redux";
 import { useAnnouncementListQuery } from "../../features/announcement/announcementApi";
 import { useNavigate } from "react-router-dom";
-import EditIcon from '@mui/icons-material/Edit';
 import { CmUtil } from "../../cm/CmUtil";
 
-const AnnouncementList = () => {
+const UserAnnList = () => {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user.user); // 로그인된 사용자 정보
-
-  // ✅ 관리자만 접근 가능하도록
-  useEffect(() => {
-    if (!user || user.adminYn !== "Y") {
-      alert("관리자만 접근 가능합니다.");
-      navigate("/"); // 또는 로그인 화면이나 홈 화면 등으로 리디렉션
-    }
-  }, [user, navigate]);
 
   const { data, refetch, isLoading, isError, error } = useAnnouncementListQuery({
     startDate: CmUtil.addDate(CmUtil.getToday(), { months: -3 }),
@@ -66,6 +54,11 @@ const AnnouncementList = () => {
     );
   }
 
+  // const rowsWithId = (data?.data?.list || []).map((row) => ({
+  //   ...row,
+  //   annId: row.annId,
+  // }));
+
   return (
     <Box sx={{ pb: 8 }}>
       {/* 공지사항 리스트 */}
@@ -80,7 +73,7 @@ const AnnouncementList = () => {
               boxShadow: 1,
               px: 2
             }}
-            onClick={() => navigate(`/ann/annview.do?id=${announcement.annId}`)}
+            onClick={() => navigate(`/ann/userannview.do?id=${announcement.annId}`)}
           >
             <ListItemText
               primary={`[${announcement.annTitle}]`}
@@ -91,28 +84,8 @@ const AnnouncementList = () => {
           </ListItemButton>
         ))}
       </List>
-
-      {/* 공지 작성 버튼 */}
-      {user?.adminYn === 'Y' && (
-        <Fab
-        aria-label="add"
-        sx={{
-          position: 'fixed',
-          bottom: 80,
-          right: 16,
-          bgcolor: '#B00020',
-          color: '#fff',
-          '&:hover': {
-            bgcolor: '#8a0010',
-          },
-        }}
-        onClick={() => navigate('/ann/anncreate.do')}
-        >
-        <EditIcon />
-      </Fab>
-      )}
     </Box>
   );
 };
 
-export default AnnouncementList;
+export default UserAnnList;

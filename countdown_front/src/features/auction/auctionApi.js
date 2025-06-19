@@ -6,6 +6,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react"; // RTK Query 훅 생성을 위한 함수
 import baseQueryWithAuthHandler from "../../cm/CmCustomBaseQuery"; // 사용자 정의 baseQuery (ex: 인증 처리 포함)
 
+
 // createApi: RTK Query로 API 요청들을 정의합니다.
 export const auctionApi = createApi({
   reducerPath: "auctionApi", // Redux 스토어에 저장될 키 이름
@@ -50,6 +51,30 @@ export const auctionApi = createApi({
       keepUnusedDataFor: 0,
       refetchOnMountOrArgChange: true,
       staleTime: 0,
+    }),
+
+    auctionMyBidList: builder.query({
+      //query 조회용(GET 또는 POST) API를 정의
+      query: (params) => ({
+        url: "/auc/aucmybidlist.do",
+        method: "POST",
+        body: params,
+      }),
+      keepUnusedDataFor: 0, // 사용하지 않는 데이터 즉시 제거 (캐시 X)
+      refetchOnMountOrArgChange: true, // 컴포넌트 마운트/파라미터 변경 시 자동 재요청
+      staleTime: 0, // (참고용) 데이터가 항상 최신 상태라고 간주하지 않음
+    }),
+
+    auctionMySellList: builder.query({
+      //query 조회용(GET 또는 POST) API를 정의
+      query: (params) => ({
+        url: "/auc/aucmyselllist.do",
+        method: "POST",
+        body: params,
+      }),
+      keepUnusedDataFor: 0, // 사용하지 않는 데이터 즉시 제거 (캐시 X)
+      refetchOnMountOrArgChange: true, // 컴포넌트 마운트/파라미터 변경 시 자동 재요청
+      staleTime: 0, // (참고용) 데이터가 항상 최신 상태라고 간주하지 않음
     }),
 
     // 📝 게시글 생성
@@ -97,7 +122,14 @@ export const auctionApi = createApi({
         body: params,
       }),
     }),
-
+    approveAuction: builder.mutation({
+      query: (body) => ({
+        url: "/auc/approve.do", // 백엔드의 POST /auc/approve.do 엔드포인트와 일치시켜야 합니다.
+        method: "POST",
+        body, // `{ aucId: number }` 형태의 데이터를 보낼 것입니다.
+      }),
+      invalidatesTags: ['AuctionList'],
+    }),
     likeStatus: builder.query({
       query: ({ aucId, userId }) => ({
         url: `/auc/auclike/status`,
@@ -128,6 +160,9 @@ export const {
   useAuctionDeleteMutation, // 게시글 삭제
   useAuctionBidMutation,
   useAuctionBuynowMutation,
+  useApproveAuctionMutation,
   useLikeStatusQuery,
   useToggleLikeMutation,
+  useAuctionMyBidListQuery,
+  useAuctionMySellListQuery,
 } = auctionApi;

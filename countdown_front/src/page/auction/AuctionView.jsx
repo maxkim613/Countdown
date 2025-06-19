@@ -10,14 +10,12 @@ import {
 import {
   Box,
   Typography,
-  Paper,
   CircularProgress,
   Alert,
   Button,
   Divider,
   Avatar,
   IconButton,
-  Grid,
   CardMedia,
   CardContent,
   CardActions,
@@ -26,24 +24,69 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const AuctionView = () => {
+  const [mainImage, setMainImage] = useState("");
   const BASE_URL = "http://localhost:8081/";
   const [bidList, setBidList] = useState([]);
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const user = useSelector((state) => state.user.user);
-  console.log(user);
   const [liked, setLiked] = useState(false);
+
   const { data: likeData, refetch: refetchLikeStatus } = useLikeStatusQuery({
     aucId: id,
     userId: user?.userId,
   });
+
   const [toggleLike] = useToggleLikeMutation();
   const { data, isLoading, error, isSuccess } = useAuctionViewQuery({
     aucId: id,
   });
+
   const [auction, setAuction] = useState(null);
   const navigate = useNavigate();
   const [deleteAuction] = useAuctionDeleteMutation();
+
+  useEffect(() => {
+    if (isSuccess && data?.data?.postFiles?.length > 0) {
+      setMainImage(
+        `${process.env.REACT_APP_API_BASE_URL}/auc/imgDown.do?fileId=${data.data.postFiles[0].fileId}`
+      );
+    }
+  }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setAuction(data?.data);
+    }
+  }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (auction) {
+      setBidList(auction.bidList || []);
+    }
+  }, [auction]);
+
+  useEffect(() => {
+    if (likeData) {
+      setLiked(likeData.data === "Y");
+    }
+  }, [likeData]);
+
+  const handleLikeToggle = async () => {
+    try {
+      const result = await toggleLike({
+        aucId: id,
+        userId: user.userId,
+      }).unwrap();
+
+      if (result) {
+        await refetchLikeStatus();
+      }
+    } catch (error) {
+      console.error("toggleLike 오류:", error);
+      alert("좋아요 변경 중 오류가 발생했습니다.");
+    }
+  };
 
   const handleDelete = async () => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
@@ -62,50 +105,11 @@ const AuctionView = () => {
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      setAuction(data?.data);
-      console.log("data:", data);
-    }
-  }, [isSuccess, data]);
-
-  useEffect(() => {
-    if (auction) {
-      setBidList(auction.bidList || []);
-      console.log("auction data:", data?.data);
-      console.log("bidList:", data?.data?.bidList);
-    }
-  }, [auction]);
-
-  useEffect(() => {
-    if (likeData) {
-      setLiked(likeData.data === "Y");
-    }
-  }, [likeData]);
-
-  const handleLikeToggle = async () => {
-    console.log("handleLikeToggle 클릭됨");
-    try {
-      const result = await toggleLike({
-        aucId: id,
-        userId: user.userId,
-      }).unwrap();
-      console.log("toggleLike 결과:", result);
-
-      if (result) {
-        // 좋아요 토글 성공 시, 서버에서 상태 다시 받아오기
-        await refetchLikeStatus();
-      }
-    } catch (error) {
-      console.error("toggleLike 오류:", error);
-      alert("좋아요 변경 중 오류가 발생했습니다.");
-    }
-  };
-
   const images =
-    auction?.postFiles?.map((file) => BASE_URL + file.fileUrl) || [];
-
-  console.log("썸네일 전체 이미지 리스트", images);
+    auction?.postFiles?.map(
+      (file) =>
+        `${process.env.REACT_APP_API_BASE_URL}/auc/imgDown.do?fileId=${file.fileId}`
+    ) || [];
 
   return (
     <Box
@@ -130,27 +134,40 @@ const AuctionView = () => {
             <Box flexShrink={0}>
               <CardMedia
                 component="img"
-                height="60"
-                image={
-                  auction.thumbnailUrl
-                    ? BASE_URL + auction.thumbnailUrl
-                    : "/default-img.png"
-                }
-                alt="상품 이미지"
-                sx={{ width: 60, borderRadius: 1 }}
+                height="120"
+                image={mainImage}
+                alt="대표 이미지"
+                sx={{ width: 120, borderRadius: 1 }}
               />
-              <Grid container spacing={1} mt={1}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 1,
+                  mt: 1,
+                  width: 120,
+                }}
+              >
                 {images.map((img, idx) => (
-                  <Grid item xs={3} key={idx}>
-                    <CardMedia
-                      component="img"
-                      height="60"
-                      image={img}
-                      alt={`썸네일 ${idx}`}
-                    />
-                  </Grid>
+                  <CardMedia
+                    key={idx}
+                    component="img"
+                    sx={{
+                      width: idx < 3 ? "30px" : "55px",
+                      height: "30px",
+                      borderRadius: 1,
+                      cursor: "pointer",
+                      border:
+                        mainImage === img ? "2px solid red" : "1px solid #ccc",
+                      flexBasis:
+                        idx < 3 ? "calc(100% / 3 - 4px)" : "calc(50% - 4px)",
+                    }}
+                    image={img}
+                    alt={`썸네일 ${idx}`}
+                    onClick={() => setMainImage(img)}
+                  />
                 ))}
-              </Grid>
+              </Box>
             </Box>
 
             <Box flex={1}>
@@ -172,7 +189,7 @@ const AuctionView = () => {
                     분류: {auction.aucCategory}
                   </Typography>
                   <Typography variant="caption">
-                    위치: {auction.location || "위치 정보 없음"}
+                    위치: {auction.aucLocation || "위치 정보 없음"}
                   </Typography>
                   <Typography variant="caption">
                     현재 상태: {auction.aucStatus}
@@ -188,24 +205,37 @@ const AuctionView = () => {
               </CardContent>
             </Box>
           </Box>
-          <Divider sx={{ my: 2 }} /> {/* 아래에 회색 줄 */}
+
+          <Divider sx={{ my: 2 }} />
+
           <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
             {auction.aucDescription || "상품 설명 없음"}
           </Typography>
-          <Divider sx={{ my: 2 }} /> {/* 아래에 회색 줄 */}
-          <Box display="flex" alignItems="center" mb={1}>
+
+          <Divider sx={{ my: 2 }} />
+
+          <Box
+            display="flex"
+            alignItems="center"
+            mb={1}
+            onClick={() => navigate("/auc/auclist.do")}
+            sx={{ cursor: "pointer" }}
+          >
             <Avatar sx={{ mr: 1 }} />
             <Box>
               <Typography variant="body1">{auction.createId}</Typography>
               <Typography variant="body2" color="text.secondary">
-                천안시 서북구
+                {auction.aucLocation}
               </Typography>
             </Box>
           </Box>
-          <Divider sx={{ my: 2 }} /> {/* 아래에 회색 줄 */}
+
+          <Divider sx={{ my: 2 }} />
+
           <Typography variant="h6" gutterBottom>
             입찰 기록
           </Typography>
+
           <Box
             component="table"
             sx={{ width: "100%", borderCollapse: "collapse" }}
@@ -250,6 +280,7 @@ const AuctionView = () => {
               )}
             </tbody>
           </Box>
+
           {auction.aucStatus === "판매대기" &&
             user?.userId === auction.createId && (
               <CardActions sx={{ mt: 2, justifyContent: "space-between" }}>
@@ -274,7 +305,8 @@ const AuctionView = () => {
                 </Box>
               </CardActions>
             )}
-          {auction.aucStatus === "경매중" &&
+
+          {["경매중", "진행중"].includes(auction.aucStatus) &&
             user?.userId !== auction.createId && (
               <CardActions sx={{ mt: 2, justifyContent: "space-between" }}>
                 <Box>

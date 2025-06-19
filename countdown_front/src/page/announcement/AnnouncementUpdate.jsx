@@ -3,13 +3,9 @@ import { useCmDialog } from "../../cm/CmDialogUtil";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { CmUtil } from "../../cm/CmUtil";
-import { Box, TextField, Typography, Button, Paper, Stack, AppBar, Toolbar, IconButton } from "@mui/material";
+import { Box, TextField, Typography, Button, Paper, Stack, } from "@mui/material";
 import SubjectIcon from "@mui/icons-material/Subject";
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
-import ForumIcon from '@mui/icons-material/Forum';
-import GavelIcon from '@mui/icons-material/Gavel'; 
+import { useSelector } from "react-redux";
 
 const AnnouncementUpdate = () => {
     const [searchParams] = useSearchParams();
@@ -23,8 +19,16 @@ const AnnouncementUpdate = () => {
     const { data, isLoading, error } = useAnnouncementViewQuery({ annId: id });
     const [announcementUpdate] = useAnnouncementUpdateMutation();
     const [announcementDelete] = useAnnouncementDeleteMutation();
-
+    const user = useSelector((state) => state.user.user); // 로그인된 사용자 정보
     const [announcement, setAnnouncement] = useState(null);
+
+    // ✅ 관리자만 접근 가능하도록
+    useEffect(() => {
+    if (!user || user.adminYn !== "Y") {
+        alert("관리자만 접근 가능합니다.");
+        navigate("/"); // 또는 로그인 화면이나 홈 화면 등으로 리디렉션
+    }
+    }, [user, navigate]);
 
     useEffect(() => {
         if (data?.success) {
