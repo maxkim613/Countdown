@@ -52,6 +52,7 @@ const AuctionCreate = () => {
     maxSize: 10 * 1024 * 1024,
   });
 
+  console.log("user: "+user);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const auctitle = e.target.auctitle.value.trim();
@@ -208,8 +209,8 @@ const AuctionCreate = () => {
             label="시작일"
             type="date"
             InputLabelProps={{ shrink: true }}
-            value={aucdeadline}
-            onChange={(e) => setAucdeadline(e.target.value)}
+            value={aucstartdate}
+            onChange={(e) => setAucstartdate(e.target.value)}
           />
         </Box>
 
@@ -219,8 +220,8 @@ const AuctionCreate = () => {
             label="종료일"
             type="date"
             InputLabelProps={{ shrink: true }}
-            value={aucstartdate}
-            onChange={(e) => setAucstartdate(e.target.value)}
+            value={aucdeadline}
+            onChange={(e) => setAucdeadline(e.target.value)}
           />
         </Box>
 
