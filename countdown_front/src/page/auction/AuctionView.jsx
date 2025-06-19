@@ -24,8 +24,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const AuctionView = () => {
-  const [mainImage, setMainImage] = useState("");
-  const BASE_URL = "http://localhost:8081/";
+  const [mainImage, setMainImage] = useState(""); 
   const [bidList, setBidList] = useState([]);
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");

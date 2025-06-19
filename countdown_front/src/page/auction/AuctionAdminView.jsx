@@ -19,6 +19,7 @@ import {
 import { useAuctionViewQuery, useApproveAuctionMutation } from "../../features/auction/auctionApi";
 
 const AuctionAdminView = () => {
+  const [mainImage, setMainImage] = useState(""); 
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const user = useSelector((state) => state.user.user);
@@ -30,6 +31,22 @@ const AuctionAdminView = () => {
   const [approveAuction, { isLoading: isApproving }] = useApproveAuctionMutation(); // 상태 변경 API
 
   const navigate = useNavigate();
+
+  const images =
+    auction?.postFiles?.map(
+      (file) =>
+        `${process.env.REACT_APP_API_BASE_URL}/auc/imgDown.do?fileId=${file.fileId}`
+    ) || [];
+
+
+
+   useEffect(() => {
+      if (isSuccess && data?.data?.postFiles?.length > 0) {
+        setMainImage(
+          `${process.env.REACT_APP_API_BASE_URL}/auc/imgDown.do?fileId=${data.data.postFiles[0].fileId}`
+        );
+      }
+    }, [isSuccess, data]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -72,60 +89,116 @@ const AuctionAdminView = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 800, mx: "auto", p: 2, minHeight: "100vh" }}>
+     <Box
+      sx={{
+        width: "100%",
+        maxWidth: 800,
+        mx: "auto",
+        p: 2,
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
       {isLoading ? (
         <CircularProgress />
       ) : error ? (
         <Alert severity="error">게시글을 불러오는 데 실패했습니다.</Alert>
       ) : auction ? (
-        <Box sx={{ p: 2 }}>
+        <Box elevation={3} sx={{ p: 2 }}>
           <Box display="flex" gap={2}>
             <Box flexShrink={0}>
               <CardMedia
                 component="img"
-                height="60"
-                image={auction.thumbnailUrl || "/default-img.png"}
-                alt="상품 이미지"
-                sx={{ width: 60, borderRadius: 1 }}
+                height="120"
+                image={mainImage}
+                alt="대표 이미지"
+                sx={{ width: 120, borderRadius: 1 }}
               />
-              <Grid container spacing={1} mt={1}>
-                {auction.images?.map((img, idx) => (
-                  <Grid item xs={3} key={idx}>
-                    <CardMedia
-                      component="img"
-                      height="60"
-                      image={img}
-                      alt={`썸네일 ${idx}`}
-                    />
-                  </Grid>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 1,
+                  mt: 1,
+                  width: 120,
+                }}
+              >
+                {images.map((img, idx) => (
+                  <CardMedia
+                    key={idx}
+                    component="img"
+                    sx={{
+                      width: idx < 3 ? "30px" : "55px",
+                      height: "30px",
+                      borderRadius: 1,
+                      cursor: "pointer",
+                      border:
+                        mainImage === img ? "2px solid red" : "1px solid #ccc",
+                      flexBasis:
+                        idx < 3 ? "calc(100% / 3 - 4px)" : "calc(50% - 4px)",
+                    }}
+                    image={img}
+                    alt={`썸네일 ${idx}`}
+                    onClick={() => setMainImage(img)}
+                  />
                 ))}
-              </Grid>
+              </Box>
             </Box>
 
             <Box flex={1}>
               <CardContent sx={{ p: 0 }}>
-                <Typography variant="body2" fontWeight="bold">상품명: {auction.aucTitle}</Typography>
-                <Typography variant="body2" fontWeight="bold">최소입찰가: {auction.aucSprice}원</Typography>
-                <Typography variant="body2" fontWeight="bold">현재입찰가: {auction.aucCprice}원</Typography>
-                <Typography variant="body2" fontWeight="bold">마감일: {auction.aucDeadline}</Typography>
-                <Typography variant="body2" fontWeight="bold">상태: {auction.aucStatus}</Typography>
+                <Box display="flex" flexDirection="column" gap={0.1}>
+                  <Typography variant="body2" fontWeight="bold">
+                    상품명: {auction.aucTitle}
+                  </Typography>
+                  <Typography variant="body2" fontWeight="bold">
+                    금액: {auction.aucCprice}원
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    등록일: {auction.createDt}
+                  </Typography>
+                  <Typography variant="caption">
+                    판매자: {auction.createId}
+                  </Typography>
+                  <Typography variant="caption">
+                    분류: {auction.aucCategory}
+                  </Typography>
+                  <Typography variant="caption">
+                    위치: {auction.aucLocation || "위치 정보 없음"}
+                  </Typography>
+                
+                </Box>
               </CardContent>
             </Box>
           </Box>
 
           <Divider sx={{ my: 2 }} />
 
-          <Box display="flex" alignItems="center" mb={1}>
+          <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+            {auction.aucDescription || "상품 설명 없음"}
+          </Typography>
+
+          <Divider sx={{ my: 2 }} />
+
+          <Box
+            display="flex"
+            alignItems="center"
+            mb={1}
+            onClick={() => navigate("/auc/auclist.do")}
+            sx={{ cursor: "pointer" }}
+          >
             <Avatar sx={{ mr: 1 }} />
             <Box>
               <Typography variant="body1">{auction.createId}</Typography>
-              <Typography variant="body2" color="text.secondary">천안시 서북구</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {auction.aucLocation}
+              </Typography>
             </Box>
           </Box>
 
-          <Typography variant="body2" sx={{ whiteSpace: "pre-line", mt: 1 }}>
-            {auction.aucDescription || "상품 설명 없음"}
-          </Typography>
+          <Divider sx={{ my: 2 }} />
 
           {/* 승인 버튼: aucStatus가 "판매대기"이고 aucPermitYn이 "N"일 때만 표시 */}
           <CardActions sx={{ mt: 3, justifyContent: "center" }}>
