@@ -5,6 +5,8 @@ import { boardApi } from '../features/board/boardApi';
 import { auctionApi } from '../features/auction/auctionApi'; 
 import { announcementApi } from '../features/announcement/announcementApi'; 
 import { fileApi } from '../features/file/fileApi'; 
+import { msgApi } from '../features/msg/msgApi';
+import { codeApi } from '../features/code/codeApi';
 
 import userReducer from '../features/user/userSlice';
 import storageSession from 'redux-persist/lib/storage/session'; // sessionStorage로 변경
@@ -23,6 +25,8 @@ const rootReducer = combineReducers({
   [fileApi.reducerPath]: fileApi.reducer,
   [auctionApi.reducerPath]: auctionApi.reducer,
   [announcementApi.reducerPath]: announcementApi.reducer,
+  [msgApi.reducerPath]: msgApi.reducer, // msgApi의 리듀서 추가
+  [codeApi.reducerPath]: codeApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -32,7 +36,15 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false
-    }).concat(userApi.middleware, boardApi.middleware, fileApi.middleware, auctionApi.middleware,announcementApi.middleware)
+    }).concat(
+      userApi.middleware, 
+      boardApi.middleware, 
+      fileApi.middleware, 
+      auctionApi.middleware,
+      announcementApi.middleware,
+      msgApi.middleware, // msgApi의 미들웨어 추가
+      codeApi.middleware 
+    ),
 });
 
 export const persistor = persistStore(store);

@@ -43,6 +43,12 @@ import AdminUserview from './page/manager/AdminUserview';
 import AuctionBid from './page/auction/AuctionBid';
 import AuctionBuynow from './page/auction/AuctionBuynow';
 
+import MsgList from './page/msg/MsgList';
+import MsgView from './page/msg/MsgView';
+import MsgCreate from './page/msg/MsgCreate';
+import AdminTaskList from './page/msg/admin/AdminTaskList';
+import AdmMsgView from './page/msg/admin/AdmMsgView';
+
 const App = () => {
   const navigate = useNavigate();
 
@@ -53,12 +59,12 @@ const App = () => {
   return (
     <>
       <Routes>
-         <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
-         <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
-         <Route path="/user/join.do" element={<LayoutNoLogin><Register /></LayoutNoLogin>} />
-         <Route path="/user/update.do" element={<LayoutLogin><UserUpdate /></LayoutLogin>} />
-         <Route path="/user/view.do" element={<LayoutLogin><UserView /></LayoutLogin>} />
-         <Route path="/user/list.do" element={<LayoutLogin><UserList /></LayoutLogin>} />
+        <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
+        <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
+        <Route path="/user/join.do" element={<LayoutNoLogin><Register /></LayoutNoLogin>} />
+        <Route path="/user/update.do" element={<LayoutLogin><UserUpdate /></LayoutLogin>} />
+        <Route path="/user/view.do" element={<LayoutLogin><UserView /></LayoutLogin>} />
+        <Route path="/user/list.do" element={<LayoutLogin><UserList /></LayoutLogin>} />
 
         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
@@ -92,9 +98,15 @@ const App = () => {
         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
 
-         <Route path="/manager/admin" element={<AdminLayoutNoLogin><AdminDashboard /></AdminLayoutNoLogin>} />
+        <Route path="/manager/admin" element={<AdminLayoutNoLogin><AdminDashboard /></AdminLayoutNoLogin>} />
         <Route path="/manager/alist" element={<AdminLayoutLogin><AdminUserList /></AdminLayoutLogin>} />
-       <Route path="/manager/user/:userId" element={<AdminLayoutNoLogin><AdminUserview /></AdminLayoutNoLogin>} />
+        <Route path="/manager/user/:userId" element={<AdminLayoutNoLogin><AdminUserview /></AdminLayoutNoLogin>} />
+
+        <Route path="/msg/list.do" element={<LayoutLogin><MsgList /></LayoutLogin>} />
+        <Route path="/msg/view.do" element={<LayoutLogin><MsgView /></LayoutLogin>} />
+        <Route path="/msg/create.do" element={<LayoutLogin><MsgCreate /></LayoutLogin>} />
+        <Route path="/msg/admin/inquiries/:msgId.do" element={<AdminLayoutLogin><AdmMsgView /></AdminLayoutLogin>} />
+        <Route path="/msg/admin/tasks.do" element={<AdminLayoutLogin><AdminTaskList /></AdminLayoutLogin>} />
 
       </Routes>
       <CmRouteChangeNotifier />
