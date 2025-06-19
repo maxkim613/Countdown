@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useAuctionViewQuery, useAuctionBidMutation } from "../../features/auction/auctionApi";
+import {
+  useAuctionViewQuery,
+  useAuctionBidMutation,
+} from "../../features/auction/auctionApi";
 import InputAdornment from "@mui/material/InputAdornment";
 
 import {
@@ -25,7 +28,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 const AuctionBid = () => {
   const BASE_URL = "http://localhost:8081/";
 
-  const [auctionBid, { isLoading: isBidding, error: bidError }] = useAuctionBidMutation();
+  const [auctionBid, { isLoading: isBidding, error: bidError }] =
+    useAuctionBidMutation();
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const user = useSelector((state) => state.user.user);
@@ -36,6 +40,9 @@ const AuctionBid = () => {
   const navigate = useNavigate();
   const [bidPrice, setBidPrice] = useState("");
 
+  useEffect(() => {
+    console.log("로그인 사용자 상태:", user);
+  }, [user]);
   const handleBid = async () => {
     if (!user) {
       alert("로그인 후 이용해주세요.");
@@ -67,7 +74,8 @@ const AuctionBid = () => {
     }
   }, [isSuccess, data]);
 
-  const images = auction?.postFiles?.map((file) => BASE_URL + file.fileUrl) || [];
+  const images =
+    auction?.postFiles?.map((file) => BASE_URL + file.fileUrl) || [];
 
   return (
     <Box
@@ -149,7 +157,9 @@ const AuctionBid = () => {
                     backgroundColor: "#d5d5d5",
                   },
                 }}
-                onClick={() => navigate(`/auc/aucbuynow.do?id=${auction.aucId}`)}
+                onClick={() =>
+                  navigate(`/auc/aucbuynow.do?id=${auction.aucId}`)
+                }
               >
                 즉시구매
               </Button>
@@ -192,19 +202,25 @@ const AuctionBid = () => {
               endAdornment: <InputAdornment position="end">원</InputAdornment>,
             }}
           />
-          {auction.aucStatus === "경매중" && user?.userId !== auction.createId && (
-            <CardActions
-              sx={{
-                mt: 2,
-                justifyContent: "space-between",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Button variant="contained" color="error" onClick={handleBid} disabled={isBidding}>
-                {isBidding ? "입찰 처리중..." : "구매 입찰 계속"}
-              </Button>
-            </CardActions>
-          )}
+          {auction.aucStatus === "경매중" &&
+            user?.userId !== auction.createId && (
+              <CardActions
+                sx={{
+                  mt: 2,
+                  justifyContent: "space-between",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleBid}
+                  disabled={isBidding}
+                >
+                  {isBidding ? "입찰 처리중..." : "구매 입찰 계속"}
+                </Button>
+              </CardActions>
+            )}
         </Box>
       ) : null}
     </Box>
