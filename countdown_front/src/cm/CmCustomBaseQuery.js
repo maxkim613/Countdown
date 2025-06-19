@@ -26,8 +26,13 @@ const baseQueryWithAuthHandler = async (args, api, extraOptions) => {
     return { error: { message: "인증 만료 처리 중" } }; // 요청 자체를 막음
   }
 
+  // API 호출 시 args는 문자열일 수도(예: '/msg/1') 있고, 
+  // url 속성을 가진 객체일 수도(예: {url: '/msg', method: 'POST'}) 있습니다.
+  // 어떤 경우든 안전하게 url을 추출합니다.
+  const url = typeof args === 'string' ? args : args?.url;
+
   // 로그인 요청은 인증 만료 처리 예외로 둠
-  const isLoginRequest = args?.url.includes("/user/login.do");
+  const isLoginRequest = url?.includes("/user/login.do");
 
   // 401 인증 오류 + 로그인 요청이 아닐 때만 알림 + 강제 이동 처리
   if (result?.error?.status === 401 && !isLoginRequest) {
