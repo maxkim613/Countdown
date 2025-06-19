@@ -30,7 +30,7 @@ export default function AdminFooter() {
           }}
         />
       </Link>
-      <Link to="/auc/auclist.do">
+      <Link to="/auc/admauclist.do">
         <img
           src="/adminauction.png"
           alt="경매"
@@ -50,7 +50,7 @@ export default function AdminFooter() {
           }}
         />
       </Link>
-      <Link to="/auc/auccreate.do">
+      <Link to="/ann/annlist.do">
         <img
           src="/adminnotification.png"
           alt="공지"

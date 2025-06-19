@@ -62,10 +62,10 @@ export default function AdminDashboard() {
         }}
       >
         {[
-          { title: '경매관리', icon: AuctionIcon },
+          { title: '경매관리', icon: AuctionIcon, path: '/auc/admauclist.do' },
           { title: '유저관리', icon: UserIcon, path: '/manager/alist' },
           { title: '쪽지함', icon: MessageIcon },
-          { title: '공지사항', icon: NoticeIcon },
+          { title: '공지사항', icon: NoticeIcon, path: '/ann/annlist.do' },
         ].map((item) => (
           <Button key={item.title} variant="contained" style={buttonStyle} onClick={() => handleNavigate(item.path)}>
             <img src={item.icon} alt={item.title} style={iconStyle} />
