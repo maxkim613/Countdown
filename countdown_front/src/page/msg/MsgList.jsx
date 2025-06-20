@@ -40,7 +40,9 @@ const MsgList = () => {
     const sortedTabOptions = useMemo(() => {
         if (!tabOptionsFromApi) return [];
         const order = ['ALL', 'RECEIVED', 'SENT', 'AUCTION', 'INQUIRIES']; // 원하는 순서 정의
-        return [...tabOptionsFromApi].sort((a, b) => order.indexOf(a.value) - order.indexOf(b.value));
+        return [...tabOptionsFromApi]
+            .filter(opt => order.includes(opt.value)) // 정의된 순서에 있는 것만 필터링
+            .sort((a, b) => order.indexOf(a.value) - order.indexOf(b.value));
     }, [tabOptionsFromApi]);
 
     // 4. API PARAMETER LOGIC
@@ -51,19 +53,27 @@ const MsgList = () => {
             searchKeyword,
             sortOrder,
             msgBox: 'all',
-            msgType: 'ALL',
         };
 
-        // 선택된 탭에 따라 파라미터 값 변경
-        if (activeTab === 'RECEIVED') {
-            params.msgBox = 'received';
-        } else if (activeTab === 'SENT') {
-            params.msgBox = 'sent';
-        } else if (activeTab === 'AUCTION') {
-            params.msgBox  = 'auction';
-            params.msgType = 'A'; 
-        } else if (activeTab === 'INQUIRIES') {
-            params.msgType = 'I';
+        switch (activeTab) {
+            case 'ALL':
+                params.msgBox = 'all';
+                break;
+            case 'RECEIVED':
+                params.msgBox = 'received';
+                break;
+            case 'SENT':
+                params.msgBox = 'sent';
+                break;
+            case 'AUCTION':
+                params.msgBox = 'auction';
+                break;
+            case 'INQUIRIES':
+                params.msgBox = 'inquiries';
+                break;
+            default:
+                params.msgBox = 'all';
+                break;
         }
         return params;
     }, [userId, activeTab, searchKeyword, sortOrder]);
@@ -74,25 +84,25 @@ const MsgList = () => {
 
     // 5. UI RENDERING
     return (
-        <Paper elevation={0} sx={{ mt: 7, mb: 8, p: 2 }}>
+        <Paper elevation={0} sx={{ mt: 7, mb: 8, p: 2, minHeight: 'calc(100vh - 120px)' }}>
             <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>쪽지함</Typography>
             
-            {/* 필터 영역 */}
+            {/* 필터 영역 (검색창, 정렬 드롭다운) */}
             <Box sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center' }}>
                 <TextField 
                     fullWidth 
-                    placeholder="검색..." 
+                    placeholder="닉네임 또는 제목으로 검색" 
                     size="small" 
                     value={searchKeyword} 
                     onChange={(e) => setSearchKeyword(e.target.value)}
                     InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) }}
                 />
-                {sortOptions && sortOptions.length > 0 && (
+                {sortOptions && (
                     <CmDropdown label="정렬" value={sortOrder} setValue={setSortOrder} options={sortOptions} width="150px" />
                 )}
             </Box>
             
-            {/* 메인 분류 탭: 정렬된 데이터로 렌더링 */}
+            {/* 메인 분류 탭 */}
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={activeTab} onChange={(e, val) => setActiveTab(val)} variant="fullWidth">
                     {sortedTabOptions.map(opt => <Tab key={opt.value} label={opt.label} value={opt.value} />)}
@@ -110,7 +120,7 @@ const MsgList = () => {
                         {messages.map((msg) => (
                             <React.Fragment key={msg.msgId}>
                                 <ListItem disablePadding>
-                                    <ListItemButton onClick={() => navigate(`/msg/view.do?msgId=${msg.msgId}`)} sx={{ py: 1.5, alignItems: 'flex-start' }}>
+                                    <ListItemButton onClick={() => navigate(`/msg/view/${msg.msgId}`)} sx={{ py: 1.5, alignItems: 'flex-start' }}>
                                         <ListItemText
                                             primary={
                                                 <Typography variant="body1" component="span" noWrap sx={{ display: 'block', mb: 0.5 }} fontWeight={msg.readYn === 'N' && msg.receiverId === userId ? 'bold' : 'normal'}>
@@ -130,7 +140,7 @@ const MsgList = () => {
                                         />
                                     </ListItemButton>
                                 </ListItem>
-                                <Divider component="li" variant="inset" />
+                                <Divider component="li" />
                             </React.Fragment>
                         ))}
                     </List>
@@ -139,8 +149,8 @@ const MsgList = () => {
                 )}
             </Box>
 
-            {/* 쪽지 보내기 버튼 */}
-            <Fab color="error" sx={{ position: 'fixed', bottom: 70, right: 16, backgroundColor: '#B00020' }} component={Link} to="/msg/create.do">
+            {/* 쪽지 보내기 버튼 (FAB) */}
+            <Fab color="primary" sx={{ position: 'fixed', bottom: 70, right: 16 }} component={Link} to="/msg/create">
                 <CreateIcon />
             </Fab>
         </Paper>
