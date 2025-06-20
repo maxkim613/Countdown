@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useViewQuery } from '../../features/user/UserApi';
+import { useViewQuery } from '../../features/user/userApi';
 
 const UserProfile = () => {
   const [searchParams] = useSearchParams();

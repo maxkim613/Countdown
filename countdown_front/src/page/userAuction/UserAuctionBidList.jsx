@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Box, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import CmCardList from "../../cm/CmCardList";
-import {  useAuctionMyBidListQuery} from "../../features/auction/auctionApi";
+import {  useAuctionMybidListQuery} from "../../features/auction/auctionApi";
 import { useSelector } from "react-redux";
 
 const UserAuctionList = () => {
   const user = useSelector((state) => state.user.user);
   const [filter, setFilter] = useState("all"); // 전체(all), buy, sell
 
-  const { data: bidDate, isLoading: sellLoading } =  useAuctionMyBidListQuery({
+  const { data: bidDate, isLoading: sellLoading } =  useAuctionMybidListQuery({
     userId: user?.userId,
   });
 

@@ -123,51 +123,7 @@ export const userApi = createApi({
     }),
 
 
-     // 프로필 이미지 조회
-    getUserImg: builder.query({
-      query: (userId) => `/user/userImg/${userId}`,
-      providesTags: ['UserImg'],
-    }),
-
-    // 프로필 이미지 업로드 (multipart/form-data)
-    uploadUserImg: builder.mutation({
-      query: ({ userId, file }) => {
-        const formData = new FormData();
-        formData.append('userId', userId);
-        formData.append('file', file);
-        return {
-          url: '/user/userImg/upload',
-          method: 'POST',
-          body: formData,
-        };
-      },
-      invalidatesTags: ['UserImg'],
-    }),
-
-    // 프로필 이미지 수정
-    updateUserImg: builder.mutation({
-      query: ({ userImgId, file }) => {
-        const formData = new FormData();
-        formData.append('userImgId', userImgId);
-        formData.append('file', file);
-        return {
-          url: '/user/userImg/update',
-          method: 'PUT',
-          body: formData,
-        };
-      },
-      invalidatesTags: ['UserImg'],
-    }),
-
-    // 프로필 이미지 삭제
-    deleteUserImg: builder.mutation({
-      query: (userImgId) => ({
-        url: `/user/userImg/${userImgId}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['UserImg'],
-    }),
-
+  
 
 
 
@@ -190,8 +146,5 @@ export const {
   useUserDeleteMutation,
   useLogoutMutation,
   useViewQuery,
-  useGetUserImgQuery,
-  useUploadUserImgMutation,
-  useUpdateUserImgMutation,
-  useDeleteUserImgMutation,
+ 
 } = userApi;

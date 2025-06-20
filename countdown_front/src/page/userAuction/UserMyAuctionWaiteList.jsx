@@ -4,7 +4,7 @@ import CmCardList from "../../cm/CmCardList";
 import {  useAuctionMyWaitingListQuery} from "../../features/auction/auctionApi";
 import { useSelector } from "react-redux";
 
-const UserAuctionSellList = () => {
+const UserMyAuctionWaiteList = () => {
   const user = useSelector((state) => state.user.user);
   const [filter, setFilter] = useState("all"); // 전체(all), buy, sell
 
@@ -16,7 +16,7 @@ const UserAuctionSellList = () => {
 
   // 판매완료 데이터
   const waiteItems = (data || []).map((item) => ({
-    info1: `상품명 : ${item.aucTitle}`,
+    info1: `${item.aucTitle}`,
     writeinfo1: "",
     info2: `판매자 : ${item.createId}`,
     writeinfo2: "",
@@ -59,4 +59,4 @@ const UserAuctionSellList = () => {
   );
 };
 
-export default UserAuctionSellList;
+export default UserMyAuctionWaiteList;
