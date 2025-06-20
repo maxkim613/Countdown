@@ -8,28 +8,22 @@ const UserAuctionLikeList = () => {
   const user = useSelector((state) => state.user.user);
   const { data: likedData, isLoading } = useAuctionmylikeListQuery(user?.userId);
 
-  const BASE_URL = "http://192.168.0.41:8081/";
 
-
-
-  const likeItems = (likedData || []).map((item) => ({  
-
-     info1: `상품명 : ${item.aucTitle}`,
-    writeinfo1: "",
-    info2: `판매자 : ${item.createId}`,
-    writeinfo2: "",
-    info3: `좋아요숫자 : ${item.aucLikecnt ?? 0}`,
-    writeinfo3: "",
-    info4: ``,
-    writeinfo4: "",
-    info5: "",  // 필요 시 추가 정보
-    writeinfo5: ""
-  }));
-
-    console.log("likedData", likedData);
-
-  console.log("likeItems", likeItems);
-
+  const likeItems = (likedData || []).map((item) => ({
+  info1: item.aucTitle,
+  writeinfo1: "",
+  info2: item.aucCprice,
+  writeinfo2: "원",
+  info3: item.aucDeadline,
+  writeinfo3: "",
+  info4: item.aucStatus,
+  writeinfo4: "",
+  thumbnailUrl: item.fileId
+    ? `${process.env.REACT_APP_API_BASE_URL}/auc/imgDown.do?fileId=${item.fileId}`
+    : null,
+  id: item.aucId,
+}));
+console.log(likedData);
   if (isLoading) return <div>로딩 중...</div>;
 
   return (

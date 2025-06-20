@@ -24,7 +24,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const AuctionView = () => {
-  const [mainImage, setMainImage] = useState(""); 
+  const [mainImage, setMainImage] = useState("");
   const [bidList, setBidList] = useState([]);
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
@@ -37,7 +37,13 @@ const AuctionView = () => {
   });
 
   const [toggleLike] = useToggleLikeMutation();
-  const { data, isLoading, error, isSuccess } = useAuctionViewQuery({
+  const {
+    data,
+    isLoading,
+    error,
+    isSuccess,
+    refetch: refetchAuctionView,
+  } = useAuctionViewQuery({
     aucId: id,
   });
 
@@ -80,6 +86,7 @@ const AuctionView = () => {
 
       if (result) {
         await refetchLikeStatus();
+        await refetchAuctionView(); 
       }
     } catch (error) {
       console.error("toggleLike 오류:", error);

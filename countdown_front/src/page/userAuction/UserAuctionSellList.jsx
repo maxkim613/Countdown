@@ -11,24 +11,22 @@ const UserAuctionSellList = () => {
   const { data, isLoading } =  useAuctionMySellListQuery({
     userId: user?.userId,
   });
-
-  const BASE_URL = "http://192.168.0.41:8081/";
-
+ 
   // 판매완료 데이터
   const sellItems = (data || []).map((item) => ({
-    info1: `상품명 : ${item.aucTitle}`,
-    writeinfo1: "",
-    info2: `판매자 : ${item.createId}`,
-    writeinfo2: "",
-    info3: item.aucDeadline,
-    writeinfo3: "",
-    info4: item.aucStatus === "경매종료" ? "판매완료" : item.aucStatus,
-    writeinfo4: "",
-    thumbnailUrl: item.thumbnailUrl
-      ? `${BASE_URL}${item.thumbnailUrl.startsWith("/") ? item.thumbnailUrl.slice(1) : item.thumbnailUrl}`
-      : null,
-    id: item.aucId,
-  }));
+  info1: item.aucTitle,
+  writeinfo1: "",
+  info2: item.aucCprice,
+  writeinfo2: "원",
+  info3: item.aucDeadline,
+  writeinfo3: "",
+  info4: item.aucStatus,
+  writeinfo4: "",
+  thumbnailUrl: item.fileId
+    ? `${process.env.REACT_APP_API_BASE_URL}/auc/imgDown.do?fileId=${item.fileId}`
+    : null,
+  id: item.aucId,
+}));
 
 
   return (

@@ -61,7 +61,7 @@ export default function Footer() {
             }}
           />
         </Link>
-        <Link to="/auc/auclist.do">
+        <Link to="/userA/useralike">
           <img
             src="/like.webp"
             alt="로고"
@@ -75,7 +75,7 @@ export default function Footer() {
             }}
           />
         </Link>
-        <Link to="/auc/auclist.do">
+        <Link to="/user/view.do">
           <img
             src="/my.png"
             alt="로고"
