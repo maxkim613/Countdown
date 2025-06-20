@@ -8,7 +8,7 @@ import {
   useViewQuery,
   useCheckNicknameMutation,
   useCheckEmailMutation,
-} from '../../features/user/userApi';
+} from '../../features/user/UserApi';
 import {
   useGetUserImgsQuery,
   useUploadUserImgMutation,
