@@ -8,11 +8,13 @@ import {
   useViewQuery,
   useCheckNicknameMutation,
   useCheckEmailMutation,
-  useGetUserImgQuery,
+} from '../../features/user/UserApi';
+import {
+  useGetUserImgsQuery,
   useUploadUserImgMutation,
   useUpdateUserImgMutation,
   useDeleteUserImgMutation,
-} from '../../features/user/UserApi';
+} from '../../features/user/userImgApi';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useCmDialog } from '../../cm/CmDialogUtil';
@@ -33,7 +35,6 @@ const UserUpdate = () => {
   const [addrD, setAddrD] = useState('');
   const [postCode, setPostCode] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedImageFile, setSelectedImageFile] = useState(null);
 
   const fileInputRef = useRef();
   const nicknameRef = useRef();
@@ -47,8 +48,14 @@ const UserUpdate = () => {
   const [updateUserImg] = useUpdateUserImgMutation();
   const [deleteUserImg] = useDeleteUserImgMutation();
 
+  const {
+    data: imgData,
+    refetch: refetchImg,
+  } = useGetUserImgsQuery(user?.userId, { skip: !user?.userId });
+
+  const userImg = Array.isArray(imgData?.data) ? imgData.data[0] : imgData?.data || null;
+
   const { data: userInfo, isSuccess } = useViewQuery({ userId: user?.userId });
-  const { data: imgData, refetch: refetchImg } = useGetUserImgQuery({ userId: user?.userId }, { skip: !user?.userId });
 
   useEffect(() => {
     if (isSuccess && userInfo?.data) {
@@ -70,18 +77,16 @@ const UserUpdate = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setSelectedImageFile(file);
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("userId", userId);
-
     try {
-      if (imgData?.data) {
-        await updateUserImg(formData).unwrap();
+      if (userImg?.userImgId) {
+        await updateUserImg({
+          userImgId: userImg.userImgId,
+          userId,
+          file,
+        }).unwrap();
         showAlert('이미지가 수정되었습니다.');
       } else {
-        await uploadUserImg(formData).unwrap();
+        await uploadUserImg({ userId, file }).unwrap();
         showAlert('이미지가 등록되었습니다.');
       }
       refetchImg();
@@ -91,8 +96,15 @@ const UserUpdate = () => {
   };
 
   const handleImageDelete = async () => {
+    const userImgId = userImg?.userImgId;
+    if (!userImgId || typeof userImgId !== 'number') {
+      console.warn('userImgId가 잘못됨:', userImgId);
+      showAlert('삭제할 이미지 정보가 없습니다.');
+      return;
+    }
+
     try {
-      await deleteUserImg({ userId });
+      await deleteUserImg(userImgId).unwrap();
       showAlert('이미지가 삭제되었습니다.');
       refetchImg();
     } catch {
@@ -158,36 +170,41 @@ const UserUpdate = () => {
     }
   };
 
+  console.log("userImg 정보:", userImg);
+
+
+
   return (
     <Box sx={{ width: '350px', height: '640px', margin: '40px auto 0', padding: '1rem' }}>
-      {/* 프로필 이미지 */}
       <Box sx={{
         p: 2, mb: 3, borderRadius: '16px', backgroundColor: '#fff', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
         display: 'flex', alignItems: 'center', position: 'relative',
       }}>
         <Box
           component="img"
-          src={imgData?.data || '/default-profile.png'}
+          src={
+              userImg?.userImgPath
+            ? `${process.env.REACT_APP_API_BASE_URL.replace('/api', '')}${encodeURI(userImg.userImgPath)}`
+            : '/default-profile.png'
+              }
+              
           alt="프로필"
           sx={{
-            width: '100px',
-            height: '100px',
-            borderRadius: '50%',
-            objectFit: 'cover',
-            border: '2px solid #ccc',
-            marginRight: '16px',
+            width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover',
+            border: '2px solid #ccc', marginRight: '16px',
           }}
         />
+        
         <Box sx={{ flex: 1 }}>
           <Typography variant="h6" fontWeight="bold">
-            사용자 이름: {username || '이름 없음'}
+            사용자 : {username || '이름 없음'}
           </Typography>
         </Box>
         <Box sx={{ position: 'absolute', right: 8, top: 8 }}>
           <Button size="small" variant="contained" onClick={triggerFileInput} sx={{ mr: 1, fontSize: '12px' }}>
             사진 변경
           </Button>
-          {imgData?.data && (
+          {userImg?.userImgId && (
             <Button size="small" variant="outlined" onClick={handleImageDelete} sx={{ fontSize: '12px' }}>
               삭제
             </Button>
@@ -371,7 +388,7 @@ const UserUpdate = () => {
       )}
 
       {/* 버튼 */}
-      <Button
+   <Button
         fullWidth
         variant="contained"
         onClick={handleUpdateClick}
@@ -406,5 +423,7 @@ const UserUpdate = () => {
     </Box>
   );
 };
+
+
 
 export default UserUpdate;

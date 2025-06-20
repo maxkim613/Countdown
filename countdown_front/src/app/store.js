@@ -7,6 +7,7 @@ import { announcementApi } from '../features/announcement/announcementApi';
 import { fileApi } from '../features/file/fileApi'; 
 import { msgApi } from '../features/msg/msgApi';
 import { codeApi } from '../features/code/codeApi';
+import { userImgApi } from '../features/user/userImgApi';
 
 import userReducer from '../features/user/userSlice';
 import storageSession from 'redux-persist/lib/storage/session'; // sessionStorage로 변경
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   [announcementApi.reducerPath]: announcementApi.reducer,
   [msgApi.reducerPath]: msgApi.reducer, // msgApi의 리듀서 추가
   [codeApi.reducerPath]: codeApi.reducer,
+  [userImgApi.reducerPath]: userImgApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -43,7 +45,8 @@ export const store = configureStore({
       auctionApi.middleware,
       announcementApi.middleware,
       msgApi.middleware, // msgApi의 미들웨어 추가
-      codeApi.middleware 
+      codeApi.middleware,
+      userImgApi.middleware 
     ),
 });
 
