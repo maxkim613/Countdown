@@ -83,11 +83,11 @@ const App = () => {
         <Route path="/user/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/user/rpassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
 
-        <Route path="/userA/useral" element={<UserAuctionList />} />
-        <Route path="/userA/userabid" element={<UserAuctionBidList />} />
-        <Route path="/userA/userasell" element={<UserAuctionSellList />} />
-        <Route path="/userA/userawaite" element={<UserMyAuctionWaiteList />} />
-        <Route path="/userA/useralike" element={<UserAuctionLikeList />} />
+        <Route path="/userA/useral" element={<LayoutLogin><UserAuctionList /></LayoutLogin>} />
+        <Route path="/userA/userabid" element={<LayoutLogin><UserAuctionBidList /></LayoutLogin>} />
+        <Route path="/userA/userasell" element={<LayoutLogin><UserAuctionSellList /></LayoutLogin>} />
+        <Route path="/userA/userawaite" element={<LayoutLogin><UserMyAuctionWaiteList /></LayoutLogin>} />
+        <Route path="/userA/useralike" element={<LayoutLogin><UserAuctionLikeList /></LayoutLogin>} />
 
 
 
