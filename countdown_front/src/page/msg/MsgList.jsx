@@ -84,25 +84,25 @@ const MsgList = () => {
 
     // 5. UI RENDERING
     return (
-        <Paper elevation={0} sx={{ mt: 7, mb: 8, p: 2, minHeight: 'calc(100vh - 120px)' }}>
+        <Paper elevation={0} sx={{ mt: 7, mb: 8, p: 2 }}>
             <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>쪽지함</Typography>
             
-            {/* 필터 영역 (검색창, 정렬 드롭다운) */}
+            {/* 필터 영역 */}
             <Box sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center' }}>
                 <TextField 
                     fullWidth 
-                    placeholder="닉네임 또는 제목으로 검색" 
+                    placeholder="검색..." 
                     size="small" 
                     value={searchKeyword} 
                     onChange={(e) => setSearchKeyword(e.target.value)}
                     InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) }}
                 />
-                {sortOptions && (
+                {sortOptions && sortOptions.length > 0 && (
                     <CmDropdown label="정렬" value={sortOrder} setValue={setSortOrder} options={sortOptions} width="150px" />
                 )}
             </Box>
             
-            {/* 메인 분류 탭 */}
+            {/* 메인 분류 탭: 정렬된 데이터로 렌더링 */}
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={activeTab} onChange={(e, val) => setActiveTab(val)} variant="fullWidth">
                     {sortedTabOptions.map(opt => <Tab key={opt.value} label={opt.label} value={opt.value} />)}
@@ -120,7 +120,7 @@ const MsgList = () => {
                         {messages.map((msg) => (
                             <React.Fragment key={msg.msgId}>
                                 <ListItem disablePadding>
-                                    <ListItemButton onClick={() => navigate(`/msg/view/${msg.msgId}`)} sx={{ py: 1.5, alignItems: 'flex-start' }}>
+                                    <ListItemButton onClick={() => navigate(`/msg/view.do?msgId=${msg.msgId}`)} sx={{ py: 1.5, alignItems: 'flex-start' }}>
                                         <ListItemText
                                             primary={
                                                 <Typography variant="body1" component="span" noWrap sx={{ display: 'block', mb: 0.5 }} fontWeight={msg.readYn === 'N' && msg.receiverId === userId ? 'bold' : 'normal'}>
@@ -140,7 +140,7 @@ const MsgList = () => {
                                         />
                                     </ListItemButton>
                                 </ListItem>
-                                <Divider component="li" />
+                                <Divider component="li" variant="inset" />
                             </React.Fragment>
                         ))}
                     </List>
@@ -149,8 +149,8 @@ const MsgList = () => {
                 )}
             </Box>
 
-            {/* 쪽지 보내기 버튼 (FAB) */}
-            <Fab color="primary" sx={{ position: 'fixed', bottom: 70, right: 16 }} component={Link} to="/msg/create">
+            {/* 쪽지 보내기 버튼 */}
+            <Fab color="primary" sx={{ position: 'fixed', bottom: 70, right: 16, backgroundColor: '#B00020' }} component={Link} to="/msg/create.do">
                 <CreateIcon />
             </Fab>
         </Paper>
