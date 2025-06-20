@@ -1,6 +1,6 @@
 // src/app/store.js
 import { configureStore } from '@reduxjs/toolkit';
-import { userApi } from '../features/user/userApi';
+import { userApi } from '../features/user/UserApi';
 import { boardApi } from '../features/board/boardApi'; 
 import { fileApi } from '../features/file/fileApi'; 
 

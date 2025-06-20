@@ -40,7 +40,9 @@ const MsgList = () => {
     const sortedTabOptions = useMemo(() => {
         if (!tabOptionsFromApi) return [];
         const order = ['ALL', 'RECEIVED', 'SENT', 'AUCTION', 'INQUIRIES']; // 원하는 순서 정의
-        return [...tabOptionsFromApi].sort((a, b) => order.indexOf(a.value) - order.indexOf(b.value));
+        return [...tabOptionsFromApi]
+            .filter(opt => order.includes(opt.value)) // 정의된 순서에 있는 것만 필터링
+            .sort((a, b) => order.indexOf(a.value) - order.indexOf(b.value));
     }, [tabOptionsFromApi]);
 
     // 4. API PARAMETER LOGIC
@@ -51,19 +53,27 @@ const MsgList = () => {
             searchKeyword,
             sortOrder,
             msgBox: 'all',
-            msgType: 'ALL',
         };
 
-        // 선택된 탭에 따라 파라미터 값 변경
-        if (activeTab === 'RECEIVED') {
-            params.msgBox = 'received';
-        } else if (activeTab === 'SENT') {
-            params.msgBox = 'sent';
-        } else if (activeTab === 'AUCTION') {
-            params.msgBox  = 'auction';
-            params.msgType = 'A'; 
-        } else if (activeTab === 'INQUIRIES') {
-            params.msgType = 'I';
+        switch (activeTab) {
+            case 'ALL':
+                params.msgBox = 'all';
+                break;
+            case 'RECEIVED':
+                params.msgBox = 'received';
+                break;
+            case 'SENT':
+                params.msgBox = 'sent';
+                break;
+            case 'AUCTION':
+                params.msgBox = 'auction';
+                break;
+            case 'INQUIRIES':
+                params.msgBox = 'inquiries';
+                break;
+            default:
+                params.msgBox = 'all';
+                break;
         }
         return params;
     }, [userId, activeTab, searchKeyword, sortOrder]);
@@ -140,7 +150,7 @@ const MsgList = () => {
             </Box>
 
             {/* 쪽지 보내기 버튼 */}
-            <Fab color="error" sx={{ position: 'fixed', bottom: 70, right: 16, backgroundColor: '#B00020' }} component={Link} to="/msg/create.do">
+            <Fab color="primary" sx={{ position: 'fixed', bottom: 70, right: 16, backgroundColor: '#B00020' }} component={Link} to="/msg/create.do">
                 <CreateIcon />
             </Fab>
         </Paper>
