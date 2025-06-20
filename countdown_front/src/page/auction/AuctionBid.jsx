@@ -52,6 +52,10 @@ const AuctionBid = () => {
       alert("입찰 가격은 현재 입찰가보다 높아야 합니다.");
       return;
     }
+    if (Number(bidPrice) >= Number(auction.aucBprice)) {
+      alert("입찰 가격은 즉시구매가보다 낮아야 합니다.");
+      return;
+    }
     try {
       await auctionBid({
         aucId: auction.aucId,
@@ -59,7 +63,7 @@ const AuctionBid = () => {
         bidPrice: Number(bidPrice),
       }).unwrap();
       alert("입찰 성공");
-      navigate("/auc/aucmylist.do"); // 입찰 후 이동 예시
+      navigate("/auc/aucmylist.do");
     } catch (err) {
       console.error("입찰 실패:", err);
       alert("입찰에 실패했습니다.");
