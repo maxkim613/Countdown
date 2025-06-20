@@ -20,7 +20,7 @@ export default function AdminFooter() {
         justifyContent: 'space-evenly',
       }}
     >
-      <Link to="/auc/auclist.do">
+      <Link to="/manager/admin">
         <img
           src="/adminhome.png"
           alt="홈"
@@ -40,7 +40,7 @@ export default function AdminFooter() {
           }}
         />
       </Link>
-      <Link to="/auc/userlist.do">
+      <Link to="/manager/alist">
         <img
           src="/adminuser.png"
           alt="유저"
