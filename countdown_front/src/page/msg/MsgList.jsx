@@ -50,8 +50,8 @@ const MsgList = () => {
             userId,
             searchKeyword,
             sortOrder,
-            msgBox: 'all',  // 기본값: 전체 (받은쪽지+보낸쪽지)
-            msgType: 'ALL', // 기본값: 전체 타입
+            msgBox: 'all',
+            msgType: 'ALL',
         };
 
         // 선택된 탭에 따라 파라미터 값 변경
@@ -60,9 +60,10 @@ const MsgList = () => {
         } else if (activeTab === 'SENT') {
             params.msgBox = 'sent';
         } else if (activeTab === 'AUCTION') {
-            params.msgType = 'A'; // '경매' 탭 선택 시, 경매 타입(A)만 조회
+            params.msgBox  = 'auction';
+            params.msgType = 'A'; 
         } else if (activeTab === 'INQUIRIES') {
-            params.msgType = 'I'; // '경매' 탭 선택 시, 경매 타입(A)만 조회
+            params.msgType = 'I';
         }
         return params;
     }, [userId, activeTab, searchKeyword, sortOrder]);
@@ -99,7 +100,7 @@ const MsgList = () => {
             </Box>
             
             {/* 쪽지 목록 */}
-            <Box> {/* 수정: 불필요한 상단 패딩 제거 */}
+            <Box>
                 {(isLoading || isFetching) ? (
                     <CircularProgress sx={{ display: 'block', margin: '50px auto' }} />
                 ) : error ? (
