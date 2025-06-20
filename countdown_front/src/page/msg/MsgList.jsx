@@ -28,7 +28,7 @@ const MsgList = () => {
     
     // 1. STATE MANAGEMENT
     const [activeTab, setActiveTab] = useState('ALL'); // 기본 탭을 '전체'로 변경
-    const [sortOrder, setSortOrder] = useState('DESC');      // 기본 정렬을 '최신순(DESC)'으로 설정
+    const [sortOrder, setSortOrder] = useState('DESC'); // 기본 정렬을 '최신순(DESC)'으로 설정
     const [searchKeyword, setSearchKeyword] = useState('');
     const userId = useSelector((state) => state.user.user?.userId);
 
@@ -150,7 +150,7 @@ const MsgList = () => {
             </Box>
 
             {/* 쪽지 보내기 버튼 */}
-            <Fab color="primary" sx={{ position: 'fixed', bottom: 70, right: 16, backgroundColor: '#B00020' }} component={Link} to="/msg/create.do">
+            <Fab color="error" sx={{ position: 'fixed', bottom: 70, right: 16, backgroundColor: '#B00020' }} component={Link} to="/msg/create.do">
                 <CreateIcon />
             </Fab>
         </Paper>
