@@ -38,21 +38,22 @@ const AuctionUpdate = () => {
   const { data, isSuccess } = useAuctionViewQuery({ aucId: id });
   const [auctionUpdate] = useAuctionUpdateMutation();
 
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [editorValue, setEditorValue] = useState("");
   const [selected, setSelected] = useState("");
   const [aucdeadline, setAucdeadline] = useState("");
   const [aucstartdate, setAucstartdate] = useState("");
   const [auclocation, setAuclocation] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [mainImageIndex, setMainImageIndex] = useState(0);
 
   useEffect(() => {
     if (isSuccess) {
       const auc = data?.data;
-      setEditorValue(auc.aucDescription);
-      setSelected(auc.aucCategory);
-      setAucdeadline(auc.aucDeadline);
-      setAucstartdate(auc.aucStartdate);
-      setAuclocation(auc.aucLocation);
+      setEditorValue(auc.aucDescription || "");
+      setSelected(auc.aucCategory || "");
+      setAucdeadline(auc.aucDeadline?.substring(0, 10) || "");
+      setAucstartdate(auc.aucStartdate?.substring(0, 10) || "");
+      setAuclocation(auc.aucLocation || "");
     }
   }, [isSuccess, data]);
 
@@ -72,9 +73,15 @@ const AuctionUpdate = () => {
   });
 
   const handleRemoveFile = (indexToRemove) => {
-    setUploadedFiles((prevFiles) =>
-      prevFiles.filter((_, index) => index !== indexToRemove)
-    );
+    setUploadedFiles((prevFiles) => {
+      const newFiles = prevFiles.filter((_, idx) => idx !== indexToRemove);
+      if (mainImageIndex === indexToRemove) {
+        return newFiles;
+      } else if (mainImageIndex > indexToRemove) {
+        setMainImageIndex((prev) => prev - 1);
+      }
+      return newFiles;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -83,7 +90,6 @@ const AuctionUpdate = () => {
     const aucsprice = e.target.aucsprice.value.trim();
     const aucbprice = e.target.aucbprice.value.trim();
     const contentText = editorRef.current?.getContent({ format: "text" });
-    const auclocation = e.target.auclocation.value.trim();
 
     if (CmUtil.isEmpty(auctitle)) {
       showAlert("제목을 입력해주세요.");
@@ -91,8 +97,21 @@ const AuctionUpdate = () => {
       return;
     }
 
+    if (!CmUtil.maxLength(auctitle, 100)) {
+      showAlert("제목은 최대 100자까지 입력할 수 있습니다.");
+      titleRef.current?.focus();
+      return;
+    }
+
     if (CmUtil.isEmpty(contentText)) {
       showAlert("내용을 입력해주세요.", () => {
+        editorRef?.current?.focus();
+      });
+      return;
+    }
+
+    if (!CmUtil.maxLength(contentText, 500)) {
+      showAlert("내용은 최대 500자까지 입력할 수 있습니다.", () => {
         editorRef?.current?.focus();
       });
       return;
@@ -108,6 +127,7 @@ const AuctionUpdate = () => {
     formData.append("aucDeadline", aucdeadline);
     formData.append("aucStartdate", aucstartdate);
     formData.append("aucLocation", auclocation);
+    formData.append("mainImageIndex", mainImageIndex);
 
     uploadedFiles.forEach((file) => {
       formData.append("files", file);
@@ -119,7 +139,7 @@ const AuctionUpdate = () => {
         navigate(`/auc/aucview.do?id=${id}`)
       );
     } else {
-      showAlert("수정에 실패했습니다.");
+      showAlert("게시글 수정에 실패했습니다.");
     }
   };
 
@@ -143,6 +163,7 @@ const AuctionUpdate = () => {
             variant="outlined"
             defaultValue={data?.data?.aucTitle || ""}
             inputRef={titleRef}
+            inputProps={{ maxLength: 100 }}
           />
         </Box>
 
@@ -175,6 +196,7 @@ const AuctionUpdate = () => {
             variant="outlined"
             defaultValue={data?.data?.aucSprice || ""}
             inputRef={aucspriceRef}
+            inputProps={{ maxLength: 10 }}
           />
         </Box>
 
@@ -187,6 +209,7 @@ const AuctionUpdate = () => {
             variant="outlined"
             defaultValue={data?.data?.aucBprice || ""}
             inputRef={aucbpriceRef}
+            inputProps={{ maxLength: 10 }}
           />
         </Box>
 
@@ -197,8 +220,10 @@ const AuctionUpdate = () => {
             name="auclocation"
             label="위치"
             variant="outlined"
-            defaultValue={data?.data?.aucLocation || ""}
+            value={auclocation}
+            onChange={(e) => setAuclocation(e.target.value)}
             inputRef={auclocationRef}
+            inputProps={{ maxLength: 10 }}
           />
         </Box>
 
@@ -243,15 +268,28 @@ const AuctionUpdate = () => {
                 <ListItem
                   key={index}
                   secondaryAction={
-                    <IconButton
-                      edge="end"
-                      onClick={() => handleRemoveFile(index)}
-                    >
-                      <DeleteIcon color="error" />
-                    </IconButton>
+                    <>
+                      <Button
+                        size="small"
+                        variant={index === mainImageIndex ? "contained" : "outlined"}
+                        color="primary"
+                        onClick={() => setMainImageIndex(index)}
+                      >
+                        대표
+                      </Button>
+                      <IconButton
+                        edge="end"
+                        onClick={() => handleRemoveFile(index)}
+                      >
+                        <DeleteIcon color="error" />
+                      </IconButton>
+                    </>
                   }
                 >
-                  <ListItemText primary={file.name} />
+                  <ListItemText
+                    primary={file.name}
+                    secondary={index === mainImageIndex ? "대표 이미지" : ""}
+                  />
                 </ListItem>
               ))}
             </List>
@@ -263,7 +301,7 @@ const AuctionUpdate = () => {
             수정 완료
           </Button>
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
             onClick={() => navigate(`/auc/aucview.do?id=${id}`)}
           >
