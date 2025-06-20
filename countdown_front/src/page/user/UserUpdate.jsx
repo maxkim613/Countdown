@@ -1,6 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Typography, Button, FormControl, InputLabel, OutlinedInput } from '@mui/material';
-import { useUserUpdateMutation, useUserDeleteMutation, useViewQuery, useCheckNicknameMutation, useCheckEmailMutation } from '../../features/user/UserApi';
+import {
+  Box, Typography, Button, FormControl, InputLabel, OutlinedInput,
+} from '@mui/material';
+import {
+  useUserUpdateMutation,
+  useUserDeleteMutation,
+  useViewQuery,
+  useCheckNicknameMutation,
+  useCheckEmailMutation,
+  useGetUserImgQuery,
+  useUploadUserImgMutation,
+  useUpdateUserImgMutation,
+  useDeleteUserImgMutation,
+} from '../../features/user/UserApi';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useCmDialog } from '../../cm/CmDialogUtil';
@@ -12,6 +24,7 @@ const UserUpdate = () => {
   const navigate = useNavigate();
   const { showAlert } = useCmDialog();
 
+  const [username, setUserName] = useState('');
   const [userId, setUserId] = useState('');
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
@@ -20,45 +33,72 @@ const UserUpdate = () => {
   const [addrD, setAddrD] = useState('');
   const [postCode, setPostCode] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [profileImageFile, setProfileImageFile] = useState(null);
-  const [profileImage, setProfileImage] = useState(null);
+  const [selectedImageFile, setSelectedImageFile] = useState(null);
 
+  const fileInputRef = useRef();
   const nicknameRef = useRef();
   const emailRef = useRef();
-  const userTelRef = useRef();
-  const fileInputRef = useRef();
 
   const [userUpdate] = useUserUpdateMutation();
   const [userDelete] = useUserDeleteMutation();
   const [checkNickname] = useCheckNicknameMutation();
   const [checkEmail] = useCheckEmailMutation();
-  const { data, isSuccess } = useViewQuery({ userId: user?.userId });
+  const [uploadUserImg] = useUploadUserImgMutation();
+  const [updateUserImg] = useUpdateUserImgMutation();
+  const [deleteUserImg] = useDeleteUserImgMutation();
+
+  const { data: userInfo, isSuccess } = useViewQuery({ userId: user?.userId });
+  const { data: imgData, refetch: refetchImg } = useGetUserImgQuery({ userId: user?.userId }, { skip: !user?.userId });
 
   useEffect(() => {
-    if (isSuccess && data?.data) {
-      const info = data.data;
+    if (isSuccess && userInfo?.data) {
+      const info = userInfo.data;
       setUserId(info.userId);
+      setUserName(info.username || '');
       setNickname(info.nickname);
       setEmail(info.email);
       setUserTel(info.userTel || '');
       setAddr(info.addr || '');
       setAddrD(info.addrD || '');
       setPostCode(info.postCode || '');
-      setProfileImage(info.profileImage || null);
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, userInfo]);
 
-  const handleProfileImageChange = (e) => {
+  const triggerFileInput = () => fileInputRef.current.click();
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setProfileImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setProfileImage(reader.result);
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    setSelectedImageFile(file);
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("userId", userId);
+
+    try {
+      if (imgData?.data) {
+        await updateUserImg(formData).unwrap();
+        showAlert('이미지가 수정되었습니다.');
+      } else {
+        await uploadUserImg(formData).unwrap();
+        showAlert('이미지가 등록되었습니다.');
+      }
+      refetchImg();
+    } catch {
+      showAlert('이미지 업로드 중 오류가 발생했습니다.');
     }
   };
 
-  const triggerFileInput = () => fileInputRef.current.click();
+  const handleImageDelete = async () => {
+    try {
+      await deleteUserImg({ userId });
+      showAlert('이미지가 삭제되었습니다.');
+      refetchImg();
+    } catch {
+      showAlert('이미지 삭제 실패');
+    }
+  };
 
   const handleCheckNickname = async () => {
     if (CmUtil.isEmpty(nickname)) {
@@ -95,8 +135,9 @@ const UserUpdate = () => {
     if (CmUtil.isEmpty(userTel)) return showAlert('전화번호를 입력해주세요.');
 
     const formData = new FormData();
-    formData.append("user", new Blob([JSON.stringify({ nickname, email, userTel, addr, addrD, postCode })], { type: "application/json" }));
-    if (profileImageFile) formData.append("file", profileImageFile);
+    formData.append("user", new Blob([JSON.stringify({
+      userId, nickname, email, userTel, addr, addrD, postCode,
+    })], { type: "application/json" }));
 
     try {
       const res = await userUpdate(formData).unwrap();
@@ -118,39 +159,44 @@ const UserUpdate = () => {
   };
 
   return (
-    <Box
-      sx={{
-        width: 350,
-        height: 640,
-        m: '0 auto',
-        p: 3,
-        boxSizing: 'border-box',
-        fontFamily: 'sans-serif',
-      }}
-    >
-      <Typography
-        variant="h5"
-        sx={{ textAlign: 'center', mb: 3, fontWeight: 'bold', marginTop: '40px' }}
-      >
-        회원정보 수정
-      </Typography>
-
-      {/* 프로필 */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+    <Box sx={{ width: '350px', height: '640px', margin: '40px auto 0', padding: '1rem' }}>
+      {/* 프로필 이미지 */}
+      <Box sx={{
+        p: 2, mb: 3, borderRadius: '16px', backgroundColor: '#fff', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+        display: 'flex', alignItems: 'center', position: 'relative',
+      }}>
         <Box
           component="img"
-          src={profileImage || '/default-profile.png'}
+          src={imgData?.data || '/default-profile.png'}
           alt="프로필"
-          sx={{ width: 100, height: 100, borderRadius: '50%', border: '2px solid #ccc', objectFit: 'cover' }}
+          sx={{
+            width: '100px',
+            height: '100px',
+            borderRadius: '50%',
+            objectFit: 'cover',
+            border: '2px solid #ccc',
+            marginRight: '16px',
+          }}
         />
-        <Button variant="contained" onClick={triggerFileInput} sx={{ borderRadius: '20px', ml: 2, bgcolor: '#B00020' }}>
-          사진 변경
-        </Button>
-        <input type="file" accept="image/*" ref={fileInputRef} style={{ display: 'none' }} onChange={handleProfileImageChange} />
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="h6" fontWeight="bold">
+            사용자 이름: {username || '이름 없음'}
+          </Typography>
+        </Box>
+        <Box sx={{ position: 'absolute', right: 8, top: 8 }}>
+          <Button size="small" variant="contained" onClick={triggerFileInput} sx={{ mr: 1, fontSize: '12px' }}>
+            사진 변경
+          </Button>
+          {imgData?.data && (
+            <Button size="small" variant="outlined" onClick={handleImageDelete} sx={{ fontSize: '12px' }}>
+              삭제
+            </Button>
+          )}
+        </Box>
+        <input type="file" accept="image/*" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImageChange} />
       </Box>
 
       {/* 닉네임 */}
-
       <FormControl fullWidth sx={{ mb: 4 }}>
         <InputLabel htmlFor="nickname">
           닉네임
@@ -173,6 +219,7 @@ const UserUpdate = () => {
               backgroundColor: '#B00020',
               borderColor: '#B00020',
               color: 'white',
+               fontSize: '12px',
               height: 40,
               px: 2,
               whiteSpace: 'nowrap',
@@ -210,6 +257,7 @@ const UserUpdate = () => {
               borderColor: '#B00020',
               color: 'white',
               height: 40,
+               fontSize: '12px',
               px: 2,
               whiteSpace: 'nowrap',
               borderRadius: '20px',
@@ -250,6 +298,7 @@ const UserUpdate = () => {
                 borderColor: '#B00020',
                 color: 'white',
                 height: 40,
+                 fontSize: '12px',
                 px: 2,
                 whiteSpace: 'nowrap',
                 borderRadius: '20px',

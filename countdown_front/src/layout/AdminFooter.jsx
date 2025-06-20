@@ -20,7 +20,7 @@ export default function AdminFooter() {
         justifyContent: 'space-evenly',
       }}
     >
-      <Link to="/auc/auclist.do">
+      <Link to="/manager/admin">
         <img
           src="/adminhome.png"
           alt="홈"
@@ -30,7 +30,7 @@ export default function AdminFooter() {
           }}
         />
       </Link>
-      <Link to="/auc/auclist.do">
+      <Link to="/auc/admauclist.do">
         <img
           src="/adminauction.png"
           alt="경매"
@@ -40,7 +40,7 @@ export default function AdminFooter() {
           }}
         />
       </Link>
-      <Link to="/auc/userlist.do">
+      <Link to="/manager/alist">
         <img
           src="/adminuser.png"
           alt="유저"
@@ -50,7 +50,7 @@ export default function AdminFooter() {
           }}
         />
       </Link>
-      <Link to="/auc/auccreate.do">
+      <Link to="/ann/annlist.do">
         <img
           src="/adminnotification.png"
           alt="공지"

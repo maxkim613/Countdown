@@ -11,10 +11,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useListQuery } from '../../features/user/UserApi';
 import { CmUtil } from '../../cm/CmUtil';
 import CmUserCardList from '../../cm/CmUserCardList';
-
 import CmUserDataCard from '../../cm/CmUserDataCard';
+import { useLocation } from 'react-router-dom';
+
 
 const AdminUserList = () => {
+
+   const location = useLocation();
   
 
   const [search, setSearch] = useState({
@@ -51,13 +54,14 @@ const AdminUserList = () => {
     refetch();
   };
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
+    useEffect(() => {
+      if (location?.state?.refreshed) {
+        refetch?.(); // refetch 안전 호출
+      }
+    }, [location?.state?.refreshed]);
 
   return (
-    <Box
-      Box
+    <Box    
       sx={{
         width: '350px',
         height: '640px',

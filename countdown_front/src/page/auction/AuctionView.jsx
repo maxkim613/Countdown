@@ -280,7 +280,7 @@ const AuctionView = () => {
             </tbody>
           </Box>
 
-          {auction.aucStatus === "판매대기" &&
+          {auction.aucStatus === "경매대기" &&
             user?.userId === auction.createId && (
               <CardActions sx={{ mt: 2, justifyContent: "space-between" }}>
                 <Box>

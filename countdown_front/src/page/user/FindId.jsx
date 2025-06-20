@@ -1,18 +1,46 @@
 import React, { useState } from 'react';
+import {  Box,  Typography,  FormControl,  InputLabel,  OutlinedInput,  Button,} from '@mui/material';
 import { useSendCertiNumMutation, useVerifyCertiNumMutation } from '../../features/user/UserApi';
 import { useNavigate } from 'react-router-dom';
 
+// 모달 컴포넌트 (MUI 스타일로 재작성 가능)
 const Modal = ({ isOpen, onConfirm, children }) => {
   if (!isOpen) return null;
 
-  return (
-    <div style={styles.backdrop}>
-      <div style={styles.modal}>
-        {children}
-        <button onClick={onConfirm} style={styles.confirmButton}>확인</button>
-      </div>
-    </div>
-  );
+   return (
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0, left: 0,
+          width: '100vw', height: '100vh',
+          bgcolor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+        }}
+      >
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+            p: 4,
+            borderRadius: 2,
+            textAlign: 'center',
+            border: '2px solid #B00020',
+            maxWidth: 280,
+          }}
+        >
+          {children}
+          <Button
+            onClick={onConfirm}
+            variant="contained"
+            sx={{ mt: 3, bgcolor: '#B00020', ':hover': { bgcolor: '#8a001a' } }}
+          >
+            확인
+          </Button>
+        </Box>
+      </Box>
+    );
 };
 
 const FindId = () => {
@@ -57,145 +85,116 @@ const FindId = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>아이디 찾기</h2>
+     <Box
+         sx={{
+           width: 350,
+           height: 640,
+           m: '0 auto',
+           p: 3,
+           boxSizing: 'border-box',
+           fontFamily: 'sans-serif',
+         }}
+       >
+       <Typography
+             variant="h5"
+             sx={{ textAlign: 'center', mb: 3, fontWeight: 'bold', marginTop: '40px' }}
+           >
+        아이디 찾기
+      </Typography>
 
-      <label style={styles.label}>
-        이름 입력 <span style={styles.required}>*</span>
-      </label>
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        style={styles.input}
-      />
+    {/* 이름 입력 */}
+         <FormControl fullWidth sx={{ mb: 2 }}>
+           <InputLabel>
+             이름 입력
+             <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+           </InputLabel>
+           <OutlinedInput
+             value={username}
+             onChange={(e) => setUsername(e.target.value)}
+             label="이름 입력"
+             sx={{ height: 40, mt: '7px' }}
+           />
+         </FormControl>
 
-      {/* 이메일 입력 라벨 + 버튼 정렬 */}
-      <div style={styles.labelRow}>
-        <label style={styles.label}>
-          이메일 입력 <span style={styles.required}>*</span>
-        </label>
-        <button onClick={handleSendCerti} style={styles.inlineButton} disabled={sending}>
-          {sending ? '전송 중...' : '인증번호 받기'}
-        </button>
-      </div>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={styles.input}
-      />
+      {/* 이메일 입력 + 인증번호 받기 버튼 */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+             <FormControl sx={{ flexGrow: 1 }}>
+               <InputLabel>
+                 이메일 입력
+                 <Box component="span" sx={{ color: '#B00020', ml: 0.3 }}>*</Box>
+               </InputLabel>
+               <OutlinedInput
+                 type="email"
+                 value={email}
+                 onChange={(e) => setEmail(e.target.value)}
+                 label="이메일 입력"
+                 sx={{ height: 40, mt: '7px' }}
+               />
+             </FormControl>
+             <Button
+               variant="contained"
+               onClick={handleSendCerti}
+               disabled={sending}
+               sx={{
+                 bgcolor: '#B00020',
+                 color: '#fff',
+                 fontSize: 12,
+                 whiteSpace: 'nowrap',
+                 height: 40,
+                 px: 2,
+                 borderRadius: 20,
+                 boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                 '&:hover': { bgcolor: '#8a001a' },
+               }}
+             >
+               {sending ? '전송 중...' : '인증번호 받기'}
+             </Button>
+           </Box>
 
-      {/* 인증번호 입력 */}
-      {isCertiSent && (
-        <>
-          <div style={styles.labelRow}>
-            <label style={styles.label}>인증번호 입력</label>
-            <button onClick={handleVerifyCerti} style={styles.inlineButton} disabled={verifying}>
-              {verifying ? '확인 중...' : '인증번호 확인'}
-            </button>
-          </div>
-          <input
-            type="text"
-            value={certiNum}
-            onChange={(e) => setCertiNum(e.target.value)}
-            style={styles.input}
-          />
-          {certiResult && (
-            <p style={{ fontSize: '12px', color: '#B00020', marginTop: '4px' }}>{certiResult}</p>
+      {/* 인증번호 입력 + 인증 확인 */}
+          {isCertiSent && (
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <FormControl sx={{ flexGrow: 1 }}>
+                  <InputLabel>인증번호 입력</InputLabel>
+                  <OutlinedInput
+                    value={certiNum}
+                    onChange={(e) => setCertiNum(e.target.value)}
+                    label="인증번호 입력"
+                    sx={{ height: 40, mt: '7px' }}
+                  />
+                </FormControl>
+                <Button
+                  variant="contained"
+                  onClick={handleVerifyCerti}
+                  disabled={verifying}
+                  sx={{
+                    bgcolor: '#B00020',
+                    color: '#fff',
+                    fontSize: 12,
+                    whiteSpace: 'nowrap',
+                    height: 40,
+                    px: 2,
+                    borderRadius: 20,
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                    '&:hover': { bgcolor: '#8a001a' },
+                  }}
+                >
+                  {verifying ? '확인 중...' : '인증번호 확인'}
+                </Button>
+              </Box>
+            </>
           )}
-        </>
-      )}
 
       {/* 모달 */}
       <Modal isOpen={modalOpen} onConfirm={handleModalConfirm}>
-        <p>
-          <span style={{ color: '#B00020', fontWeight: 'bold' }}>{foundUsername}</span>님의 아이디는{' '}
-          <span style={{ color: '#B00020', fontWeight: 'bold' }}>{foundUserId}</span>입니다.
-        </p>
+        <Typography>
+          <strong style={{ color: '#B00020' }}>{foundUsername}</strong>님의 아이디는{' '}
+          <strong style={{ color: '#B00020' }}>{foundUserId}</strong>입니다.
+        </Typography>
       </Modal>
-    </div>
+    </Box>
   );
-};
-
-const styles = {
-  container: {
-    width: '350px',
-    height: '640px',
-    margin: '0 auto',
-    padding: '1rem',
-    boxSizing: 'border-box',
-    fontFamily: 'sans-serif',
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: '1rem',
-  },
-   label: {
-    display: 'block',          
-    marginBottom: '1px',
-  
-  },
-  labelRow: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    gap: '115px',
-    marginTop: '1rem',
-  },
-  required: {
-    color: '#B00020',
-    marginLeft: '4px',
-  },
-  input: {
-    width: '93%',
-    height: '38px',
-    border: '1px solid #B00020',
-    borderRadius: '4px',
-    padding: '0.5rem',
-    marginTop: '0.5rem',
-    marginBottom: '0.5rem',
-    boxSizing: 'border-box',
-  },
-  inlineButton: {
-    backgroundColor: '#B00020',
-    color: '#fff',
-    fontSize: '10px',
-    padding: '8px 12px',
-    border: 'none',
-    borderRadius: '20px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-    whiteSpace: 'nowrap',
-  },
-  backdrop: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  modal: {
-    backgroundColor: 'white',
-    padding: '2rem',
-    borderRadius: '8px',
-    textAlign: 'center',
-    border: '2px solid #B00020',
-    maxWidth: '280px',
-  },
-  confirmButton: {
-    marginTop: '1rem',
-    padding: '0.5rem 1.5rem',
-    fontSize: '1rem',
-    backgroundColor: '#B00020',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-  },
 };
 
 export default FindId;

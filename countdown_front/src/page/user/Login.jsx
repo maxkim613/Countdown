@@ -7,8 +7,8 @@ import { Box, Typography, Button, OutlinedInput } from "@mui/material";
 import { useCmDialog } from "../../cm/CmDialogUtil";
 import { CmUtil } from "../../cm/CmUtil";
 import { persistor } from "../../app/store";
-import logoImage from "../../css/icons/logo.png";
 import { useSelector } from "react-redux";
+import logoImage from "../../css/icons/logo.png";
 
 const Login = () => {
   const [userId, setUserId] = useState("");
@@ -19,6 +19,7 @@ const Login = () => {
   const [login] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
@@ -53,7 +54,6 @@ const Login = () => {
               })
             );
           }
-          
           navigate(response.data.adminYn === "Y" ? "/manager/admin" : "/");
         });
       } else {

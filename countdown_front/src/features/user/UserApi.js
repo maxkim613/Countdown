@@ -37,12 +37,12 @@ export const userApi = createApi({
         body: credentials
       })
     }),
-    userUpdate: builder.mutation({
-        query: (credentials) => ({
-          url: '/user/update.do',
-          method: 'POST',
-          body: credentials
-        })
+      userUpdate: builder.mutation({
+      query: (formData) => ({
+        url: '/user/update.do',
+        method: 'POST',
+        body: formData
+       }),
     }),
     userDelete: builder.mutation({
         query: (credentials) => ({
@@ -74,10 +74,9 @@ export const userApi = createApi({
         method: 'POST',
         body: credentials
       }),
-      keepUnusedDataFor: 0, // = cacheTime: 0
+      keepUnusedDataFor: 0,
       refetchOnMountOrArgChange: true,
-      staleTime: 0, // 이건 RTK Query에서 직접 사용되진 않음. react-query에서 쓰는 용어
-    }),  
+    }),
     userM: builder.mutation({
       query: (credentials) => ({
         url: '/user/userM.do',
@@ -116,12 +115,17 @@ export const userApi = createApi({
 
     updateUserStatus: builder.mutation({
       query: ({ userId, status }) => ({
-        url: `user/update-status.do`,
+        url: `/user/update-status.do`,
         method: 'POST',
         body: { userId, status },
       }),
        invalidatesTags: ['User'],
     }),
+
+
+  
+
+
 
   })
 });
@@ -141,5 +145,6 @@ export const {
   useUserUpdateMutation,
   useUserDeleteMutation,
   useLogoutMutation,
-  useViewQuery
+  useViewQuery,
+ 
 } = userApi;
