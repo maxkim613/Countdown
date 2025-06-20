@@ -120,7 +120,18 @@ const MsgList = () => {
                         {messages.map((msg) => (
                             <React.Fragment key={msg.msgId}>
                                 <ListItem disablePadding>
-                                    <ListItemButton onClick={() => navigate(`/msg/view.do?msgId=${msg.msgId}`)} sx={{ py: 1.5, alignItems: 'flex-start' }}>
+                                    <ListItemButton 
+                                        onClick={() => {
+                                            // 보낸이가 'system'이고, 경매 관련 쪽지일 경우 상품 상세 페이지로 이동
+                                            if (msg.senderId === 'system' && msg.msgType === 'A' && msg.aucId) {
+                                                navigate(`/auc/aucview.do?id=${msg.aucId}`);
+                                            } else {
+                                                // 그 외에는 일반 쪽지 상세 보기로 이동
+                                                navigate(`/msg/view/${msg.msgId}`);
+                                            }
+                                        }}
+                                        sx={{ py: 1.5, alignItems: 'flex-start' }}
+                                    >
                                         <ListItemText
                                             primary={
                                                 <Typography variant="body1" component="span" noWrap sx={{ display: 'block', mb: 0.5 }} fontWeight={msg.readYn === 'N' && msg.receiverId === userId ? 'bold' : 'normal'}>
