@@ -137,7 +137,9 @@ const UserProfile = () => {
                   navigate(`/userA/userawaite`);
               } else if (item ===  '관심 상품') {
                   navigate(`/userA/useralike`);
-              } else {
+              } else if (item ===  '공지 사항') {
+                  navigate(`/ann/userannlist.do`);
+              }else {
                 // 그 외 메뉴 클릭 처리  
               }
             }}

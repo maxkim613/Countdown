@@ -74,7 +74,7 @@ const App = () => {
       <Routes>
         <Route path="/user/first.do" element={<FirstPage />} />
         <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
-        <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
+        <Route path="/" element={<FirstPage />} />
         <Route path="/user/join.do" element={<LayoutNoLogin><Register /></LayoutNoLogin>} />
         <Route path="/user/update.do" element={<LayoutLogin><UserUpdate /></LayoutLogin>} />
         <Route path="/user/view.do" element={<LayoutLogin><UserView /></LayoutLogin>} />
