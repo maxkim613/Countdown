@@ -8,7 +8,8 @@ export const codeApi = createApi({
         getCodes: builder.query({
             query: (groupCode) => `/codes/${groupCode}`,
             transformResponse: (response) => response.data.map(code => ({
-                label: code.codeName
+                label: code.codeName,
+                value: code.codeValue
             })),
         }),
     }),
