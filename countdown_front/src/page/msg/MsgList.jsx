@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useGetMsgListQuery } from '../../features/msg/msgApi';
 import { useGetCodesQuery } from '../../features/code/codeApi';
 import { useSelector } from 'react-redux';
@@ -36,32 +36,17 @@ const MsgList = () => {
     const { data: tabOptionsFromApi } = useGetCodesQuery('USER_MSG_FILTER');
     const { data: sortOptions } = useGetCodesQuery('MSG_SORT');
 
-    useEffect(() => {
-        if (tabOptionsFromApi?.length) {
-        setActiveTab(tabOptionsFromApi[0].value.toUpperCase());
-        }
-    }, [tabOptionsFromApi]);
-
-    useEffect(() => {
-        if (sortOptions?.length) {
-        setSortOrder(sortOptions[0].value.toUpperCase());
-        }
-    }, [sortOptions]);
+    console.log('로그인된 사용자 ID:', userId);
+    console.log('탭 데이터:', { data: tabOptionsFromApi });
+    console.log('정렬 데이터:', { data: sortOptions });
 
     // 3. 요구사항 반영: 탭 순서 강제 정렬
     const sortedTabOptions = useMemo(() => {
         if (!tabOptionsFromApi) return [];
-        const order = ['ALL','RECEIVED','SENT','AUCTION','INQUIRIES'];
-        return tabOptionsFromApi
-        .filter(opt => order.includes(opt.value?.toUpperCase()))
-        .sort((a,b)=>
-            order.indexOf(b.value?.toUpperCase()) - order.indexOf(a.value?.toUpperCase())
-        )
-        .map(opt => ({
-            // value를 탭에 그대로 쓰되, 클릭 핸들러에서 toLowerCase() 처리할 수도 있음
-            ...opt,
-            value: opt.value?.toUpperCase()
-        }));
+        const order = ['ALL', 'RECEIVED', 'SENT', 'AUCTION', 'INQUIRIES']; // 원하는 순서 정의
+        return [...tabOptionsFromApi]
+            .filter(opt => order.includes(opt.value)) // 정의된 순서에 있는 것만 필터링
+            .sort((a, b) => order.indexOf(a.value) - order.indexOf(b.value));
     }, [tabOptionsFromApi]);
 
     // 4. API PARAMETER LOGIC
@@ -117,8 +102,7 @@ const MsgList = () => {
                     InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) }}
                 />
                 {sortOptions && sortOptions.length > 0 && (
-                    <CmDropdown label="정렬" value={sortOrder} setValue={setSortOrder} options={sortOptions.map(opt => ({
-                    label: opt.label, value: opt.value.toUpperCase() }))} width="150px" />
+                    <CmDropdown label="정렬" value={sortOrder} setValue={setSortOrder} options={sortOptions} width="150px" />
                 )}
             </Box>
             
