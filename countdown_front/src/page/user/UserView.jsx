@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useViewQuery } from "../../features/user/UserApi";
+import { useGetUserImgsQuery } from "../../features/user/userImgApi";
 
 const UserProfile = () => {
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
-  const { data, isSuccess } = useViewQuery({ userId: id });
+  const user = useSelector((state) => state.user.user);
+  const userId = user?.userId;
+
+  const { data, isSuccess } = useViewQuery({ userId });
+  const { data: imgData } = useGetUserImgsQuery(userId, { skip: !userId });
+
   const [userInfo, setUserInfo] = useState(null);
+
   const navigate = useNavigate();
 
+  const userImg = Array.isArray(imgData?.data)
+    ? imgData.data[0]
+    : imgData?.data || null;
+
   useEffect(() => {
-    if (isSuccess) {
-      setUserInfo(data?.data);
+    if (isSuccess && data?.data) {
+      setUserInfo(data.data);
     }
   }, [isSuccess, data]);
 
   if (!userInfo) return null;
-
-  // 기본 프로필 이미지
-  const defaultProfileImg = "/default-profile.png";
 
   // 메뉴 리스트
   const menuItems = [
@@ -59,7 +66,14 @@ const UserProfile = () => {
       >
         <Box
           component="img"
-          src={userInfo.thumbnailUrl || "/default-profile.png"}
+          src={
+            userImg?.userImgPath
+              ? `${process.env.REACT_APP_API_BASE_URL.replace(
+                  "/api",
+                  ""
+                )}${encodeURI(userImg.userImgPath)}`
+              : "/default-profile.png"
+          }
           alt="프로필 이미지"
           sx={{
             width: "100px",
@@ -71,7 +85,7 @@ const UserProfile = () => {
           }}
         />
 
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, ml: 2 }}>
           <Typography variant="h6" fontWeight="bold" mb={0.5}>
             사용자 이름: {userInfo.username || "이름 없음"}
           </Typography>
@@ -121,10 +135,7 @@ const UserProfile = () => {
               userSelect: "none",
             }}
             onClick={() => {
-              // 필요시 클릭 동작 추가
               if (item === "로그 아웃") {
-                // 로그아웃 처리 예시
-                // authLogout();
                 navigate("/login");
               } else if (item === "내 거래 내역") {
                 navigate(`/userA/useral`);
@@ -138,8 +149,6 @@ const UserProfile = () => {
                 navigate(`/userA/useralike`);
               } else if (item === "공지 사항") {
                 navigate(`/ann/userannlist.do`);
-              } else {
-                // 그 외 메뉴 클릭 처리
               }
             }}
           >
