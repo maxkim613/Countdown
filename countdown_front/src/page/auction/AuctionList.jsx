@@ -49,8 +49,10 @@ const AuctionList = () => {
     writeinfo2: "원",
     info3: item.aucDeadline,
     writeinfo3: "",
-    info4: item.aucStatus,
+    info4: item.createId,
     writeinfo4: "",
+    info5: item.aucLocation,
+    writeinfo5: "",
     thumbnailUrl: item.fileId
   ? `${process.env.REACT_APP_API_BASE_URL}/auc/imgDown.do?fileId=${item.fileId}`
   : null,

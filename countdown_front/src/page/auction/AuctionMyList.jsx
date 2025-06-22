@@ -31,22 +31,7 @@ const AuctionMyList = () => {
     { value: "기타", label: "기타" },
   ];
 
-  // const columns = [
-  //   { field: "rn", headerName: "번호", width: 90, sortable: false },
-  //   { field: "auctitle", headerName: "제목", width: 300, dbName: "AUC_TITLE" },
-  //   { field: "createId", headerName: "작성자", width: 150, dbName: "CREATE_ID" },
-  //   { field: "aucsprice", headerName: "시작가", width: 120, dbName: "AUC_CURRENT_PRICE" },
-  //   { field: "aucdeadline", headerName: "마감일", width: 180, dbName: "AUC_DEADLINE" },
-  // ];
-
-  // const handleSortChange = (model) => {
-  //   if (!model.length) return;
-  //   const { field, sort } = model[0];
-  //   const colDef = columns.find((col) => col.field === field);
-  //   const sortField = colDef?.dbName || field;
-  //   setSort({ field: sortField, order: sort?.toUpperCase() || "ASC" });
-  // };
-
+  
   const handleSearch = () => {
     refetch();
   };
@@ -61,6 +46,8 @@ const AuctionMyList = () => {
     writeinfo3: "",
     info4: item.aucStatus,
     writeinfo4: "",
+    info5: item.aucLocation,
+    writeinfo5: "",
     thumbnailUrl: item.thumbnailUrl,
     id: item.aucId,
   }));
