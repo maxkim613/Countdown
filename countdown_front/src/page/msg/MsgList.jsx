@@ -79,7 +79,7 @@ const MsgList = () => {
     }, [userId, activeTab, searchKeyword, sortOrder]);
 
     const { data: messages, error, isLoading, isFetching } = useGetMsgListQuery(queryParams, {
-        skip: !userId, 
+        skip: !userId, refetchOnMountOrArgChange: true
     });
 
     // 5. UI RENDERING
