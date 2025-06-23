@@ -129,8 +129,8 @@ const App = () => {
         <Route path="/msg/list.do" element={<LayoutLogin><MsgList /></LayoutLogin>} />
         <Route path="/msg/view.do" element={<LayoutLogin><MsgView /></LayoutLogin>} />
         <Route path="/msg/create.do" element={<LayoutLogin><MsgCreate /></LayoutLogin>} />
-        <Route path="/msg/admin/inquiries.do/:msgId" element={<AdminLayoutLogin><AdmMsgView /></AdminLayoutLogin>} />
-        <Route path="/msg/admin/tasks.do" element={<AdminLayoutLogin><AdminTaskList /></AdminLayoutLogin>} />
+        <Route path="/admin/msg/inquiries.do" element={<AdminLayoutLogin><AdmMsgView /></AdminLayoutLogin>} />
+        <Route path="/admin/msg/tasks.do" element={<AdminLayoutLogin><AdminTaskList /></AdminLayoutLogin>} />
 
       </Routes>
       <CmRouteChangeNotifier />
