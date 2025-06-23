@@ -149,6 +149,8 @@ const UserProfile = () => {
                 navigate(`/userA/useralike`);
               } else if (item === "공지 사항") {
                 navigate(`/ann/userannlist.do`);
+              } else if (item === "문의 하기") {
+                navigate(`/msg/create.do`);
               }
             }}
           >
