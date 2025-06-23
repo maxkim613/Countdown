@@ -13,7 +13,6 @@ const UserProfile = () => {
   const { data: imgData } = useGetUserImgsQuery(userId, { skip: !userId });
 
   const [userInfo, setUserInfo] = useState(null);
-
   const navigate = useNavigate();
 
   const userImg = Array.isArray(imgData?.data)
@@ -28,7 +27,6 @@ const UserProfile = () => {
 
   if (!userInfo) return null;
 
-  // 메뉴 리스트
   const menuItems = [
     "내 거래 내역",
     "관심 상품",
@@ -46,7 +44,7 @@ const UserProfile = () => {
         width: "350px",
         height: "640px",
         margin: "40px auto 0",
-        padding: "1rem",
+        padding: "",
         fontFamily: "sans-serif",
         boxSizing: "border-box",
       }}
@@ -71,7 +69,7 @@ const UserProfile = () => {
               ? `${process.env.REACT_APP_API_BASE_URL.replace(
                   "/api",
                   ""
-                )}${encodeURI(userImg.userImgPath)}`
+                )}${encodeURI(userImg.userImgPath)}?t=${Date.now()}`
               : "/default-profile.png"
           }
           alt="프로필 이미지"
@@ -86,11 +84,11 @@ const UserProfile = () => {
         />
 
         <Box sx={{ flex: 1, ml: 2 }}>
-          <Typography variant="h6" fontWeight="bold" mb={0.5}>
-            사용자 이름: {userInfo.username || "이름 없음"}
+          <Typography variant="h7" fontWeight="bold" mb={0.5}>
+             {userInfo.username || "이름 없음"}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            닉네임: {userInfo.nickname || "-"}
+             {userInfo.nickname || "-"}
           </Typography>
         </Box>
 
@@ -99,8 +97,7 @@ const UserProfile = () => {
           color="error"
           size="small"
           sx={{
-            position: "absolute",
-            right: "8px",
+            position: "relative",
             top: "8px",
             borderRadius: "20px",
             fontSize: "12px",
@@ -125,10 +122,13 @@ const UserProfile = () => {
               cursor: "pointer",
               fontWeight: 500,
               fontSize: "14px",
-              width: "87%",
+              width: "100%",
               boxShadow: "0 2px 4px rgba(0,0,0,0.08)",
               border: "1px solid #eee",
               transition: "box-shadow 0.2s ease-in-out",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
               "&:hover": {
                 boxShadow: "0 6px 12px rgba(0,0,0,0.15)",
               },
